@@ -31,28 +31,28 @@
     ];
 
     oh-my-zsh = {
-      enable = true
-        theme = "darkblood"
-      plugins = [ "zsh-fzf-history-search"]
-      }
-      };
+      enable = true;
+      theme = "darkblood";
+      plugins = [ "zsh-fzf-history-search" ];
+    };
+  };
 
-      programs.fzf =
-        {
-          enable = true;
-          enableZshIntegration = true;
-        }
-
-          shellAliases = {
-      ls = "eza --icons -l -T -L=1";
-      cat = "bat";
-      mamba = "micromamba"
-        };
-
-      home.packages = with pkgs; [
-        eza
-        bat
-        fzf
-      ];
-
+  programs.fzf =
+    {
+      enable = true;
+      enableZshIntegration = true;
     }
+
+      shellAliases = {
+  ls = "eza --icons -l -T -L=1";
+  cat = "bat";
+  mamba = "micromamba"
+    };
+
+  home.packages = with pkgs; [
+    eza
+    bat
+    fzf
+  ];
+
+}
