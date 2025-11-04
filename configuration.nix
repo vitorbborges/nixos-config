@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
       # ./modules/system
       # ./hyprland.nix
@@ -59,7 +60,7 @@
     description = "Vitor Bandeira Borges";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-        kitty	
+      kitty
     ];
   };
 
@@ -75,6 +76,11 @@
     # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
   ];
+
+  # Use zsh
+  programs.zsh.enable = true;
+  environment.shells = with pkgs; [ zsh bash ]; # Use bash as fallback
+  users.defaultUserShell = pkgs.zsh;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
