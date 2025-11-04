@@ -54,4 +54,5 @@
     fzf
   ];
 
+  users.defaultUserShell = pkgs.zsh;
 }
