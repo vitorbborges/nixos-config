@@ -35,6 +35,11 @@
       theme = "darkblood";
       plugins = [ "zsh-fzf-history-search" ];
     };
+    shellAliases = {
+      ls = "eza --icons -l -T -L=1";
+      cat = "bat";
+      mamba = "micromamba";
+    };
   };
 
   programs.fzf =
@@ -42,12 +47,6 @@
       enable = true;
       enableZshIntegration = true;
     };
-
-  shellAliases = {
-    ls = "eza --icons -l -T -L=1";
-    cat = "bat";
-    mamba = "micromamba";
-  };
 
   home.packages = with pkgs; [
     eza
