@@ -41,13 +41,13 @@
     {
       enable = true;
       enableZshIntegration = true;
-    }
-
-      shellAliases = {
-  ls = "eza --icons -l -T -L=1";
-  cat = "bat";
-  mamba = "micromamba"
     };
+
+  shellAliases = {
+    ls = "eza --icons -l -T -L=1";
+    cat = "bat";
+    mamba = "micromamba";
+  };
 
   home.packages = with pkgs; [
     eza
