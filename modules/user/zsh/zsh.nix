@@ -13,7 +13,7 @@
     };
 
     shellAliases = {
-      ls = "eza --icons -l -T -L=1";
+      ls = "eza --icons --git --group-directories-first -l -T -L=1";
       cat = "bat";
       mamba = "micromamba";
       lg = "lazygit";
