@@ -63,7 +63,6 @@
     enableZshIntegration = true;
     extraOptions = [
       "--group-directories-first"
-      "header"
     ];
     git = true;
     icons = "always";
