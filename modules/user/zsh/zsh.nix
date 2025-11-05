@@ -5,6 +5,26 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+
+    oh-my-zsh = {
+      enable = true;
+      theme = "fox";
+      plugins = [ ]; # TODO: Check if you need any packages.
+    };
+
+    shellAliases = {
+      ls = "eza --icons -l -T -L=1";
+      cat = "bat";
+      mamba = "micromamba";
+      lg = "lazygit";
+    };
+
+    history = {
+      size = 10000;
+      ignoreAllDups = true;
+      path = "$HOME/.zsh_history";
+    };
+
     plugins = [
 
       {
@@ -30,16 +50,6 @@
 
     ];
 
-    oh-my-zsh = {
-      enable = true;
-      theme = "darkblood";
-      plugins = [ "zsh-fzf-history-search" ];
-    };
-    shellAliases = {
-      ls = "eza --icons -l -T -L=1";
-      cat = "bat";
-      mamba = "micromamba";
-    };
   };
 
   programs.fzf =
@@ -47,6 +57,18 @@
       enable = true;
       enableZshIntegration = true;
     };
+
+  programs.eza = {
+    enable = true;
+    enableZshIntegration = true;
+    extraOptions = [
+      "--group-directories-first"
+      "header"
+    ];
+    git = true;
+    icons = "always";
+    theme = "dracula";
+  };
 
   home.packages = with pkgs; [
     eza
