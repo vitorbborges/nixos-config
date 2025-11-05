@@ -86,7 +86,6 @@
     bat
     fzf
     tldr
-    tldr-update
   ];
 
 }
