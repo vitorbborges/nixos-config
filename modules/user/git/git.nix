@@ -17,5 +17,6 @@
   home.packages = with pkgs; [
     git
     lazygit
+    zsh-forgit
   ];
 }
