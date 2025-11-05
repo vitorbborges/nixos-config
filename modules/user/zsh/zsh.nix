@@ -17,6 +17,7 @@
         "git-auto-fetch"
         "ssh-agent"
         "last-working-dir"
+        "sudo" # Press Esc twice for sudo
       ]; # TODO: Check if you need any packages.
     };
 
@@ -86,6 +87,7 @@
     bat
     fzf
     tldr
+    fastfetch
   ];
 
 }
