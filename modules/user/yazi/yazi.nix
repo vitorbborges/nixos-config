@@ -11,8 +11,9 @@
           owner = "yazi-rs";
           repo = "flavors";
           rev = "main";
-          sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Update this
+          sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
         } + "/dracula.yazi";
     };
 
-  }
+  };
+}
