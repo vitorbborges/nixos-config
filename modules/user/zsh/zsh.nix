@@ -16,7 +16,6 @@
       ls = "eza --icons --git --group-directories-first -l -T -L=1";
       cat = "bat";
       mamba = "micromamba";
-      lg = "lazygit";
     };
 
     history = {
