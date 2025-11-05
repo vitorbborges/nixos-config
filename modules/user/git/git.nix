@@ -1,4 +1,4 @@
-{ config, pkgs, home-manager, ... }:
+{ pkgs, ... }:
 
 {
   programs.git = {
@@ -14,18 +14,8 @@
     enableZshIntegration = true;
   };
 
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
-    matchBlocks = {
-      "github.com" = {
-        identityFile = "~/.ssh/id_ed25519";
-      };
-    };
-  };
-
   home.packages = with pkgs; [
     git
-    openssh
+    lazygit
   ];
 }
