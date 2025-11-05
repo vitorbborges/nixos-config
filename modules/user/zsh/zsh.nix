@@ -5,13 +5,19 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    enableAutosuggestions = true;
+    autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
 
     oh-my-zsh = {
       enable = true;
       theme = "fox";
-      plugins = [ ]; # TODO: Check if you need any packages.
+      plugins = [
+        "dotenv"
+        "emoji"
+        "git-auto-fetch"
+        "ssh-agent"
+        "last-working-dir"
+      ]; # TODO: Check if you need any packages.
     };
 
     shellAliases = {
