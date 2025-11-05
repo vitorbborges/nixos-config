@@ -6,8 +6,13 @@
     enable = true;
     enableZshIntegration = true;
     flavors = {
-      dark = "dracula";
+      dracula = pkgs.fetchFromGitHub
+        {
+          owner = "yazi-rs";
+          repo = "flavors";
+          rev = "main";
+          sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Update this
+        } + "/dracula.yazi";
     };
-  };
 
-}
+  }
