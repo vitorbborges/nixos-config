@@ -5,7 +5,7 @@
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;
-    flavor = {
+    flavors = {
       dark = "dracula";
     };
   };
