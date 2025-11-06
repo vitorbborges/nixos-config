@@ -1,13 +1,30 @@
-{ inputs, pkgs, ... }:
-{
+{ inputs, pkgs, ... }: {
+  home.sessionVariables = {
+    LIBVA_DRIVER_NAME = "nvidia";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    NIXOS_OZONE_WL = "1";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    NVD_BACKEND = "direct";
+  };
 
-  #imports = [ inputs.hyprland.nixosModules.default ];
+  wayland.windowManager.hyprland = {
+    enable = true;
+    settings = {
+      monitor = ",preferred,auto,1";
 
-  #programs.hyprland = {
-  #  enable = true;
-  #  withUWSM = true;
-  #  xwayland.enable = true;
-  #  package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-  #  portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-  #};
+      "$mod" = "ALT";
+
+      bind = [
+        "$mod, RETURN, exec, kitty"
+        "$mod, B, exec, zen-browser"
+        "$mod, E, exec, kitty -e yazi"
+        "$mod, Q, killactive"
+      ];
+
+      bindm = [
+        "$mod, mouse:272, movewindow"
+        "$mod, mouse:273, resizewindow"
+      ];
+    };
+  };
 }
