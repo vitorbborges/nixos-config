@@ -7,7 +7,7 @@
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    zen-browser.url = "github:0x000022070/zen-browser-flake";
+    zen-browser.url = “github:0xc000022070/zen-browser-flake”;
   };
 
   outputs = { self, nixpkgs, home-manager, zen-browser, ... }@inputs:
