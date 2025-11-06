@@ -2,7 +2,11 @@
 
 {
 
-  home.packages = [ pkgs.kitty ];
+  home = {
+    packages = [ pkgs.kitty ];
+    sessionVariables.TERMINAL = "kitty";
+  };
+
   programs.kitty = {
     enable = true;
     themeFile = "Dracula"; # TODO: Choose Theme. 
