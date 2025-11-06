@@ -5,7 +5,7 @@
   home.packages = [ pkgs.kitty ];
   programs.kitty = {
     enable = true;
-    themeFile = "Dracula";
+    themeFile = "Dracula"; # TODO: Choose Theme. 
     enableGitIntegration = true;
     shellIntegration.enableZshIntegration = true;
     settings = {
@@ -30,5 +30,4 @@
       "ctrl+v" = "paste_from_clipboard";
     };
   };
-  # TODO: FInish configuring kitty
 }
