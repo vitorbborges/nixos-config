@@ -12,8 +12,10 @@
           repo = "flavors";
           rev = "main";
           sha256 = "sha256-bavHcmeGZ49nNeM+0DSdKvxZDPVm3e6eaNmfmwfCid0=";
-        } + "/dracula.yazi";
+        } + "/dracula.yazi"; # TODO: Choose theme after configuring fonts and terminal.
     };
+
+    # TODO: Finish configuring keymaps and plugins.
 
     theme.icon = {
       dirs = [
