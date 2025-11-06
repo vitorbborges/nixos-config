@@ -1,31 +1,37 @@
 {
 
-    description = "Flake of VitorBandeiraBorges";
+  description = "Flake of VitorBandeiraBorges";
 
-    inputs = {
-        nixpkgs.url = "nixpkgs/nixos-unstable";
-        home-manager.url = "github:nix-community/home-manager/master";
-        home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    };
+  inputs = {
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager/master";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    outputs = { self, nixpkgs, home-manager, ... }: 
-        let
-            lib = nixpkgs.lib;
-            system = "x86_64-linux";
-            pkgs = nixpkgs.legacyPackages.${system}; 
-       in {
-        nixosConfigurations = {
-            nixos = lib.nixosSystem { # TODO: Change hostname
-                inherit system;
-                modules = [ ./configuration.nix ./modules/system ];
-            };
+    zen-browser.url = "github:0x000022070/zen-browser-flake";
+  };
+
+  outputs = { self, nixpkgs, home-manager, zen-browser, ... }@inputs:
+    let
+      lib = nixpkgs.lib;
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      nixosConfigurations = {
+        nixos = lib.nixosSystem {
+          # TODO: Change hostname
+          inherit system;
+          modules = [ ./configuration.nix ./modules/system ];
+          specialArgs = { inherit inputs; };
         };
-        homeConfigurations = {
-            vitorbborges = home-manager.lib.homeManagerConfiguration {
-                inherit pkgs;
-                modules = [ ./home.nix ];
-            };
+      };
+      homeConfigurations = {
+        vitorbborges = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [ ./home.nix ];
+          extraSpecialArgs = { inherit inputs system; };
         };
+      };
     };
 
 }
