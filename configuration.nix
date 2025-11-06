@@ -9,9 +9,6 @@
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      # ./modules/system
-      # ./hyprland.nix
-      # ./virtualbox.nix
     ];
 
   # Bootloader.
@@ -56,12 +53,11 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.vitorbborges = {
+    # TODO: Move this to home-manager?
     isNormalUser = true;
     description = "Vitor Bandeira Borges";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      kitty
-    ];
+    packages = with pkgs; [ ];
   };
 
   # Enable automatic login for the user.
@@ -110,5 +106,34 @@
 
   system.stateVersion = "25.05"; # Did you read the comment?
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # Nix housekeeping
+  nix = {
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      auto-optimise-store = true;
+    };
+    optimise.automatic = true;
+    optimise.dates = [ "daily" ];
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 10d";
+    };
+  };
+
+  # Auto updates
+  system.autoUpgrade = {
+    enable = true;
+    allowReboot = false;
+    flake = "/home/vitorbborgs/.dofiles";
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "--update-input"
+      "home-manager"
+      "--commit-lock-file"
+    ];
+    dates = "daily";
+  };
 }
