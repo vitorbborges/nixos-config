@@ -14,9 +14,7 @@
 
       "$mod" = "ALT";
 
-      exec-once = [
-        "kitty"
-      ];
+
 
       general.layout = "dwindle";
 
