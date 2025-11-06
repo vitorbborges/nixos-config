@@ -3,9 +3,13 @@
 {
   programs.git = {
     enable = true;
-    settings.user.name = "vitorbborges";
-    settings.user.email = "vitorbborges31@gmail.com";
-    settings.init.defaultBranch = "main";
+    settings = {
+      user = {
+        name = "vitorbborges";
+        email = "vitorbborges31@gmail.com";
+      };
+      init.defaultBranch = "main";
+    };
     lfs.enable = true;
   };
 
