@@ -136,4 +136,10 @@
     ];
     dates = "daily";
   };
+
+  # Hardware housekeeping
+  services = {
+    fwupd.enable = true;
+    fstrim.enable = true;
+  };
 }
