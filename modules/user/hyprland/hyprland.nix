@@ -18,11 +18,13 @@
         "kitty"
       ];
 
-      bind = [
-        "$mod, RETURN, exec, kitty"
-        "$mod, B, exec, zen-browser"
-        "$mod, E, exec, kitty -e yazi"
-        "$mod, Q, killactive"
+      general.layout = "dwindle"
+
+        bind = [
+      "$mod, RETURN, exec, kitty"
+      "$mod, B, exec, zen-browser"
+      "$mod, E, exec, kitty -e yazi"
+      "$mod, Q, killactive"
       ];
 
       bindm = [
