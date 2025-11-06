@@ -142,4 +142,13 @@
     fwupd.enable = true;
     fstrim.enable = true;
   };
+
+
+  # TODO: Remove this in bare metal.
+  virtualisation.virtualbox.guest.enable = true;
+
+  environment.sessionVariables = {
+    WLR_NO_HARDWARE_CURSOR = "1";
+    WLR_RENDERER_ALLOW_SOFTWARE = "1";
+  };
 }
