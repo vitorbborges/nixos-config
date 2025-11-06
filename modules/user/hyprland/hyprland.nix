@@ -14,6 +14,10 @@
 
       "$mod" = "ALT";
 
+      exec-once = [
+        "kitty"
+      ];
+
       bind = [
         "$mod, RETURN, exec, kitty"
         "$mod, B, exec, zen-browser"
