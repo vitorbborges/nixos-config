@@ -12,11 +12,4 @@ in
     portalPackage = hyprSystem.xdg-desktop-portal-hyprland;
   };
 
-  environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "nvidia";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    NIXOS_OZONE_WL = 1;
-    ELECTRON_OZONE_PLATFORM_HINT = "auto";
-    NVD_BACKEND = "direct";
-  };
 }
