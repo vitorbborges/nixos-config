@@ -7,6 +7,7 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    keybindings = "vi-mode";
     
     initContent = ''
       # Auto-start Hyprland
