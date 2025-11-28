@@ -17,9 +17,7 @@
     enable = true;
     settings = {
       monitor = [
-        # Set Virtual-1 (VM display) to 1920x1080 for better aspect ratio
-        "Virtual-1,1920x1080@60,0x0,1"
-        # Fallback for any other monitors
+        # Auto preferred for all monitors
         ",preferred,auto,1"
       ];
 

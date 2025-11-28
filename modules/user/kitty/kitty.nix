@@ -20,7 +20,7 @@
       mouse_hide_wait = "3.0";
       detect_urls = "yes";
       copy_on_select = "clipboard";
-      paste_actions = "quote_urls_at_prompt,replace_newline";
+      paste_actions = "quote-urls-at-prompt,replace-dangerous-control-codes";
       strip_trailing_spaces = "smart";
       focus_follows_mouse = "yes";
       text_fg_override_threshold = "4.5 ratio";

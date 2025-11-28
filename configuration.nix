@@ -60,8 +60,15 @@
     packages = with pkgs; [ ];
   };
 
-  # Enable automatic login for the user.
-  services.getty.autologinUser = "vitorbborges";
+  # Enable display manager with password authentication
+  services.xserver.enable = true;
+  services.displayManager = {
+    sddm = {
+      enable = true;
+      wayland.enable = true;  # Enable Wayland support for Hyprland
+    };
+    defaultSession = "hyprland-uwsm";  # Set Hyprland as default session
+  };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -81,10 +88,10 @@
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 
   # List services that you want to enable:
 
@@ -126,7 +133,7 @@
   system.autoUpgrade = {
     enable = true;
     allowReboot = false;
-    flake = "/home/vitorbborgs/.dofiles";
+    flake = "/home/vitorbborges/.dotfiles";
     flags = [
       "--update-input"
       "nixpkgs"
