@@ -6,7 +6,8 @@
   # in your system-wide configuration.nix.
 
   home.packages = with pkgs; [
-    micromamba
+    conda
+    conda-install
     uv
   ];
 
