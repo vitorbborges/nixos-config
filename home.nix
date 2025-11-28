@@ -25,6 +25,7 @@
   # environment.
   home.packages = [
     pkgs.hello
+    pkgs.nh
     
     # Script to start Hyprland
     (pkgs.writeShellScriptBin "start-hyprland" ''

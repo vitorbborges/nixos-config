@@ -98,6 +98,12 @@
     fzf
     tldr
     fastfetch
+    zoxide
   ];
+
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 
 }
