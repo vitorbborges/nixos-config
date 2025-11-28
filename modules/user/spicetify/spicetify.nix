@@ -19,6 +19,22 @@
       enabledExtensions = with spicePkgs.extensions; [
         shuffle
         keyboardShortcut
+        powerBar
+        playlistIcons
+        fullAlbumDate
+        skipStats
+        writefy
+        songStats
+        autoVolume
+        showQueueDuration
+        history
+        betterGenres
+        adblock
+        playNext
+        volumePercentage
+        coverAmbience
+        simpleBeautifulLyrics
+        allOfArtist
         ({
           # The source of the custom extension
           src = pkgs.fetchFromGitHub {
