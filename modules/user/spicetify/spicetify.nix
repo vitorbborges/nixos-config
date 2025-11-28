@@ -13,7 +13,7 @@
     in
     {
       enable = true;
-      theme = spicePkgs.themes.ziro;
+      theme = spicePkgs.themes.hazy;
       colorScheme = "blue-dark";
 
       enabledExtensions = with spicePkgs.extensions; [
