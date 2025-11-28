@@ -29,6 +29,5 @@ in {
       mutableExtensionsDir = false;
 
     };
-    stylix.targets.vscode.enable = true;
     };
 }
