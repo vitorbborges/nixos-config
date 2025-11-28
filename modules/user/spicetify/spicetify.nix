@@ -23,7 +23,7 @@
             owner = "abh80";
             repo = "Spicetify-Fullscreen-Canvas";
             rev = "30a0139";
-            hash = ""; # Will be prompted by nix
+            hash = "sha256-mKEuyWBr+KGuyDvfqQpU8y0L5B5LTmZPN/DTaW4hQZQ="; # Will be prompted by nix
           };
           # The actual file name of the custom extension
           name = "spotifyFullscreenCanvas.js";
