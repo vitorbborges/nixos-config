@@ -1,4 +1,4 @@
-{ config, pkgs, font, fontPkg, ... }:
+{ config, pkgs, font, ... }:
 
 {
   imports =
@@ -46,16 +46,6 @@
     layout = "us";
     variant = "";
   };
-
-  fonts.fontconfig.defaultFonts = {
-    serif = [ font ];
-    sansSerif = [ font ];
-    monospace = [ font ];
-  };
-
-  fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ fontPkg ]; })
-  ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.vitorbborges = {
