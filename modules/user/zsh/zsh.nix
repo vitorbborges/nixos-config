@@ -99,9 +99,15 @@
     tldr
     fastfetch
     zoxide
+    atuin
   ];
 
   programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.atuin = {
     enable = true;
     enableZshIntegration = true;
   };
