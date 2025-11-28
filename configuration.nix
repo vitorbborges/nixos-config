@@ -113,6 +113,12 @@
 
   system.stateVersion = "25.05"; # Did you read the comment?
 
+  # System-wide neovim configuration  
+  environment.variables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
+
   # Nix housekeeping
   nix = {
     settings = {

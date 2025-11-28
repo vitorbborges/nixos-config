@@ -46,6 +46,10 @@
       cat = "bat";
       mamba = "micromamba";
       man = "tldr";
+      
+      # Neovim update aliases
+      nvim-update = "cd ~/.dotfiles/modules/user/nvim && ./update-nvim-auto.sh";
+      nu = "cd ~/.dotfiles/modules/user/nvim && ./update-nvim-auto.sh";
     };
 
     history = {
