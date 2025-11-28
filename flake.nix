@@ -29,7 +29,7 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       font = "JetBrains Mono Nerd Font";
-      fontPkg = "JetBrainsMono";
+      fontPkg = "jetbrains-mono";
     in
     {
       nixosConfigurations = {

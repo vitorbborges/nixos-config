@@ -11,6 +11,6 @@
   };
 
   home.packages = [
-    (pkgs.nerd-fonts.override { fonts = [ fontPkg ]; })
+    (builtins.getAttr fontPkg pkgs.nerd-fonts)
   ];
 }
