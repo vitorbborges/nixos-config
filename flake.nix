@@ -37,7 +37,7 @@
           # TODO: Change hostname
           inherit system;
           modules = [ ./configuration.nix ./modules/system ];
-          specialArgs = { inherit inputs font; };
+          specialArgs = { inherit inputs font fontPkg; };
         };
       };
       homeConfigurations = {
