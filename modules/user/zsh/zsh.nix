@@ -8,24 +8,9 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     
-    initExtra = ''
-      # Auto-start Hyprland on tty1 login shell only (with safety check)
-      if [[ -o login ]] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ] && [ -z "$HYPRLAND_TRIED" ]; then
-        export HYPRLAND_TRIED=1
-        echo "Starting Hyprland... (Press Ctrl+C within 3 seconds to cancel)"
-        if ! timeout 3 bash -c 'while true; do sleep 0.1; done' 2>/dev/null; then
-          echo "Cancelled by user"
-        else
-          echo "Launching Hyprland..."
-          # Clear any stale environment that might interfere
-          unset DISPLAY
-          # Start Hyprland with error logging
-          if ! exec Hyprland 2>"$HOME/.hyprland-error.log"; then
-            echo "Hyprland failed to start. Check ~/.hyprland-error.log for details."
-            echo "Falling back to regular shell..."
-          fi
-        fi
-      fi
+    initContent = ''
+      # Auto-start Hyprland
+      exec Hyprland
     '';
 
     oh-my-zsh = {
