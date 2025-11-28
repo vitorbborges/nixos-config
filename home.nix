@@ -83,6 +83,7 @@
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+    BROWSER = "zen";
   };
 
   # Let Home Manager install and manage itself.
