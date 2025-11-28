@@ -29,6 +29,7 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       font = "JetBrains Mono Nerd Font";
+      fontPkg = "JetBrainsMono";
     in
     {
       nixosConfigurations = {
@@ -36,7 +37,7 @@
           # TODO: Change hostname
           inherit system;
           modules = [ ./configuration.nix ./modules/system ];
-          specialArgs = { inherit inputs font; };
+          specialArgs = { inherit inputs font fontPkg; };
         };
       };
       homeConfigurations = {
