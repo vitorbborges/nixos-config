@@ -23,7 +23,7 @@
         playlistIcons
         fullAlbumDate
         skipStats
-        writefy
+        writeify
         songStats
         autoVolume
         showQueueDuration
