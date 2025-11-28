@@ -8,11 +8,6 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     
-    initContent = ''
-      # Auto-start Hyprland
-      exec Hyprland
-    '';
-
     oh-my-zsh = {
       enable = true;
       theme = "fox";
