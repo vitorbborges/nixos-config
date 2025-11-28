@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, font, ... }:
 
 {
 
@@ -11,6 +11,10 @@
     enable = true;
     themeFile = "Dracula"; # TODO: Choose Theme. 
     enableGitIntegration = true;
+    font = {
+      name = font;
+      size = 12;
+    };
     shellIntegration.enableZshIntegration = true;
     settings = {
       background_opacity = lib.mkForce "0.65";

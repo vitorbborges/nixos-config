@@ -16,6 +16,11 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
@@ -23,6 +28,8 @@
       lib = nixpkgs.lib;
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      font = "JetBrains Mono Nerd Font";
+      fontPkg = "JetBrainsMono";
     in
     {
       nixosConfigurations = {
@@ -30,14 +37,14 @@
           # TODO: Change hostname
           inherit system;
           modules = [ ./configuration.nix ./modules/system ];
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs font fontPkg; };
         };
       };
       homeConfigurations = {
         vitorbborges = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [ ./home.nix ];
-          extraSpecialArgs = { inherit inputs system; };
+          extraSpecialArgs = { inherit inputs system font fontPkg; };
         };
       };
     };
