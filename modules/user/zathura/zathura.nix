@@ -4,9 +4,9 @@
   programs.zathura = {
     enable = true;
     package = pkgs.zathura.override {
-      plugins = [
-        pkgs.zathura.plugins.pdf-mupdf
-        pkgs.zathura.plugins.djvu
+      plugins = with pkgs.zathuraPkgs; [
+        zathura_pdf_mupdf
+        zathura_djvu
       ];
     };
 
