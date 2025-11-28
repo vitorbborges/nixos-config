@@ -23,12 +23,22 @@
   # environment.
   home.packages = [
     pkgs.hello
+    
+    # Script to start Hyprland
+    (pkgs.writeShellScriptBin "start-hyprland" ''
+      if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+        exec Hyprland
+      else
+        echo "Hyprland is already running or not on tty1"
+        exit 1
+      fi
+    '')
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
     # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+    # (pkgs.nerdfonges.override { fonts = [ "FantasqueSansMono" ]; })
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
