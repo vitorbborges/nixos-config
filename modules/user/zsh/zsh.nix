@@ -7,7 +7,6 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    keybindings = "vi-mode";
     
     initContent = ''
       # Auto-start Hyprland
@@ -35,7 +34,7 @@
       
       # Neovim update aliases
       nvim-update = "cd ~/.dotfiles/modules/user/nvim && ./update-nvim-auto.sh";
-      nu = "cd ~/.dotfiles/modules/user/nvim && ./update-nvim-auto.sh";
+      nu = "cd ~/.dotfiles/modules/user/nvim && ./update-nvi-auto.sh";
     };
 
     history = {
@@ -45,6 +44,12 @@
     };
 
     plugins = [
+
+      {
+        name = "zsh-vi-mode";
+        src = pkgs.zsh-vi-mode;
+        file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
+      }
 
       {
         name = "zsh-nix-shell";
