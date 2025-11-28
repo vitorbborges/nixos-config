@@ -14,7 +14,7 @@
     {
       enable = true;
       theme = spicePkgs.themes.hazy;
-      colorScheme = "blue-dark";
+      # colorScheme = "blue-dark";
 
       enabledExtensions = with spicePkgs.extensions; [
         shuffle
