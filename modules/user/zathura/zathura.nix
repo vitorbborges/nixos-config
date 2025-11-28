@@ -39,51 +39,32 @@
       "index-fg" = "#C6D0F5";
       "index-active-bg" = "#414559";
       "index-active-fg" = "#C6D0F5";
-      "render-loading-bg" = "#303446";
       "render-loading-fg" = "#C6D0F5";
       "font" = "${font} 12";
-
-      # nvim-like keybindings
-      "map" = [
-        # Navigation
-        "map J next"
-        "map K previous"
-        "map h scroll left"
-        "map l scroll right"
-        "map <C-f> scroll full-down"
-        "map <C-b> scroll full-up"
-        "map <C-d> scroll half-down"
-        "map <C-u> scroll half-up"
-        "map gg first-page"
-        "map G last-page"
-
-        # Zoom
-        "map + zoom in"
-        "map - zoom out"
-        "map = zoom 100%"
-
-        # Tabs
-        "map <C-t> new-tab"
-        "map <C-w> close-tab"
-        "map > next-tab"
-        "map < previous-tab"
-
-        # Custom
-        "map Q quit"
-        "unmap q"
-      ];
-
-      # Window dimensions
-      "window-height" = 3000;
-      "window-width" = 3000;
-
-      # Clipboard
-      "selection-clipboard" = "clipboard";
-
-      # Enable synctex for LaTeX
-      "synctex" = true;
-      "synctex-editor-command" = "nvr --remote-silent +%{line} %{input}";
     };
+
+    mappings = {
+      "J" = "next";
+      "K" = "previous";
+      "h" = "scroll left";
+      "l" = "scroll right";
+      "<C-f>" = "scroll full-down";
+      "<C-b>" = "scroll full-up";
+      "<C-d>" = "scroll half-down";
+      "<C-u>" = "scroll half-up";
+      "gg" = "first-page";
+      "G" = "last-page";
+      "+" = "zoom in";
+      "-" = "zoom out";
+      "=" = "zoom 100%";
+      "<C-t>" = "new-tab";
+      "<C-w>" = "close-tab";
+      ">" = "next-tab";
+      "<" = "previous-tab";
+      "Q" = "quit";
+    };
+
+    extraConfig = "unmap q";
   };
 
   xdg.mimeApps.defaultApplications = {
