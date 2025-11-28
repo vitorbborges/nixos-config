@@ -85,6 +85,7 @@
         "$mod, RETURN, exec, env LIBGL_ALWAYS_SOFTWARE=1 kitty"
         "$mod SHIFT, RETURN, exec, [float] env LIBGL_ALWAYS_SOFTWARE=1 kitty"
         "$mod, B, exec, zen"
+        "$mod, C, exec, codium"
         "$mod, S, exec, spotify"
         "$mod, E, exec, kitty -e yazi"
         "$mod, Q, killactive"

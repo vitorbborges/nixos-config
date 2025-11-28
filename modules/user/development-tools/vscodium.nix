@@ -8,14 +8,16 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = {
+    # Enable VSCodium by default
+    userSettings.vscodium.enable = lib.mkDefault true;
     nixpkgs.config.allowUnfree = true; # Required for some extensions like Data Wrangler
 
     programs.vscode = {
       enable = true;
       package = pkgs.vscodium;
       profiles.default.extensions = with pkgs.vscode-extensions; [
-          ms-toolsai-datawrangler
+          ms-toolsai.datawrangler
           github.copilot-chat
           ms-toolsai.jupyter
           ms-python.python
