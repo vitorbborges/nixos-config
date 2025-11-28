@@ -11,6 +11,6 @@
   };
 
   home.packages = [
-    (pkgs.nerdfonts.override { fonts = [ fontPkg ]; })
+    (pkgs.nerd-fonts.override { fonts = [ fontPkg ]; })
   ];
 }
