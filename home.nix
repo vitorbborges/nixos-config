@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, fontPkg, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   # Allow unfree packages for home-manager
@@ -40,7 +40,8 @@
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
     # # fonts?
-    (pkgs.nerd-fonts.override { fonts = [ fontPkg ]; })
+    pkgs.jetbrains-mono-nerd-font
+
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
