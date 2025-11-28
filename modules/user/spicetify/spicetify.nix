@@ -11,7 +11,7 @@
     in
     {
       enable = true;
-      theme = spicePkgs.themes.Ziro;
+      theme = spicePkgs.themes.ziro;
       colorScheme = "Blue-dark";
 
       enabledExtensions = with spicePkgs.extensions; [
