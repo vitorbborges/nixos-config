@@ -25,6 +25,11 @@
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
     };
+
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
