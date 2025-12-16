@@ -16,23 +16,7 @@
             # ==============================================================================
             # Work
             # ==============================================================================
-            {
-              match-app-id = "kitty";
-              replace-app-id = "Work";
-            }
-            {
-              match-app-id = "org.gnome.Nautilus";
-              replace-app-id = "Work";
-            }
-            {
-              match-app-id = "vscodium";
-              replace-app-id = "Work";
-            }
-            {
-              match-app-id = "zen";
-              match-title = ".*(Overleaf|LinkedIn|GitLab|DeepSeek|Qwen Chat|Google Docs|Inria|GitHub|Hugging Face|Jupyter|VSCode|VSCodium).*";
-              replace-app-id = "Work";
-            }
+
             {
               match-app-id = "zen";
               match-title = ".*(dev|SDA|profiling|Stack Overflow|kernel|node|python|rust|cargo).*";

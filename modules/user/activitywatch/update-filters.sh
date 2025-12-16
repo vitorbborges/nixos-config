@@ -32,6 +32,6 @@ echo "Found events, saved to ${EVENTS_FILE}"
 
 PROMPT="Please update my ActivityWatch filter list in '${ACTIVITYWATCH_NIX_FILE}' based on the unclassified activities from the last 24 hours. The events are in '${EVENTS_FILE}'. Analyze the events, identify unclassified activities (those not categorized as 'Work', 'Study', or 'Leisure'), and add new filter rules to the existing configuration to classify them. Use your best judgment to categorize them and create general rules where possible."
 
-gemini-cli "$PROMPT"
+copilot -p "$PROMPT"
 
 echo "Filter update process completed."
