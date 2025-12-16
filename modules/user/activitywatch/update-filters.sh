@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+# Source home-manager environment
+if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+
 CONFIG_DIR="/home/vitor/nixos-config"
 ACTIVITYWATCH_NIX_FILE="${CONFIG_DIR}/modules/user/activitywatch/activitywatch.nix"
 EVENTS_FILE=$(mktemp --suffix=.json)
