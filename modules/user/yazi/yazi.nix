@@ -16,9 +16,9 @@
       require("git"):setup()
       require("yatline"):setup({
 	--theme = my_theme,
-	section_separator = { open = "\ue0b2", close = "\ue0b0" },
-	part_separator = { open = "\ue0b3", close = "\ue0b1" },
-	inverse_separator = { open = "\ue0d6", close = "\ue0d7" },
+	section_separator = { open = "\u{e0b2}", close = "\u{e0b0}" },
+	part_separator = { open = "\u{e0b3}", close = "\u{e0b1}" },
+	inverse_separator = { open = "\u{e0d6}", close = "\u{e0d7}" },
 
 	style_a = {
 		fg = "black",
@@ -40,15 +40,15 @@
 	tab_width = 20,
 	tab_use_inverse = false,
 
-	selected = { icon = "\U000f0eed", fg = "yellow" },
-	copied = { icon = "\uf0c5", fg = "green" },
-	cut = { icon = "\uf0c4", fg = "red" },
+	selected = { icon = "\u{f0eed}", fg = "yellow" },
+	copied = { icon = "\u{f0c5}", fg = "green" },
+	cut = { icon = "\u{f0c4}", fg = "red" },
 
-	total = { icon = "\U000f0b8d", fg = "yellow" },
-	succ = { icon = "\uf05d", fg = "green" },
-	fail = { icon = "\uf05c", fg = "red" },
-	found = { icon = "\U000f0b95", fg = "blue" },
-	processed = { icon = "\U000f040d", fg = "green" },
+	total = { icon = "\u{f0b8d}", fg = "yellow" },
+	succ = { icon = "\u{f05d}", fg = "green" },
+	fail = { icon = "\u{f05c}", fg = "red" },
+	found = { icon = "\u{f0b95}", fg = "blue" },
+	processed = { icon = "\u{f040d}", fg = "green" },
 
 	show_background = true,
 
@@ -139,7 +139,7 @@
     };
 
     keymap = {
-      manager.prepend_keymap = [
+      mgr.prepend_keymap = [
         { run = "cd ~/Projects"; on = [ "g" "p" ]; desc = "Go to projects"; }
         { run = "cd ~/Screenshots"; on = [ "g" "s" ]; desc = "Go to screenshots"; }
         { run = "shell ' \"$@\"' --cursor=0 --interactive"; on = [ "@" ]; }
