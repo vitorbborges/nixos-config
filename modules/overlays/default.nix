@@ -1,21 +1,27 @@
 final: prev: {
   awatcher = prev.rustPlatform.buildRustPackage rec {
     pname = "awatcher";
-    version = "unstable-2023-12-16";
+    version = "0.3.3";
 
     src = prev.fetchFromGitHub {
       owner = "2e3s";
       repo = "awatcher";
-      rev = "312781b0460c5c678a1a4570075d9e5a1b32d294";
-      sha256 = prev.lib.fakeSha256;
+      rev = "678d7fd0867462f7925c1e4771994bba5f3da0c7";
+      sha256 = "01gnc9vym2wcb9y5afhqix0p9cvdjdqqnhig823zqzwajvsdn11d";
     };
 
-    cargoSha256 = prev.lib.fakeHash;
+    cargoHash = "sha256-/dI0gaTRElAQnZNRo2sKMUc33fphubcG/fXOflPHXWs=";
+
+    nativeBuildInputs = with prev; [
+      pkg-config
+    ];
 
     buildInputs = with prev; [
-      pkg-config
       openssl
       dbus
+      libxkbcommon
+      wayland
+      libGL
     ];
 
     meta = with prev.lib; {
