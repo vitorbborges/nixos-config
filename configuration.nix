@@ -88,14 +88,9 @@
     enable = true;
     enableSSHSupport = false;
   };
-
-  ecurity.pam.services.sddm.enableGnomeKeyring = true;
   
   # Ensure SSH agent environment variables are set
   programs.ssh.startAgent = false; # Disable system ssh-agent
-  
-  # Add auto-unlock for SSH keys
-  security.pam.services.sddm-greeter.enableGnomeKeyring = true;
 
   # List services that you want to enable:
 
