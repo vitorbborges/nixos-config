@@ -8,10 +8,10 @@ pkgs.rustPlatform.buildRustPackage rec {
     owner = "2e3s";
     repo = "awatcher";
     rev = "312781b0460c5c678a1a4570075d9e5a1b32d294"; # Latest commit hash at the time of writing
-    sha256 = ""; # IMPORTANT: Replace with actual sha256 after first build attempt
+    sha256 = lib.fakeSha256; # IMPORTANT: Replace with actual sha256 after first build attempt
   };
 
-  cargoSha256 = ""; # IMPORTANT: Replace with actual cargoSha256 after first build attempt
+  cargoSha256 = lib.fakeHash; # IMPORTANT: Replace with actual cargoSha256 after first build attempt
   # To get the correct sha256 and cargoSha256, run a Nix build. It will fail
   # and provide the expected hashes in the error message. Replace lib.fakeSha256
   # and lib.fakeHash with those values.
