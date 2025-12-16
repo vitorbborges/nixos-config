@@ -89,12 +89,7 @@
     enableSSHSupport = false;
   };
 
-  # Enable GNOME Keyring at system level
-  services.gnome.gnome-keyring.enable = true;
-  
-  # Enable PAM integration for automatic keyring unlock
-  security.pam.services.login.enableGnomeKeyring = true;
-  security.pam.services.sddm.enableGnomeKeyring = true;
+  ecurity.pam.services.sddm.enableGnomeKeyring = true;
   
   # Ensure SSH agent environment variables are set
   programs.ssh.startAgent = false; # Disable system ssh-agent
