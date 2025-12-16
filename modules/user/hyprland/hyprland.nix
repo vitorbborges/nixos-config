@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }: {
+{ inputs, pkgs, lib, ... }: {
   home.sessionVariables = {
     # LIBVA_DRIVER_NAME = "nvidia";  # Disabled for VM
     # __GLX_VENDOR_LIBRARY_NAME = "nvidia";  # Disabled for VM
@@ -36,8 +36,7 @@
         gaps_in = 5;
         gaps_out = 10;
         border_size = 2;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
+        # Remove border colors to let stylix handle them
         layout = "dwindle";
       };
 
@@ -52,7 +51,7 @@
           enabled = true;
           range = 4;
           render_power = 3;
-          color = "rgba(1a1a1aee)";
+          # Remove shadow color to let stylix handle it
         };
       };
 

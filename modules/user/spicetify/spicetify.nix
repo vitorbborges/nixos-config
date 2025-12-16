@@ -13,7 +13,7 @@
     in
     {
       enable = true;
-      theme = spicePkgs.themes.text;
+      # Remove theme to let stylix handle theming
       # colorScheme = "blue-dark";
 
       enabledExtensions = with spicePkgs.extensions; [

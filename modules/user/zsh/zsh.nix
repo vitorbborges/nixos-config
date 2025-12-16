@@ -15,7 +15,6 @@
         "dotenv"
         "emoji"
         "git-auto-fetch"
-        "ssh-agent"
         "last-working-dir"
         "sudo" # Press Esc twice for sudo
       ]; # TODO: Check if you need any packages.
@@ -85,7 +84,7 @@
     ];
     git = true;
     icons = "always";
-    theme = "dracula";
+    # Remove theme to let stylix handle colors
   };
 
   services.tldr-update = {

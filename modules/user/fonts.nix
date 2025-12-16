@@ -1,14 +1,8 @@
 { pkgs, font, fontPkg, ... }:
 
 {
-  fonts.fontconfig = {
-    enable = true;
-    defaultFonts = {
-      serif = [ font ];
-      sansSerif = [ font ];
-      monospace = [ font ];
-    };
-  };
+  # Let stylix handle font configuration
+  # fonts.fontconfig managed by stylix
 
   home.packages = [
     (builtins.getAttr fontPkg pkgs.nerd-fonts)

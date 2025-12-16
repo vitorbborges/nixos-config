@@ -9,15 +9,12 @@
 
   programs.kitty = {
     enable = true;
-    themeFile = "Dracula"; # TODO: Choose Theme. 
+    # Remove themeFile to let stylix handle theming
     enableGitIntegration = true;
-    font = {
-      name = font;
-      size = 12;
-    };
+    # Remove font settings to let stylix handle fonts
     shellIntegration.enableZshIntegration = true;
     settings = {
-      background_opacity = lib.mkForce "0.65";
+      # Let stylix handle opacity through its terminal settings
       modify_font = "cell_width 90%";
       confirm_os_window_close = 0;
       scrollback_lines = 2000;

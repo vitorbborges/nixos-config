@@ -2,7 +2,7 @@
 
 {
   imports = [
-    inputs.stylix.homeManagerModules.stylix
+    inputs.stylix.homeModules.stylix
   ];
 
   stylix = {
@@ -21,7 +21,7 @@
     cursor = {
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Ice";
-      size = 24;
+      size = 12;
     };
 
     # Configure fonts
@@ -40,7 +40,7 @@
       };
       sizes = {
         applications = 12;
-        terminal = 15;
+        terminal = 14;
         desktop = 10;
         popups = 10;
       };
@@ -49,7 +49,7 @@
     # Configure opacity for different application types
     opacity = {
       applications = 1.0;
-      terminal = 0.8;
+      terminal = 0.65;
       desktop = 1.0;
       popups = 1.0;
     };
@@ -61,12 +61,28 @@
     targets = {
       # Desktop environment theming
       gtk.enable = true;
+      hyprland.enable = true;
       
       # Terminal applications
       kitty.enable = true;
       
       # Development tools
       vim.enable = true;
+      
+      # PDF viewer
+      zathura.enable = true;
+      
+      # File manager  
+      yazi.enable = true;
+      
+      # Music applications
+      spicetify.enable = true;
+      
+      # Browser theming
+      zen-browser = {
+        enable = true;
+        profileNames = [ "default-release" ];
+      };
       
       # Other applications you might want to theme
       # firefox.enable = true;
