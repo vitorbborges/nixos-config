@@ -36,11 +36,16 @@
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [ self.overlays.default ];
+      };
       font = "JetBrains Mono Nerd Font";
       fontPkg = "jetbrains-mono";
     in
     {
+      overlays.default = import ./modules/overlays;
       nixosConfigurations = {
         nixos = lib.nixosSystem {
           # TODO: Change hostname

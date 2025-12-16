@@ -5,19 +5,12 @@
     enable = true;
     package = pkgs.aw-server-rust;
     watchers = {
-      aw-watcher-afk = {
-        package = pkgs.activitywatch;
+      awatcher = {
+        package = pkgs.awatcher;
         settings = {
-          timeout = 300;
-          poll_time = 2;
-        };
-      };
-
-      aw-watcher-window = {
-        package = pkgs.activitywatch;
-        settings = {
-          poll_time = 1;
-          exclude_title = true;
+          "idle-timeout-seconds" = 180;
+          "poll-time-idle-seconds" = 4;
+          "poll-time-window-seconds" = 1;
         };
       };
     };
