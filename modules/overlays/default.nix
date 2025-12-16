@@ -1,3 +1,3 @@
 final: prev: {
-  awatcher = prev.callPackage ../system/awatcher-package.nix { };
+  awatcher = (import ../system/awatcher-package.nix) { pkgs = prev; lib = prev.lib; };
 }
