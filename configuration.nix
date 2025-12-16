@@ -86,7 +86,7 @@
   # programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
-    enableSSHSupport = true;
+    enableSSHSupport = false;
   };
 
   # Enable GNOME Keyring at system level
