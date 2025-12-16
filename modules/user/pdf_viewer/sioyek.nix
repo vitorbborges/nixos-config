@@ -20,6 +20,4 @@
     };
   };
 
-  # Let stylix manage sioyek's appearance
-  stylix.targets.sioyek.enable = true;
 }
