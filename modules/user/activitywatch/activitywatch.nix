@@ -22,10 +22,7 @@
               match-title = ".*(dev|SDA|profiling|Stack Overflow|kernel|node|python|rust|cargo).*";
               replace-app-id = "Work";
             }
-            {
-              match-app-id = "thunderbird_thunderbird";
-              replace-app-id = "Work";
-            }
+
 
             # ==============================================================================
             # System Configuration
@@ -63,11 +60,33 @@
             }
 
             # ==============================================================================
+            # Media
+            # ==============================================================================
+            {
+              match-app-id = "zen";
+              match-title = ".*(YouTube|Plex|VLC).*";
+              replace-app-id = "Media";
+            }
+
+            # ==============================================================================
+            # Comm
+            # ==============================================================================
+            {
+              match-app-id = "zen";
+              match-title = ".*(Messenger|Telegram|Signal|WhatsApp|Rambox|Slack|Riot|Element|Discord|Nheko|NeoChat|Mattermost|Gmail|Thunderbird|mutt|alpine).*";
+              replace-app-id = "Comm";
+            }
+            {
+              match-app-id = "thunderbird_thunderbird";
+              replace-app-id = "Comm";
+            }
+
+            # ==============================================================================
             # Leisure
             # ==============================================================================
             {
               match-app-id = "zen";
-              match-title = ".*(YouTube|WhatsApp|Facebook|Instagram|Twitter|Reddit).*";
+              match-title = ".*(Facebook|Instagram|Twitter|Reddit).*";
               replace-app-id = "Leisure";
             }
             {
