@@ -1,4 +1,5 @@
 { config, pkgs, inputs, ... }:
+# TODO: migrate to nixvim
 
 {
   # Neovim configuration (modularized)
