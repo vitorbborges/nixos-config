@@ -3,6 +3,9 @@
 {
   programs.gemini-cli = {
     enable = true;
+    settings = {
+      vimMode = true;
+    };
 
     commands.changelog = {
       prompt =
