@@ -1,4 +1,4 @@
-{ pkgs, lib }:
+{ pkgs, lib, ... }:
 
 pkgs.rustPlatform.buildRustPackage rec {
   pname = "awatcher";
