@@ -56,16 +56,6 @@
     packages = with pkgs; [ ];
   };
 
-  # Enable display manager with password authentication
-  services.xserver.enable = true;
-  services.displayManager = {
-    sddm = {
-      enable = true;
-      wayland.enable = true;  # Enable Wayland support for Hyprland
-    };
-    defaultSession = "hyprland-uwsm";  # Set Hyprland as default session
-  };
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
