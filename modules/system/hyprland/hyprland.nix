@@ -17,7 +17,7 @@
   };
 
   # Power key should not shut off computer by defaultPower key shuts of
-  services.logind.powerKey = "suspend";
+  services.logind.settings.Login.HandlePowerKey = "suspend";
 
   # Necessary packages
   environment.systemPackages = with pkgs; [
@@ -32,7 +32,7 @@
   ];
 
   # Display manager
-  services.xserver.displayManager.sddm = {
+  services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
     enableHidpi = true;
@@ -48,7 +48,7 @@
       })
     ];
   };
-  services.xserver.displayManager.defaultSession = "hyprland-uwsm";
+  services.displayManager.defaultSession = "hyprland-uwsm";
 
   services.upower.enable = true;
 
