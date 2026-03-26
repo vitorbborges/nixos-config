@@ -27,8 +27,8 @@
       man = "tldr";
       
       # Neovim update aliases
-      nvim-update = "cd ~/.dotfiles/modules/user/nvim && ./update-nvim-auto.sh";
-      nu = "cd ~/.dotfiles/modules/user/nvim && ./update-nvim-auto.sh";
+      nvim-update = "cd ~/nixos-config/modules/user/nvim && ./update-nvim-auto.sh";
+      nu = "cd ~/nixos-config/modules/user/nvim && ./update-nvim-auto.sh";
     };
 
     history = {
@@ -47,23 +47,14 @@
 
       {
         name = "zsh-nix-shell";
-        file = "nix-shell.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "chisui";
-          repo = "zsh-nix-shell";
-          rev = "v0.8.0";
-          sha256 = "1lzrn0n4fxfcgg65v0qhnj7wnybybqzs4adz7xsrkgmcsr0ii8b7";
-        };
+        src = pkgs.zsh-nix-shell;
+        file = "share/zsh-nix-shell/nix-shell.plugin.zsh";
       }
 
       {
         name = "fzf-tab";
-        src = pkgs.fetchFromGitHub {
-          owner = "Aloxaf";
-          repo = "fzf-tab";
-          rev = "c2b4aa5ad2532cca91f23908ac7f00efb7ff09c9";
-          sha256 = "1b4pksrc573aklk71dn2zikiymsvq19bgvamrdffpf7azpq6kxl2";
-        };
+        src = pkgs.zsh-fzf-tab;
+        file = "share/fzf-tab/fzf-tab.plugin.zsh";
       }
 
     ];
@@ -92,9 +83,6 @@
   };
 
   home.packages = with pkgs; [
-    eza
-    bat
-    fzf
     tldr
     fastfetch
     zoxide
