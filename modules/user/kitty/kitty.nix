@@ -2,10 +2,7 @@
 
 {
 
-  home = {
-    packages = [ pkgs.kitty ];
-    sessionVariables.TERMINAL = "kitty";
-  };
+  home.sessionVariables.TERMINAL = "kitty";
 
   programs.kitty = {
     enable = true;

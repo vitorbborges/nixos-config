@@ -3,7 +3,7 @@
 {
   services.syncthing = {
     enable = true;
-    guiAddress = "0.0.0.0:8384";
+    guiAddress = "127.0.0.1:8384";
     tray.enable = true;
   };
 }

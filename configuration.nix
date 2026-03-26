@@ -58,10 +58,7 @@
 
   users.users.root.initialPassword = "nixos"; # VM testing only — remove before baremetal
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
+# List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
@@ -97,13 +94,7 @@
 
   system.stateVersion = "25.05"; # Did you read the comment?
 
-  # System-wide neovim configuration  
-  environment.variables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
-  };
-
-  # Nix housekeeping
+# Nix housekeeping
   nix = {
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
