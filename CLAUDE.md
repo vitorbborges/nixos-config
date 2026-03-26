@@ -4,6 +4,18 @@
 
 - **Prefer TUIs over GUIs** whenever a well-maintained, aesthetic TUI exists. Before suggesting or implementing a GUI tool, check if a good TUI alternative is available in nixpkgs.
 
+### Vetted TUI replacements (nixpkgs package in parentheses)
+
+| Category | Use | nixpkgs |
+|----------|-----|---------|
+| Bluetooth | `bluetuith` — full TUI BT manager, NGI-funded | `bluetuith` |
+| Network | `nmtui` — official NM curses UI | bundled in `networkmanager` |
+| System monitor | `btop` — interactive, beautiful | `btop` |
+| Audio mixer | `wiremix` — PipeWire-native TUI | `wiremix` |
+| Music (Spotify) | `spotify-player` — full Spotify in terminal | `spotify-player` |
+| Disk usage | `dua-cli` — fast parallel Rust TUI | `dua` |
+| File manager | `yazi` (already in use) | `yazi` |
+
 ## Architecture
 
 - NixOS flake-based config with home-manager as a NixOS module (single `nixos-rebuild switch`)
