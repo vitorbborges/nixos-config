@@ -8,10 +8,6 @@ Priority order: Bugs → Redundant packages → Structural → Missing component
 
 `programs.X.enable = true` already installs the package — these `home.packages` entries are pure duplication:
 
-- [x] `zsh.nix` — remove `eza`, `bat`, `fzf` (`programs.eza` + `programs.fzf` handle them)
-- [x] `git.nix` — remove `git`, `lazygit` (`programs.git` + `programs.lazygit` handle them)
-- [x] `ssh.nix` — remove `openssh` (`programs.ssh.enable` handles it)
-- [x] `kitty.nix` — remove `pkgs.kitty` (`programs.kitty.enable` handles it)
 - [ ] `nvim.nix` — remove `git`, `curl`, `wget` (system-wide or covered elsewhere)
 
 ---
@@ -20,7 +16,6 @@ Priority order: Bugs → Redundant packages → Structural → Missing component
 
 - [ ] **`username` hardcoded in 4+ places** — add `let username = "vitorbborges";` in `flake.nix`, pass via `specialArgs`
 - [ ] **Keyboard layout defined 3 times** — `configuration.nix`, `system/hyprland/hyprland.nix`, `user/hyprland/hyprland.nix`. Single variable via `specialArgs`.
-- [x] **`allowUnfree = true` in 2 remaining places** — `configuration.nix:59` (only `flake.nix` needed)
 - [ ] **SDDM resolution hardcoded to 1920x1080** — monitor is 3200x2000; fix in `system/hyprland/hyprland.nix`
 - [ ] **`font`/`fontPkg` specialArgs coupling** — stylix manages fonts globally; only `zathura.nix` and `system/fonts.nix` need these
 
@@ -30,16 +25,7 @@ Priority order: Bugs → Redundant packages → Structural → Missing component
 
 - [ ] **`system/fonts.nix` sets JetBrains Mono as serif/sans-serif** — wrong; contradicts stylix which correctly uses DejaVu
 - [ ] **Duplicate font installation** — `modules/user/fonts.nix` and `modules/system/fonts.nix` both install same nerd font
-- [x] **`zsh-nix-shell` fetched from GitHub** — use `pkgs.zsh-nix-shell` with `file = "share/zsh-nix-shell/nix-shell.plugin.zsh"`
-- [x] **`fzf-tab` fetched from GitHub** — use `pkgs.zsh-fzf-tab`
 - [ ] **`spicetify-nix` missing `inputs.nixpkgs.follows`** — brings own nixpkgs copy, inflating closure
-- [x] **`environment.variables` EDITOR/VISUAL in `configuration.nix`** — neovim is in HM profile; remove system vars, keep `programs.neovim.defaultEditor = true`
-
----
-
-## Security
-
-- [x] **Syncthing bound to all interfaces** — change `guiAddress` from `0.0.0.0:8384` to `127.0.0.1:8384`
 
 ---
 
