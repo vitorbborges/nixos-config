@@ -7,11 +7,10 @@
       ./hardware-configuration.nix
     ];
 
-  # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
-  boot.initrd.checkJournalingFS = false; # TODO: VirtualBox config DELETE THIS WHEN MIGRATE TO BARE METAL 
+  # Bootloader (UEFI / systemd-boot)
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -54,7 +53,10 @@
     description = "Vitor Bandeira Borges";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [ ];
+    initialPassword = "nixos"; # VM testing only — remove before baremetal
   };
+
+  users.users.root.initialPassword = "nixos"; # VM testing only — remove before baremetal
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -139,11 +141,4 @@
   };
 
 
-  # TODO: Remove this in bare metal.
-  virtualisation.virtualbox.guest.enable = true;
-
-  environment.sessionVariables = {
-    WLR_NO_HARDWARE_CURSOR = "1";
-    WLR_RENDERER_ALLOW_SOFTWARE = "1";
-  };
 }

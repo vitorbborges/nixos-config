@@ -1,10 +1,10 @@
 { inputs, pkgs, lib, ... }: {
   home.sessionVariables = {
-    # LIBVA_DRIVER_NAME = "nvidia";  # Disabled for VM
-    # __GLX_VENDOR_LIBRARY_NAME = "nvidia";  # Disabled for VM
+    LIBVA_DRIVER_NAME = "nvidia";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     NIXOS_OZONE_WL = "1";
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
-    # NVD_BACKEND = "direct";  # Disabled for VM
+    NVD_BACKEND = "direct";
     # Ensure Wayland apps work properly
     MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland";
@@ -80,9 +80,8 @@
       };
 
       bind = [
-        # Terminal (software rendering for VM compatibility)
-        "$mod, RETURN, exec, env LIBGL_ALWAYS_SOFTWARE=1 kitty"
-        "$mod SHIFT, RETURN, exec, [float] env LIBGL_ALWAYS_SOFTWARE=1 kitty"
+        "$mod, RETURN, exec, kitty"
+        "$mod SHIFT, RETURN, exec, [float] kitty"
         "$mod, B, exec, zen"
         "$mod, C, exec, codium"
         "$mod, S, exec, spotify"

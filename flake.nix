@@ -50,10 +50,21 @@
         nixos = lib.nixosSystem {
           # TODO: Change hostname
           inherit system;
-          modules = [ ./configuration.nix ./modules/system ];
+          modules = [
+            ./configuration.nix
+            ./modules/system
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs system font fontPkg; };
+              home-manager.users.vitorbborges = import ./home.nix;
+            }
+          ];
           specialArgs = { inherit inputs font fontPkg; };
         };
       };
+      # Kept for standalone `home-manager switch` use outside NixOS
       homeConfigurations = {
         vitorbborges = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;

@@ -40,11 +40,31 @@
         package = config.boot.kernelPackages.nvidiaPackages.stable;
 
         # Nvidia Optimus PRIME for Hybrid GPU
-        # TODO: Uncomment this in 
+        # Bus IDs confirmed from lspci: Intel iGPU at 0000:00:02.0, NVIDIA RTX 4070 at 0000:01:00.0
+        # TODO: Implement PRIME with dynamic profile switching based on battery level.
+        #
+        # Recommended approach for this ASUS laptop:
+        #   - services.supergfxd.enable + programs.rog-control-center.enable (via asusctl)
+        #     ASUS-native GPU switching (integrated / hybrid / nvidia modes).
+        #     supergfxctl can switch modes without a full reboot in some cases.
+        #     Pairs with asusctl for fan curves and power profiles.
+        #
+        # Simpler cross-distro alternative:
+        #   - programs.envycontrol (switch integrated/hybrid/nvidia modes, requires reboot)
+        #
+        # For CPU-side battery savings alongside PRIME offload:
+        #   - services.auto-cpufreq.enable (CPU governor tuning on AC vs battery)
+        #   - services.power-profiles-daemon.enable (power-saver/balanced/performance)
+        #     Note: conflicts with auto-cpufreq, pick one.
+        #
         # prime = {
-            # sync.enable = true; # TODO: create two profiles based on battery level for offload/sync modes
+            # offload mode: iGPU drives display, NVIDIA activated per-app via `nvidia-offload <app>`
+            # offload.enable = true;
+            # offload.enableOffloadCmd = true;
 
-            # Make sure to use the correct Bus ID values for your system!
+            # sync mode: NVIDIA always active, drives display (max performance, more power draw)
+            # sync.enable = true;
+
             # intelBusId = "PCI:0:2:0";
             # nvidiaBusId = "PCI:1:0:0";
         # };

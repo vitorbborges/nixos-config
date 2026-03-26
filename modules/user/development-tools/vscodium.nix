@@ -11,7 +11,7 @@ in {
   config = {
     # Enable VSCodium by default
     userSettings.vscodium.enable = lib.mkDefault true;
-    nixpkgs.config.allowUnfree = true; # Required for some extensions like Data Wrangler
+    # nixpkgs.allowUnfree inherited from system pkgs via useGlobalPkgs = true
 
     programs.vscode = {
       enable = true;
