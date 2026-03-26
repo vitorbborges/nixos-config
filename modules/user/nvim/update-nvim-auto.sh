@@ -26,6 +26,6 @@ echo "🏗️  Applying changes..."
 
 # Apply the changes
 cd ../../../
-home-manager switch --flake .#vitorbborges
+nixos-rebuild switch --flake .#nixos
 
 echo "🎉 Neovim config updated successfully!"

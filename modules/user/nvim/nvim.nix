@@ -37,24 +37,44 @@
   };
 
   # Neovim essential packages
+  # NOTE: Mason cannot install binaries on NixOS (no /lib/ld-linux.so.2).
+  # All LSP servers, formatters, and linters must come from Nix.
+  # Disable `ensure_installed` in mason-lspconfig.lua and mason-tool-installer.lua
+  # so Mason stops trying to manage these — they are already in PATH via Nix.
   home.packages = with pkgs; [
-    lua-language-server
-    stylua
-    git
-    curl
-    wget
+    # Core
+    gcc
+    unzip
+    nodejs
+
+    # LSP servers (replaces Mason ensure_installed)
+    lua-language-server       # lua_ls
+    pyright                   # Python
+    clang-tools               # clangd (C/C++)
+
+    # Formatters (replaces mason-tool-installer)
+    stylua                    # Lua
+    nodePackages.prettier     # JS/TS/HTML/CSS/JSON/YAML/Markdown
+    black                     # Python
+    nodePackages.sql-formatter # SQL
+
+    # Linters
+    python3Packages.ruff      # Python (also formats)
+    python3Packages.isort     # Python imports
+    markdownlint-cli          # Markdown
+    yamllint                  # YAML
+    python3Packages.cpplint   # C/C++
+
+    # Jupyter support (jupytext formatter)
+    python3Packages.jupytext
+
+    # Search / navigation tools
     ripgrep
     fd
     tree-sitter
-    nodejs
-    unzip
-    gcc
-    
+
     # For updating neovim config automatically
     nix-prefetch-github
     jq
-    
-    # For nvim-obsidian plugin
-    obsidian
   ];
 }
