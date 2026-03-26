@@ -29,15 +29,45 @@ Priority order: Bugs → Redundant packages → Structural → Missing component
 
 ---
 
-## Missing Components
+## Migration: Ubuntu Hyprland → NixOS
 
-- [ ] **Audio** — `services.pipewire` not configured; sound won't work
-- [ ] **Wallpaper daemon** — no `swww`; screen blank on login
-- [ ] **Status bar** — `waybar` referenced in stylix targets but not configured; `ags` absent entirely
-- [ ] **Bluetooth** — `hardware.bluetooth.enable` missing
-- [ ] **Clipboard manager** — `wl-clipboard` / `cliphist` not configured
-- [ ] **`hypridle` / `hyprlock`** — present in Ubuntu, absent here
-- [ ] **Notification daemon** — `swaync` or `dunst` missing
+Migrate component by component. After each group: build VM, boot, verify, then continue.
+
+### Round 1 — Critical (system unusable without these)
+
+- [ ] **Audio** — `services.pipewire` + wireplumber; zero sound without it
+- [ ] **Bluetooth** — `hardware.bluetooth.enable` + `blueman`
+- [ ] **Wallpaper daemon** — `swww` package + `exec-once` in hyprland; screen blank without it
+- [ ] **Idle management** — `programs.hypridle` with 9min notify → 10min lock → 11min DPMS off
+- [ ] **Lock screen** — `programs.hyprlock` with blur background, time, date, password input
+- [ ] **Clipboard** — `wl-clipboard` + `cliphist`; `exec-once` to watch text+image clipboard
+
+### Round 2 — Daily usability
+
+- [ ] **Notifications** — `services.swaync`; best Hyprland integration
+- [ ] **App launcher** — replace `rofi` with `fuzzel`; rofi is X11-wrapped, fuzzel is Wayland-native
+- [ ] **Status bar** — `programs.waybar` with battery, clock, cpu, network, audio, tray modules
+- [ ] **XDG portal** — `xdg-portal-hyprland` system service; needed for screen sharing, file picker
+- [ ] **Polkit agent** — `security.polkit.enable` + polkit authentication agent
+- [ ] **GNOME Keyring** — `services.gnome-keyring`; SSH key + secret storage
+
+### Round 3 — Theming & extras
+
+- [ ] **Stylix full wiring** — ensure GTK, Qt, cursor, waybar, hyprlock all themed via stylix; drop manual kvantum/gtk overrides
+- [ ] **Drop AGS** — only used for `Super+A` overview; AGS v1 deprecated, not worth the complexity
+- [ ] **nm-applet** — `exec-once = nm-applet --indicator`; tray WiFi management
+- [ ] **wlogout** — power menu; keep, add keybind `CTRL+ALT+P`
+- [ ] **ActivityWatch** — `services.activitywatch` if actively used; skip otherwise
+
+### Round 4 — Hyprland config itself
+
+- [ ] **Monitor config** — update to 3200x2000 @ 2.0 scale (eDP-1); mirror HDMI-A-2 to 1920x1080
+- [ ] **Input settings** — repeat rate 50/300ms, numlock on, touchpad natural scroll + tap-to-click
+- [ ] **Keybinds** — migrate all custom keybinds from `UserKeybinds.conf` + `Keybinds.conf`
+- [ ] **Window rules** — migrate floating rules, workspace assignments, opacity rules
+- [ ] **Decorations** — rounding 10px, blur size 6 passes 2, dim inactive 0.1, inactive opacity 0.9
+- [ ] **Gestures** — 3-finger workspace swipe, 400px distance
+- [ ] **Environment variables** — migrate all from `ENVariables.conf` (GDK, QT, XDG, cursor, NVIDIA)
 
 ---
 
