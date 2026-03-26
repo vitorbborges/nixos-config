@@ -42,8 +42,10 @@
   # Disable `ensure_installed` in mason-lspconfig.lua and mason-tool-installer.lua
   # so Mason stops trying to manage these — they are already in PATH via Nix.
   home.packages = with pkgs; [
-    # Core
+    # Core build tools
     gcc
+    gnumake
+    cmake
     unzip
     nodejs
 
@@ -63,7 +65,7 @@
     python3Packages.isort     # Python imports
     markdownlint-cli          # Markdown
     yamllint                  # YAML
-    python3Packages.cpplint   # C/C++
+    cpplint                   # C/C++
 
     # Jupyter support (jupytext formatter)
     python3Packages.jupytext
