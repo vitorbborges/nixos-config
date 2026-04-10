@@ -7,6 +7,11 @@
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprland = {
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,59 +22,50 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    catppuccin = {
-      url = "github:catppuccin/nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     stylix = {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixpkgs-stable.url = "nixpkgs/nixos-25.11";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, ... }@inputs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
-      pkgs = import nixpkgs {
+      pkgs-stable = import nixpkgs-stable {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ self.overlays.default ];
       };
+      username = "vitor";
+      kbLayout = "us";
       font = "JetBrains Mono Nerd Font";
-      fontPkg = "jetbrains-mono";
+      theme = "catppuccin-mocha"; # base16 scheme from pkgs.base16-schemes — change here to retheme everything
     in
     {
-      overlays.default = import ./modules/overlays;
       nixosConfigurations = {
-        nixos = lib.nixosSystem {
-          # TODO: Change hostname
+        vivobook = lib.nixosSystem {
           inherit system;
           modules = [
+            { nixpkgs.config.allowUnfree = true; }
             ./configuration.nix
             ./modules/system
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs system font fontPkg; };
-              home-manager.users.vitorbborges = import ./home.nix;
+              home-manager.extraSpecialArgs = { inherit inputs system username kbLayout font pkgs-stable theme; };
+              home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
+              home-manager.users.${username} = import ./home.nix;
             }
           ];
-          specialArgs = { inherit inputs font fontPkg; };
-        };
-      };
-      # Kept for standalone `home-manager switch` use outside NixOS
-      homeConfigurations = {
-        vitorbborges = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [ ./home.nix ];
-          extraSpecialArgs = { inherit inputs system font fontPkg; };
+          specialArgs = { inherit inputs username kbLayout pkgs-stable theme; };
         };
       };
     };

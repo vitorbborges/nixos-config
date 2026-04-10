@@ -4,12 +4,9 @@
   # Enable GNOME Keyring at system level
   services.gnome.gnome-keyring.enable = true;
 
-  # Enable PAM integration for automatic keyring unlock
+  # Enable PAM integration for automatic keyring unlock on login
   security.pam.services.login.enableGnomeKeyring = true;
-  security.pam.services.sddm.enableGnomeKeyring = true;
-
-  # Add auto-unlock for SSH keys
-  security.pam.services.sddm-greeter.enableGnomeKeyring = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
 
   # Disable GPG agent's SSH support to prevent conflicts
   programs.gnupg.agent.enableSSHSupport = false;

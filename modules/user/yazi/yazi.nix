@@ -167,6 +167,13 @@
         { run = "sort size --reverse=no"; on = [ "s" "s" ]; desc = "Sort by size"; }
         { run = "sort size --reverse=yes"; on = [ "s" "S" ]; desc = "Sort by size (reverse)"; }
 
+        # Open hovered file(s) in nvim; for directories, cd in and restore session
+        {
+          run = "shell 'if [ -d \"$1\" ]; then cd \"$1\" && nvim .; else nvim \"$@\"; fi' --block";
+          on = [ "e" ];
+          desc = "Open in nvim";
+        }
+
         { run = "tab_create --current"; on = [ "t" ]; }
         { run = "close"; on = [ "x" ]; }
         { run = "tab_switch 1 --relative"; on = [ "J" ]; }

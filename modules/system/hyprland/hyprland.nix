@@ -1,4 +1,4 @@
-{ inputs, pkgs, config, lib, ... }:
+{ inputs, pkgs, config, lib, kbLayout, ... }:
 {
   imports = [ inputs.hyprland.nixosModules.default ];
 
@@ -16,39 +16,29 @@
     trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
   };
 
-  # Power key should not shut off computer by defaultPower key shuts of
+  # Power key suspends instead of shutting down
   services.logind.settings.Login.HandlePowerKey = "suspend";
 
-  # Necessary packages
-  environment.systemPackages = with pkgs; [
-    jq
-    (sddm-astronaut.override {
-      themeConfig = {
-        ScreenWidth = 1920;
-        ScreenHeight = 1080;
-        blur = false;
-      };
-    })
-  ];
+  # Force xdg-open through the portal so file pickers behave consistently on Wayland
+  xdg.portal.xdgOpenUsePortal = true;
 
-  # Display manager
-  services.displayManager.sddm = {
+  environment.systemPackages = [ pkgs.jq ];
+
+  # greetd + tuigreet: X-free Wayland-native login manager
+  services.greetd = {
     enable = true;
-    wayland.enable = true;
-    enableHidpi = true;
-    theme = "sddm-astronaut-theme";
-    package = pkgs.kdePackages.sddm;
-    extraPackages = with pkgs; [
-      (sddm-astronaut.override {
-        themeConfig = {
-          ScreenWidth = 1920;
-          ScreenHeight = 1080;
-          blur = false;
-        };
-      })
-    ];
+    settings.default_session = {
+      command = lib.concatStringsSep " " [
+        "${pkgs.tuigreet}/bin/tuigreet"
+        "--time"
+        "--remember"                # remember last username
+        "--remember-user-session"   # remember last session per user
+        "--asterisks"               # mask password with *
+        "--sessions ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions"
+      ];
+      user = "greeter";
+    };
   };
-  services.displayManager.defaultSession = "hyprland-uwsm";
 
   services.upower.enable = true;
 
@@ -56,7 +46,7 @@
   services.xserver = {
     enable = true;
     xkb = {
-      layout = "us";
+      layout = kbLayout;
       variant = "";
       options = "caps:escape";
     };

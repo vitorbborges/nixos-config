@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, pkgs-stable, ... }:
 let
   cfg = config.userSettings.vscodium;
 in {
@@ -15,7 +15,7 @@ in {
 
     programs.vscode = {
       enable = true;
-      package = pkgs.vscodium;
+      package = pkgs-stable.vscodium;
       profiles.default.extensions = with pkgs.vscode-extensions; [
           ms-toolsai.datawrangler
           github.copilot-chat

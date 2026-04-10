@@ -1,12 +1,38 @@
 { pkgs, ... }:
 
+let
+  awatcher = pkgs.rustPlatform.buildRustPackage {
+    pname = "awatcher";
+    version = "0.3.3";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "2e3s";
+      repo = "awatcher";
+      rev = "678d7fd0867462f7925c1e4771994bba5f3da0c7";
+      sha256 = "01gnc9vym2wcb9y5afhqix0p9cvdjdqqnhig823zqzwajvsdn11d";
+    };
+
+    cargoHash = "sha256-/dI0gaTRElAQnZNRo2sKMUc33fphubcG/fXOflPHXWs=";
+
+    nativeBuildInputs = with pkgs; [ pkg-config ];
+    buildInputs = with pkgs; [ openssl dbus libxkbcommon wayland libGL ];
+
+    meta = {
+      description = "Window activity and idle watcher for ActivityWatch";
+      homepage = "https://github.com/2e3s/awatcher";
+      license = pkgs.lib.licenses.mpl20;
+      platforms = pkgs.lib.platforms.linux;
+    };
+  };
+in
+
 {
   services.activitywatch = {
     enable = true;
     package = pkgs.aw-server-rust;
     watchers = {
       awatcher = {
-        package = pkgs.awatcher;
+        package = awatcher;
         settings = {
           "idle-timeout-seconds" = 180;
           "poll-time-idle-seconds" = 4;

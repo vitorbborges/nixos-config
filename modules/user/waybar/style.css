@@ -1,0 +1,181 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Waybar layout CSS — layout, shape, and spacing only.
+   Colors:    stylix injects @define-color base00..base0F automatically.
+   Font:      stylix injects font-family / font-size into * {} automatically.
+   To change: edit theme/font/sizes in flake.nix — nothing to touch here.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+* {
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  transition-property: background-color, color, opacity, border-color;
+  transition-duration: 180ms;
+  transition-timing-function: ease-out;
+}
+
+/* ── Bar window ─────────────────────────────────────────────────────── */
+window#waybar {
+  background: transparent;
+  color: @base05;
+}
+
+/* ── Pill containers ────────────────────────────────────────────────── */
+.modules-left,
+.modules-center,
+.modules-right {
+  background: rgba(0, 0, 0, 0.82);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0 6px;
+}
+
+.modules-center {
+  padding: 0 18px;
+}
+
+/* ── Workspaces ─────────────────────────────────────────────────────── */
+#workspaces {
+  padding: 2px 4px;
+}
+
+#workspaces button {
+  background: transparent;
+  color: @base03;
+  padding: 4px 9px;
+  border-radius: 9px;
+  min-width: 24px;
+  font-size: 0.85em;
+  font-weight: 600;
+  transition: none;
+}
+
+#workspaces button.active {
+  background: @base02;
+  color: @base0D;
+}
+
+#workspaces button.urgent {
+  color: @base08;
+  background: rgba(255, 80, 80, 0.15);
+}
+
+#workspaces button:hover {
+  background: @base02;
+  color: @base05;
+}
+
+/* ── Clock ──────────────────────────────────────────────────────────── */
+#clock {
+  color: @base05;
+  font-weight: 600;
+  padding: 0 4px;
+  letter-spacing: 0.03em;
+}
+
+/* ── Shared right-module style ──────────────────────────────────────── */
+#network,
+#pulseaudio,
+#battery,
+#custom-notification {
+  padding: 0 12px;
+  color: @base05;
+}
+
+/* vertical separator between right modules */
+#network,
+#pulseaudio,
+#battery {
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ── Network ────────────────────────────────────────────────────────── */
+#network {
+  color: @base0C;
+}
+
+#network.disconnected,
+#network.disabled {
+  color: @base03;
+}
+
+/* ── Audio ──────────────────────────────────────────────────────────── */
+#pulseaudio {
+  color: @base0B;
+}
+
+#pulseaudio.muted {
+  color: @base03;
+}
+
+/* ── Battery ────────────────────────────────────────────────────────── */
+#battery {
+  color: @base0B;
+}
+
+#battery.charging,
+#battery.plugged {
+  color: @base0D;
+}
+
+#battery.warning:not(.charging) {
+  color: @base09;
+}
+
+#battery.critical:not(.charging) {
+  color: @base08;
+  animation-name: blink;
+  animation-duration: 500ms;
+  animation-timing-function: steps(1);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes blink {
+  to { color: @base03; }
+}
+
+/* ── Weather ────────────────────────────────────────────────────────── */
+#custom-weather {
+  color: @base0A;
+  padding: 0 12px;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+#custom-weather:hover {
+  color: @base06;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+/* ── Notification toggle ────────────────────────────────────────────── */
+#custom-notification {
+  color: @base0E;
+  font-size: 1.05em;
+  padding: 0 12px 0 10px;
+}
+
+/* ── Hover brightening for right modules ────────────────────────────── */
+#network:hover,
+#pulseaudio:hover,
+#battery:hover,
+#custom-notification:hover {
+  color: @base06;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+/* ── Tooltips ───────────────────────────────────────────────────────── */
+tooltip {
+  background: rgba(0, 0, 0, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: @base05;
+}
+
+tooltip label {
+  color: @base05;
+}

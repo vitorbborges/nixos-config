@@ -23,7 +23,7 @@
       XDG_VM_DIR = "${config.home.homeDirectory}/Machines";
       XDG_NOTES_DIR = "${config.home.homeDirectory}/Notes";
       XDG_KP_DIR = "${config.home.homeDirectory}/KP";
-      XDG_SCREENSHOT_DIR = "${config.home.homeDirectory}/Screenshots";
+      XDG_SCREENSHOT_DIR = "${config.home.homeDirectory}/Pictures/Screenshots";
     };
   };
   xdg.mime.enable = true;

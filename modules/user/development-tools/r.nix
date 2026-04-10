@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-stable, ... }:
 
 let
   myRPackages = with pkgs.rPackages; [
@@ -11,8 +11,11 @@ let
     packages = myRPackages;
   };
 
-  RStudio-with-my-packages = pkgs.rstudioWrapper.override {
-    packages = myRPackages;
+  RStudio-with-my-packages = pkgs-stable.rstudioWrapper.override {
+    packages = with pkgs-stable.rPackages; [
+      ggplot2
+      dplyr
+    ];
   };
 
 in {

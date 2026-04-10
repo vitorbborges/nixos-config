@@ -1,124 +1,42 @@
-{ inputs, pkgs, lib, ... }: {
-  home.sessionVariables = {
-    LIBVA_DRIVER_NAME = "nvidia";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    NIXOS_OZONE_WL = "1";
-    ELECTRON_OZONE_PLATFORM_HINT = "auto";
-    NVD_BACKEND = "direct";
-    # Ensure Wayland apps work properly
-    MOZ_ENABLE_WAYLAND = "1";
-    QT_QPA_PLATFORM = "wayland";
-    GDK_BACKEND = "wayland";
-    XDG_SESSION_TYPE = "wayland";
-    XDG_CURRENT_DESKTOP = "Hyprland";
-  };
+{ pkgs, ... }: {
+
+  home.packages = with pkgs; [
+    grim          # screenshot: capture to file (used by hl-screenshot-*)
+    slurp         # screenshot: interactive area/window selection
+    libnotify     # notify-send for volume/brightness/screenshot OSD feedback
+    brightnessctl # screen & keyboard backlight (Fn brightness keys)
+  ];
 
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
       monitor = [
-        # Auto preferred for all monitors
-        ",preferred,auto,1"
+        "eDP-1,3200x2000@120,0x0,2"          # built-in: 3200x2000 @ 2.0 scale 120Hz
+        "HDMI-A-1,preferred,auto,1"           # external: auto-detect, verify name with `hyprctl monitors`
+        "Unknown-1,disabled"                  # phantom monitor on NVIDIA hybrid systems
       ];
 
-      "$mod" = "ALT";
+      "$mod" = "SUPER";
 
-      input = {
-        kb_layout = "us";
-        follow_mouse = 1;
-        touchpad = {
-          natural_scroll = false;
-        };
-        sensitivity = 0;
-      };
-
-      general = {
-        gaps_in = 5;
-        gaps_out = 10;
-        border_size = 2;
-        # Remove border colors to let stylix handle them
-        layout = "dwindle";
-      };
-
-      decoration = {
-        rounding = 5;
-        blur = {
-          enabled = true;
-          size = 3;
-          passes = 1;
-        };
-        shadow = {
-          enabled = true;
-          range = 4;
-          render_power = 3;
-          # Remove shadow color to let stylix handle it
-        };
-      };
-
-      animations = {
-        enabled = true;
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-        animation = [
-          "windows, 1, 7, myBezier"
-          "windowsOut, 1, 7, default, popin 80%"
-          "border, 1, 10, default"
-          "borderangle, 1, 8, default"
-          "fade, 1, 7, default"
-          "workspaces, 1, 6, default"
-        ];
-      };
-
-      dwindle = {
-        pseudotile = true;
-        preserve_split = true;
-      };
-
-      misc = {
-        force_default_wallpaper = 0;
-        disable_hyprland_logo = true;
-        disable_splash_rendering = true;
-      };
-
-      bind = [
-        "$mod, RETURN, exec, kitty"
-        "$mod SHIFT, RETURN, exec, [float] kitty"
-        "$mod, B, exec, zen"
-        "$mod, C, exec, codium"
-        "$mod, S, exec, spotify"
-        "$mod, E, exec, kitty -e yazi"
-        "$mod, Q, killactive"
-        "$mod SHIFT, Q, exit"
-        "$mod, V, togglefloating"
-        "$mod, P, pseudo"
-        "$mod, J, togglesplit"
-        # Move focus
-        "$mod, left, movefocus, l"
-        "$mod, right, movefocus, r"
-        "$mod, up, movefocus, u"
-        "$mod, down, movefocus, d"
-        # Move windows
-        "$mod SHIFT, left, movewindow, l"
-        "$mod SHIFT, right, movewindow, r"
-        "$mod SHIFT, up, movewindow, u"
-        "$mod SHIFT, down, movewindow, d"
-        # Switch workspaces
-        "$mod, 1, workspace, 1"
-        "$mod, 2, workspace, 2"
-        "$mod, 3, workspace, 3"
-        "$mod, 4, workspace, 4"
-        "$mod, 5, workspace, 5"
-        # Move to workspace
-        "$mod SHIFT, 1, movetoworkspace, 1"
-        "$mod SHIFT, 2, movetoworkspace, 2"
-        "$mod SHIFT, 3, movetoworkspace, 3"
-        "$mod SHIFT, 4, movetoworkspace, 4"
-        "$mod SHIFT, 5, movetoworkspace, 5"
-      ];
-
-      bindm = [
-        "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow"
+      # Polkit agent must be launched from exec-once — binary lives in libexec (not PATH)
+      exec-once = [
+        "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
       ];
     };
+  };
+
+  home.sessionVariables = {
+    LIBVA_DRIVER_NAME = "nvidia";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    GBM_BACKEND = "nvidia-drm";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    NVD_BACKEND = "direct";
+    MOZ_ENABLE_WAYLAND = "1";
+    QT_QPA_PLATFORM = "wayland";
+    GDK_BACKEND = "wayland";
+    XDG_SESSION_TYPE = "wayland";
+    XDG_CURRENT_DESKTOP = "Hyprland";
   };
 }

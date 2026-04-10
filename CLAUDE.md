@@ -8,8 +8,9 @@
 
 | Category | Use | nixpkgs |
 |----------|-----|---------|
-| Bluetooth | `bluetuith` — full TUI BT manager, NGI-funded | `bluetuith` |
-| Network | `nmtui` — official NM curses UI | bundled in `networkmanager` |
+| Bluetooth | `bluetui` — Rust/ratatui, vim keys, 2x stars vs bluetuith | `bluetui` |
+| WiFi | `wifitui` — Go/Bubble Tea, NM-native, actively maintained | `wifitui` |
+| Network (fallback) | `nmtui` — official NM curses UI, zero-config | bundled in `networkmanager` |
 | System monitor | `btop` — interactive, beautiful | `btop` |
 | Audio mixer | `wiremix` — PipeWire-native TUI | `wiremix` |
 | Music (Spotify) | `spotify-player` — full Spotify in terminal | `spotify-player` |

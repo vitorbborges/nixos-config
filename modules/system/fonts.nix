@@ -1,16 +1,10 @@
-{ pkgs, font, fontPkg, ... }:
+{ pkgs, ... }:
 
 {
-  fonts.fontconfig = {
-    enable = true;
-    defaultFonts = {
-      serif = [ font ];
-      sansSerif = [ font ];
-      monospace = [ font ];
-    };
-  };
-
+  # Install nerd font system-wide; stylix manages fontconfig defaults
+  # noto-fonts-emoji provides full-color emoji rendering for waybar/GTK/Wayland
   fonts.packages = [
-    (builtins.getAttr fontPkg pkgs.nerd-fonts)
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.noto-fonts-color-emoji
   ];
 }
