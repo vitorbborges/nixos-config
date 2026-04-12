@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Enable GNOME Keyring at system level
@@ -13,6 +13,11 @@
 
   # Disable system ssh-agent, as gnome-keyring will provide it
   programs.ssh.startAgent = false;
+
+  # Replace the default x11-ssh-askpass (ugly Motif/XWayland dialog) with gcr4's
+  # native GTK4 dialog — scales correctly on Wayland and integrates with gnome-keyring.
+  # Only used as fallback; with SSH_AUTH_SOCK set, the agent handles auth silently.
+  programs.ssh.askPassword = "${pkgs.gcr_4}/libexec/gcr-ssh-askpass";
 
   # Declarative known hosts — avoids interactive fingerprint prompts
   programs.ssh.knownHosts = {
