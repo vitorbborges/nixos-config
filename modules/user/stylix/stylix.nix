@@ -63,7 +63,7 @@
       vim.enable = true;
       zathura.enable = true;
       yazi.enable = true;
-      spicetify.enable = true;
+      spicetify.enable = false; # comfy theme set explicitly in spicetify.nix
       zen-browser = {
         enable = true;
         profileNames = [ "default-release" ];

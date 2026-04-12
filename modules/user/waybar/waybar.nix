@@ -48,20 +48,11 @@ in
 
       modules-left   = [ "hyprland/workspaces" ];
       modules-center = [ "clock" ];
-      modules-right  = [ "custom/weather" "network" "pulseaudio" "battery" "custom/notification" ];
+      modules-right  = [ "custom/weather" "temperature" "network" "pulseaudio" "battery" "custom/notification" ];
 
       "hyprland/workspaces" = {
-        format = "{icon}";
-        format-icons = {
-          "1" = "1";
-          "2" = "2";
-          "3" = "3";
-          "4" = "4";
-          "5" = "5";
-          active  = "";
-          default = "";
-          urgent  = "󰀨";
-        };
+        format = "{name}";
+        format-icons.urgent = "󰀨";
         on-click = "activate";
         persistent-workspaces."*" = 5;
       };
@@ -89,9 +80,17 @@ in
         max-length = 18;
       };
 
+      temperature = {
+        thermal-zone       = 8;   # x86_pkg_temp (Intel CPU package)
+        format             = "󰘚  {temperatureC}°C";
+        critical-threshold = 80;
+        format-critical    = "󰘚  {temperatureC}°C";
+        tooltip-format     = "CPU package: {temperatureC}°C";
+      };
+
       pulseaudio = {
         format       = "{icon}  {volume}%";
-        format-muted = "󰝟";
+        format-muted = "󰝟  {volume}%";
         format-icons = {
           headphone  = "󰋋";
           headset    = "󰋎";

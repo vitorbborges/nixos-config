@@ -141,7 +141,7 @@
     keymap = {
       mgr.prepend_keymap = [
         { run = "cd ~/Projects"; on = [ "g" "p" ]; desc = "Go to projects"; }
-        { run = "cd ~/Screenshots"; on = [ "g" "s" ]; desc = "Go to screenshots"; }
+        { run = "cd ~/Media/Pictures/Screenshots"; on = [ "g" "s" ]; desc = "Go to screenshots"; }
         { run = "shell ' \"$@\"' --cursor=0 --interactive"; on = [ "@" ]; }
         { run = "hidden toggle"; on = [ "<C-h>" ]; }
         { run = "yank"; on = [ "y" "y" ]; }
@@ -182,6 +182,40 @@
         { run = "tab_switch -1 --relative"; on = [ "<C-BackTab>" ]; }
         { run = "undo"; on = [ "u" ]; }
         { run = "redo"; on = [ "<C-r>" ]; }
+        { run = "shell 'kitty --directory \"$PWD\" &' --orphan"; on = [ "<C-t>" ]; desc = "Open terminal in current directory"; }
+        { run = "open --interactive"; on = [ "o" ]; desc = "Open with… (picker)"; }
+      ];
+    };
+
+    settings = {
+      opener = {
+        text  = [{ run = ''nvim "$@"''; block = true; }];
+        image = [
+          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
+          { run = ''imv "$@"'';         orphan = true; desc = "imv"; }
+          { run = ''gimp "$@"'';        orphan = true; desc = "GIMP"; }
+        ];
+        video = [
+          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
+          { run = ''mpv "$@"'';         orphan = true; desc = "mpv"; }
+        ];
+        audio = [
+          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
+          { run = ''mpv "$@"'';         orphan = true; desc = "mpv"; }
+        ];
+        document = [
+          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
+          { run = ''zathura "$@"'';     orphan = true; desc = "zathura"; }
+        ];
+      };
+      open.rules = [
+        { mime = "text/*";               use = "text"; }
+        { mime = "inode/x-empty";        use = "text"; }
+        { mime = "image/*";              use = "image"; }
+        { mime = "video/*";              use = "video"; }
+        { mime = "audio/*";              use = "audio"; }
+        { mime = "application/pdf";      use = "document"; }
+        { mime = "application/epub+zip"; use = "document"; }
       ];
     };
   };

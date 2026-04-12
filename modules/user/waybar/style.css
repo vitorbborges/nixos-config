@@ -53,8 +53,10 @@ window#waybar {
 }
 
 #workspaces button.active {
-  background: @base02;
+  background: transparent;
   color: @base0D;
+  font-weight: 700;
+  border-bottom: 2px solid @base0D;
 }
 
 #workspaces button.urgent {
@@ -104,10 +106,22 @@ window#waybar {
 /* ── Audio ──────────────────────────────────────────────────────────── */
 #pulseaudio {
   color: @base0B;
+  min-width: 74px;
 }
 
 #pulseaudio.muted {
   color: @base03;
+}
+
+/* ── CPU Temperature ────────────────────────────────────────────────── */
+#temperature {
+  color: @base0C;
+  padding: 0 12px;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+#temperature.critical {
+  color: @base08;
 }
 
 /* ── Battery ────────────────────────────────────────────────────────── */
@@ -159,6 +173,7 @@ window#waybar {
 
 /* ── Hover brightening for right modules ────────────────────────────── */
 #network:hover,
+#temperature:hover,
 #pulseaudio:hover,
 #battery:hover,
 #custom-notification:hover {

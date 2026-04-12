@@ -27,7 +27,6 @@
           "K"           = { action = "hover";           desc = "Show docs"; };
           "<leader>ca"  = { action = "code_action";     desc = "Code action"; };
           "<leader>rn"  = { action = "rename";          desc = "Smart rename"; };
-          "<leader>rs"  = { action = "restart"; desc = "Restart LSP"; };
         };
 
         diagnostic = {
@@ -55,6 +54,10 @@
       };
     };
   };
+
+  programs.nixvim.keymaps = [
+    { key = "<leader>rs"; action = "<cmd>LspRestart<cr>"; mode = "n"; options = { desc = "Restart LSP"; silent = true; }; }
+  ];
 
   # Diagnostic display: signs in gutter, no inline virtual text (clean look)
   # Toggle with <leader>vw (wired in linting.nix)

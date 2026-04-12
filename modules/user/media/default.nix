@@ -2,6 +2,7 @@
 
 {
   home.packages = with pkgs; [
+    imv              # Wayland image viewer — minimal, vim-key navigation
     mpv              # video player (superior Wayland support vs VLC)
     yt-dlp           # download video/audio from YouTube and 400+ sites
     ffmpeg           # audio/video conversion and processing

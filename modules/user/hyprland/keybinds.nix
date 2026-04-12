@@ -3,18 +3,27 @@
 let
   screenshot-area = pkgs.writeShellApplication {
     name = "hl-screenshot-area";
-    runtimeInputs = with pkgs; [ grim slurp libnotify ];
+    runtimeInputs = with pkgs; [ grim slurp libnotify wl-clipboard ];
     text = builtins.readFile ./scripts/screenshot-area.sh;
   };
   screenshot-full = pkgs.writeShellApplication {
     name = "hl-screenshot-full";
-    runtimeInputs = with pkgs; [ grim libnotify ];
+    runtimeInputs = with pkgs; [ grim libnotify wl-clipboard ];
     text = builtins.readFile ./scripts/screenshot-full.sh;
+  };
+  kb-switch = pkgs.writeShellApplication {
+    name = "hl-kb-switch";
+    runtimeInputs = with pkgs; [ hyprland jq libnotify ];
+    text = ''
+      hyprctl switchxkblayout all next
+      layout=$(hyprctl devices -j | jq -r '[.keyboards[] | select(.main == true) | .active_keymap][0]')
+      notify-send -t 2000 " Layout" "$layout"
+    '';
   };
 in
 
 {
-  home.packages = [ screenshot-area screenshot-full ];
+  home.packages = [ screenshot-area screenshot-full kb-switch ];
 
   wayland.windowManager.hyprland.settings = {
 
@@ -44,8 +53,9 @@ in
       "$mod SHIFT, V, exec, cliphist wipe"
       "$mod SHIFT, W, exec, find ~/Media/Pictures/Wallpapers -type f | sort | fuzzel --dmenu -p '  Wallpaper' | xargs -r wallpaper-switch"
       # System
+      "$mod, A, exec, pyprctl expose"
       "CTRL ALT, L, exec, pidof hyprlock || hyprlock"
-      "$mod, SPACE, exec, hyprctl switchxkblayout all next"
+      "$mod, SPACE, exec, hl-kb-switch"
       "$mod CTRL ALT, B, exec, pkill -SIGUSR1 waybar"
       # Screenshots (scripts in ./scripts/, packaged as hl-screenshot-*)
       ", Print, exec, hl-screenshot-area"

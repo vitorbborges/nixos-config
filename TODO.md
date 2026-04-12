@@ -4,36 +4,9 @@ Priority order: Bugs → Structural → Migration → Program swaps
 
 ---
 
-## Bugs / Quick Wins
-
-These are confirmed issues in the current config — fix before anything else.
-
-- [x] **Remove `render.explicit_sync = false`** — `modules/user/hyprland/hyprland.nix`
-  Hyprland 0.50+ nuked all `render:explicit_sync` options; explicit sync is unconditionally on.
-  The current `false` value generates an unknown-option warning or error on modern Hyprland.
-
-- [x] **Fix `system.autoUpgrade` deprecated flags** — `modules/system/nix-settings.nix`
-  `--update-input nixpkgs` and `--update-input home-manager` are deprecated and will be removed.
-  Replace with a separate `nix flake update` workflow or a pre-upgrade systemd oneshot service
-  (see **Flake Health** below).
-
-- [x] **Remove `pkgs.hello`** — `home.nix`
-  Leftover from the initial home-manager template. Not needed.
-
-- [x] **Double `##` in hyprlock placeholder** — `modules/user/hyprland/hyprlock.nix`
-  `foreground="##${config.lib.stylix.colors.base04}"` has two `#` — stylix colors already
-  contain the hex string without a `#` prefix, so the template should emit `#RRGGBB` not `##RRGGBB`.
-  Fix: `foreground="#${config.lib.stylix.colors.base04}"`.
-
-- [x] **`environment.localBinInPath = true` is missing** — noted in `modules/user/development-tools/python.nix` but never added to any system module. Without it, `uv tool install` binaries in `~/.local/bin` are not on PATH.
-
----
-
 ## Structural
 
 - [ ] **`hosts/` abstraction** — add `hosts/nixos/` to isolate per-machine specifics (hardware-configuration, hostname, monitor layout, PRIME bus IDs); do after Hyprland migration is complete
-
-- [x] **Pass `pkgs-stable` to NixOS specialArgs** — `flake.nix` only passes `pkgs-stable` to home-manager's `extraSpecialArgs`; it is not available to system modules. If any system module ever needs a stable package it silently falls back to unstable. Fix by adding `inherit pkgs-stable` to `nixosSystem.specialArgs`.
 
 - [ ] **Audit `catppuccin` flake input** — imported in `flake.nix` but not visibly used in any module. Either wire it up (e.g., as a nixvim colorscheme source) or remove it to keep the lock file lean.
 
@@ -41,19 +14,7 @@ These are confirmed issues in the current config — fix before anything else.
 
 ## Flake Health
 
-- [x] **Pin `nix.registry` and `nix.nixPath` to flake's nixpkgs** — without this, `nix repl '<nixpkgs>'`, `nix-shell -p foo`, and `nix run nixpkgs#...` resolve against the global flake registry (current upstream) rather than your locked nixpkgs, causing cache misses and version drift.
-  Add to `modules/system/nix-settings.nix`:
-  ```nix
-  nix.registry.nixpkgs.flake = inputs.nixpkgs;
-  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs.outPath}" ];
-  ```
-  Requires threading `inputs` through `specialArgs` (already done).
-
-- [x] **Replace deprecated `autoUpgrade` flags with a proper update strategy** — `--update-input` is gone in current Nix. The simplest replacement: disable `system.autoUpgrade` entirely and add a weekly systemd timer that runs `nix flake update && nixos-rebuild switch --flake ...`. Alternatively use `nh os switch --update` once nh supports it. The `--commit-lock-file` flag is still valid and useful to keep.
-
 - [ ] **`autoUpgrade` only tracks 2 of 8+ inputs** — nixpkgs and home-manager are updated; hyprland, nixvim, zen-browser, catppuccin, spicetify-nix, stylix, and nixpkgs-stable are pinned forever unless you run `nix flake update` manually. Decide: do you want all inputs to drift together or pin non-critical ones?
-
-- [x] **Add `nix.settings.keep-outputs = true` and `keep-derivations = true`** — prevents nix GC from deleting build inputs and derivations needed for `nix develop` and `nix-direnv` shells. Low cost, high dev ergonomics.
 
 ---
 
@@ -95,38 +56,17 @@ Currently the config has PRIME entirely disabled (commented out). This section c
 
 After each round: `nix build .#nixosConfigurations.nixos.config.system.build.vm`, boot, verify.
 
-### Round 1 — Critical (system unusable without these)
+### Round 2 — Daily usability (remaining)
 
-- [x] **Audio** — `services.pipewire` + wireplumber + wiremix (`$mod+S`); Fn keys via `bindel`/`bindl` + `wpctl`
-- [x] **Bluetooth** — `hardware.bluetooth.enable` + `bluetui` (`$mod+B`)
-- [x] **Wallpaper daemon** — `hyprpaper` + `wallpaper-switch` script + stylix integration
-- [x] **Idle management** — `services.hypridle`: 5min lock → 5:30min DPMS off
-- [x] **Lock screen** — `programs.hyprlock`: dimmed wallpaper, clock, date, pill input; PAM wired
-- [x] **Clipboard** — `services.cliphist` + `wl-clipboard` + fzf picker (`$mod+V`); wipe (`$mod+SHIFT+V`)
-- [x] **WiFi** — `wifitui` (`$mod+W`); NetworkManager with wifi.powersave
-
-### Round 2 — Daily usability
-
-- [x] **Notifications** — `services.swaync`; `notify-send` OSD on volume Fn keys
-- [x] **App launcher** — `fuzzel` (`$mod+R`); `stylix.targets.fuzzel.enable = true`; clipboard picker updated to `fuzzel --dmenu`
 - [ ] **Wallpaper picker** — `$mod+SHIFT+W` opens fuzzel `--dmenu` mode to browse
   `~/Media/Pictures/Wallpapers/` with preview (pipe through `swww img` or `wallpaper-switch`).
   Requires fuzzel configured first.
-- [ ] **Yazi "open with"** — add `o` keymap in yazi calling `xdg-open "$1"` (respects MIME associations)
-- [x] **Status bar** — `programs.waybar`: floating pill bar, workspaces, clock, network, audio, battery, swaync toggle, tray. `stylix.targets.waybar.enable = true`; layout CSS in separate file using only `@baseXX` variables.
 - [ ] **XDG portal** — verify `xdg-desktop-portal-hyprland` is active; `programs.hyprland.enable`
   with `portalPackage` should wire it up automatically, but confirm with
   `systemctl --user status xdg-desktop-portal-hyprland`.
-- [x] **Polkit agent** — `exec-once = ${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent`
-- [x] **Screenshots** — `grim` + `slurp`; `Print` = area, `Shift+Print` = fullscreen; notify-send OSD on capture.
 - [ ] **GNOME Keyring** — verify PAM unlock works; update `gnome-keyring.nix` when migrating away
   from SDDM: replace `security.pam.services.sddm.enableGnomeKeyring` with greetd equivalent
   (`security.pam.services.greetd.enableGnomeKeyring = true`).
-
-### Theming — done as part of Round 2
-
-- [x] **Unified theming** — `theme` variable in `flake.nix`; `stylix.base16Scheme` from `pkgs.base16-schemes/${theme}.yaml`; `override.base00 = "000000"` for OLED true-black. Changing `theme` in `flake.nix` rethemes all apps.
-- [x] **No hardcoded styling** — fonts derive from `config.stylix.fonts.*`; colors from `@baseXX` (CSS) or `config.lib.stylix.colors.withHashtag` (Nix strings); no hex/font-name literals outside `stylix.nix`.
 
 ### Round 3 — Theming & extras
 
@@ -225,8 +165,6 @@ After each round: `nix build .#nixosConfigurations.nixos.config.system.build.vm`
     tag.gpgsign = true;
   };
   ```
-
-- [x] **`environment.localBinInPath = true`** — added to `modules/system/shell.nix`.
 
 ---
 

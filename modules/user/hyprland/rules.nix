@@ -5,7 +5,7 @@
     # Hyprland v0.47+ layerrule syntax: "key value, match:namespace regex"
     layerrule = [
       "match:namespace waybar, blur 1"
-      "match:namespace swaync-notification-window, blur 1"
+      "match:namespace swaync-notification-window, blur 0"
       "match:namespace swaync-control-center, blur 1"
     ];
 

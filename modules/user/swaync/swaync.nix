@@ -32,7 +32,7 @@ in
       timeout-low      = 2;
       timeout-critical = 0;
 
-      fit-to-screen       = true;
+      fit-to-screen       = false;
       relative-timestamps = true;
 
       widgets = [ "inhibitors" "title" "dnd" "notifications" ];
@@ -72,6 +72,18 @@ in
       }
 
       /* ── Notification popup ─────────────────────────────────────── */
+      window,
+      window > box,
+      .floating-notifications,
+      .floating-notifications > box,
+      .floating-notifications > box > box,
+      .notifications {
+        background: transparent;
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+      }
+
       .notification-row {
         outline: none;
         background: transparent;

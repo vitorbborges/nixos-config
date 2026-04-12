@@ -78,7 +78,7 @@ MARKDOWN_FILE="$TEMP_DIR/output/paper/paper.md"
 [[ -f "$MARKDOWN_FILE" ]] || die "Marker failed to produce paper.md"
 
 # --- Fix deprecated \rm LaTeX macro ---
-echo "Fixing LaTeX macros (\\rm → \\mathrm)..."
+printf 'Fixing LaTeX macros (\\rm -> \\mathrm)...\n'
 sed -i 's/\\rm\([[:space:]{]\)/\\mathrm\1/g; s/\\rm\([a-zA-Z]\)/\\mathrm{\1}/g' "$MARKDOWN_FILE"
 
 # --- Convert Markdown → EPUB ---

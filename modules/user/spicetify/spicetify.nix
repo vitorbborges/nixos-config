@@ -13,8 +13,7 @@
     in
     {
       enable = true;
-      # Remove theme to let stylix handle theming
-      # colorScheme = "blue-dark";
+      theme = spicePkgs.themes.comfy;
 
       enabledExtensions = with spicePkgs.extensions; [
         shuffle

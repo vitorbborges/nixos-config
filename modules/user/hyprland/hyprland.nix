@@ -38,5 +38,7 @@
     GDK_BACKEND = "wayland";
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "Hyprland";
+    EDITOR = "nvim";
+    VISUAL = "nvim";
   };
 }
