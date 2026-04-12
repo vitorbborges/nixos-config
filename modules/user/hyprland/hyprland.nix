@@ -40,7 +40,5 @@
     XDG_CURRENT_DESKTOP = "Hyprland";
     EDITOR = "nvim";
     VISUAL = "nvim";
-    # Point SSH to gnome-keyring's agent socket (set by PAM but not always propagated)
-    SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gcr/ssh";
   };
 }
