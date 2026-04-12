@@ -108,6 +108,7 @@
     tldr
     fastfetch
     zoxide
+    bat
   ];
 
   programs.zoxide = {
