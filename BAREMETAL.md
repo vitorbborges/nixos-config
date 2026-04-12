@@ -18,12 +18,12 @@ git log --oneline -3   # confirm the commit is there
 
 ## Part 1 — Install NixOS
 
-**Use:** NixOS minimal ISO (no DE). Boot from USB.
+**Use:** NixOS graphical ISO (the standard download). Boot from USB.
 
 During Calamares:
 - **Partitioning** — note whether the ESP mounts at `/boot` or `/boot/efi` before confirming
 - **Username** — must be `vitor` (hardcoded in `flake.nix`)
-- **Desktop** — select **None / No desktop**
+- **Desktop** — select **No desktop environment** (Hyprland comes from the flake config, not the installer)
 - **Password** — set a temporary password; you'll change it after first boot
 
 After the installer reboots you land in a TTY. Log in as `vitor`.
