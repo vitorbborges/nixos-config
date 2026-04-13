@@ -10,6 +10,10 @@
     ];
 
     windowrule = [
+      # Wallpaper picker (fzf + kitty image preview)
+      "float on, match:class wallpaper-picker"
+      "size 1200 700, match:class wallpaper-picker"
+      "center on, match:class wallpaper-picker"
       # Clipboard picker (cliphist via fuzzel dmenu)
       "float on, match:class clipboard-picker"
       "size 600 400, match:class clipboard-picker"

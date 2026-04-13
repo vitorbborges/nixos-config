@@ -182,7 +182,7 @@
         { run = "tab_switch -1 --relative"; on = [ "<C-BackTab>" ]; }
         { run = "undo"; on = [ "u" ]; }
         { run = "redo"; on = [ "<C-r>" ]; }
-        { run = "shell 'kitty --directory \"$PWD\" &' --orphan"; on = [ "<C-t>" ]; desc = "Open terminal in current directory"; }
+        { run = "shell '$SHELL' --block"; on = [ "<C-t>" ]; desc = "Open shell here (exit to return to yazi)"; }
         { run = "open --interactive"; on = [ "o" ]; desc = "Open with… (picker)"; }
       ];
     };

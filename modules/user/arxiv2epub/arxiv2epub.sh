@@ -3,8 +3,10 @@
 # Usage: arxiv2epub https://arxiv.org/abs/2602.19597
 #        arxiv2epub 2602.19597
 #
+# LLM-enhanced conversion is used automatically when GEMINI_API_KEY is set.
+#
 # Optional env vars:
-#   GEMINI_API_KEY  — enables LLM-enhanced conversion via marker's --use_llm
+#   GEMINI_API_KEY  — Gemini API key for marker's --use_llm (loaded from ~/.config/secrets/api-keys.sh)
 #   DOWNLOAD_DIR    — output directory (default: ~/Downloads)
 
 set -euo pipefail
@@ -14,6 +16,10 @@ TEMP_DIR=$(mktemp -d -t arxiv2epub-XXXXXX)
 
 cleanup() { rm -rf "$TEMP_DIR"; }
 trap cleanup EXIT
+
+# Kill entire process group on Ctrl+C (marker spawns worker subprocesses that
+# survive a plain SIGINT to the shell without this)
+trap 'trap - INT TERM; echo "Interrupted." >&2; kill 0; exit 130' INT TERM
 
 die() { echo "ERROR: $*" >&2; exit 1; }
 
@@ -68,9 +74,12 @@ run_marker() {
 }
 
 if [[ -n "${GEMINI_API_KEY:-}" ]]; then
-    echo "Gemini API key detected — enabling LLM-enhanced conversion..."
-    GOOGLE_API_KEY="$GEMINI_API_KEY" run_marker --use_llm
+    echo "LLM-enhanced conversion enabled (Gemini)..."
+    run_marker --use_llm \
+        --llm_service marker.services.gemini.GoogleGeminiService \
+        --gemini_api_key "$GEMINI_API_KEY"
 else
+    echo "No GEMINI_API_KEY set — using standard conversion."
     run_marker
 fi
 

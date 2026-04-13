@@ -15,6 +15,10 @@
       enable = true;
       theme = spicePkgs.themes.comfy;
 
+      enabledCustomApps = with spicePkgs.apps; [
+        marketplace
+      ];
+
       enabledExtensions = with spicePkgs.extensions; [
         shuffle
         keyboardShortcut

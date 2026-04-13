@@ -1,6 +1,16 @@
 { lib, pkgs, ... }:
 
 let
+  cpu-temp = pkgs.writeShellScript "waybar-cpu-temp" ''
+    input=$(ls /sys/devices/platform/coretemp.0/hwmon/hwmon*/temp1_input 2>/dev/null | head -1)
+    if [[ -n "$input" ]]; then
+      temp=$(( $(cat "$input") / 1000 ))
+      echo "󰘚  ''${temp}°C"
+    else
+      echo "󰘚  --°C"
+    fi
+  '';
+
   weather = pkgs.writeShellScript "waybar-weather" ''
     set -euo pipefail
     data=$(${pkgs.curl}/bin/curl -sf --max-time 10 "https://wttr.in/?format=j1") || {
@@ -48,7 +58,7 @@ in
 
       modules-left   = [ "hyprland/workspaces" ];
       modules-center = [ "clock" ];
-      modules-right  = [ "custom/weather" "temperature" "network" "pulseaudio" "battery" "custom/notification" ];
+      modules-right  = [ "custom/weather" "custom/cpu-temp" "network" "pulseaudio" "battery" "custom/notification" ];
 
       "hyprland/workspaces" = {
         format = "{name}";
@@ -80,12 +90,10 @@ in
         max-length = 18;
       };
 
-      temperature = {
-        thermal-zone       = 8;   # x86_pkg_temp (Intel CPU package)
-        format             = "󰘚  {temperatureC}°C";
-        critical-threshold = 80;
-        format-critical    = "󰘚  {temperatureC}°C";
-        tooltip-format     = "CPU package: {temperatureC}°C";
+      "custom/cpu-temp" = {
+        exec     = "${cpu-temp}";
+        interval = 5;
+        format   = "{}";
       };
 
       pulseaudio = {

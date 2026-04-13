@@ -51,9 +51,9 @@ in
       "$mod, R, exec, fuzzel"
       "$mod, V, exec, cliphist list | fuzzel --dmenu -p '  Clipboard' | cliphist decode | wl-copy"
       "$mod SHIFT, V, exec, cliphist wipe"
-      "$mod SHIFT, W, exec, find ~/Media/Pictures/Wallpapers -type f | sort | fuzzel --dmenu -p '  Wallpaper' | xargs -r wallpaper-switch"
+      "$mod SHIFT, W, exec, kitty --class wallpaper-picker -T 'Wallpaper Picker' -e wallpaper-picker"
       # System
-      "$mod, A, exec, pyprctl expose"
+      "$mod, A, exec, pypr expose"
       "CTRL ALT, L, exec, pidof hyprlock || hyprlock"
       "$mod, SPACE, exec, hl-kb-switch"
       "$mod CTRL ALT, B, exec, pkill -SIGUSR1 waybar"

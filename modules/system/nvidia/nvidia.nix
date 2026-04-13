@@ -36,4 +36,8 @@
     hardware.graphics.extraPackages = with pkgs; [
         nvidia-vaapi-driver
     ];
+
+    # ASUS hardware: fan curves, battery charge limit, keyboard RGB
+    # Works alongside PRIME sync — does not manage GPU mode
+    services.asusd.enable = true;
 }

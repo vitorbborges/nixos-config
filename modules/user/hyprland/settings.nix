@@ -32,8 +32,8 @@
       inactive_opacity = 0.85;
       blur = {
         enabled = true;
-        size = 8;
-        passes = 2;
+        size = 4;
+        passes = 1;
         noise = 0.05;
         xray = false;
       };

@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, theme, ... }:
+{ config, lib, pkgs, inputs, theme, ... }:
 
 {
   imports = [
@@ -49,7 +49,7 @@
 
     opacity = {
       applications = 1.0;
-      terminal = 0.85;
+      terminal = 0.75;
       desktop = 1.0;
       popups = 1.0;
     };
@@ -63,7 +63,8 @@
       vim.enable = true;
       zathura.enable = true;
       yazi.enable = true;
-      spicetify.enable = false; # comfy theme set explicitly in spicetify.nix
+      spicetify.enable = false;  # comfy theme set explicitly in spicetify.nix
+      hyprpaper.enable = lib.mkForce false;  # using swww instead; wallpaper set via exec-once
       zen-browser = {
         enable = true;
         profileNames = [ "default-release" ];

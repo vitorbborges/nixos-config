@@ -3,15 +3,22 @@
 let
   wallpaper-switch = pkgs.writeShellApplication {
     name = "wallpaper-switch";
-    runtimeInputs = with pkgs; [ matugen jq ];
+    runtimeInputs = with pkgs; [ swww matugen jq libnotify hyprland ];
     text = builtins.readFile ./scripts/wallpaper-switch.sh;
+  };
+  wallpaper-picker = pkgs.writeShellApplication {
+    name = "wallpaper-picker";
+    runtimeInputs = [ pkgs.fzf wallpaper-switch ];
+    text = builtins.readFile ./scripts/wallpaper-picker.sh;
   };
 in
 
 {
   home.packages = with pkgs; [
     wallpaper-switch
-    matugen  # fast Material You color extraction from images
-    jq       # JSON parsing for matugen output
+    wallpaper-picker
+    matugen
+    jq
+    libnotify
   ];
 }

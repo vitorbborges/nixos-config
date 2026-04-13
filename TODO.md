@@ -6,27 +6,11 @@
 
 - [ ] **`hosts/` abstraction** — add `hosts/vivobook/` to isolate per-machine specifics (hardware-configuration, hostname, monitor layout, PRIME bus IDs)
 
-- [ ] **Audit `catppuccin` flake input** — imported in `flake.nix` but not used in any module. Wire it up or remove it.
-
----
-
-## Flake Health
-
-- [ ] **`autoUpgrade` only tracks 2 of 8+ inputs** — nixpkgs and home-manager are updated; hyprland, nixvim, zen-browser, catppuccin, spicetify-nix, stylix, nixpkgs-stable are pinned forever. Decide: all inputs drift together or pin non-critical ones?
-
 ---
 
 ## Hardware / NVIDIA
 
-- [ ] **Enable NVIDIA open source kernel module** — RTX 4070 is Turing+; NixOS wiki recommends `hardware.nvidia.open = true` since driver 560. Test in VM first.
-
-- [ ] **Enable `powerManagement.enable = true`** (stable, not finegrained) — saves VRAM state on suspend; required for reliable suspend/resume on hybrid laptops.
-
-- [ ] **Add PRIME BusIDs and choose GPU mode** — BusIDs confirmed: `intelBusId = "PCI:0:2:0"`, `nvidiaBusId = "PCI:1:0:0"`. Choose: offload (battery), sync (perf), or reverse-sync (Wayland-friendly).
-
-- [ ] **`programs.envycontrol`** — CLI to switch integrated/hybrid/nvidia modes. Evaluate before supergfxctl.
-
-- [ ] **`supergfxctl` + `asusctl`** — ASUS-native GPU switching + fan curves + keyboard LEDs. Heavier but more integrated with EC firmware.
+- [ ] **`asusctl` keyboard RGB** — `services.asusd` is enabled (fan curves, battery charge limit). Keyboard RGB profiles can be set with `asusctl aura -m static -c RRGGBB`.
 
 ---
 
@@ -103,5 +87,3 @@
 ## Baremetal — remaining
 
 - [ ] **Remove `security.sudo.extraRules` NOPASSWD for nixos-rebuild** — blocked on wallpaper-switch → `nh os switch` migration above.
-
-- [ ] **Verify PRIME BusIDs on baremetal before enabling PRIME** — run `lspci | grep -E 'VGA|3D'` and confirm `0:2:0` / `1:0:0` match before uncommenting PRIME config.

@@ -75,6 +75,9 @@
       }
       zle -N sudo-command-line
 
+      # Load optional API keys (file is not tracked by git)
+      [[ -f "$HOME/.config/secrets/api-keys.sh" ]] && source "$HOME/.config/secrets/api-keys.sh"
+
       # git-auto-fetch: silently fetch on every directory change into a git repo
       _git_auto_fetch() {
         if git rev-parse --git-dir &>/dev/null 2>&1; then

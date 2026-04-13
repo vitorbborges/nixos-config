@@ -1,7 +1,10 @@
-# Managed by wallpaper-switch script — do not edit manually
-# Default: NixOS artwork (always available from nixpkgs, no local file needed)
-# After first wallpaper-switch: replaced with an absolute path to your chosen image
 { pkgs, ... }:
 {
-  stylix.image = pkgs.nixos-artwork.wallpapers.nineish-dark-gray.gnomeFilePath;
+  # stylix.image must be a Nix-store path (absolute /home paths fail in pure flake eval).
+  # Colors come from base16Scheme (catppuccin-mocha), not from this image.
+  # The actual runtime wallpaper is managed by swww — see hyprpaper.nix.
+  stylix.image = pkgs.runCommand "default-wallpaper.png"
+    { buildInputs = [ pkgs.imagemagick ]; } ''
+    magick -size 1920x1080 gradient:"#0d0d0d-#000000" "$out"
+  '';
 }
