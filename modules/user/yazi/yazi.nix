@@ -1,10 +1,56 @@
 { pkgs, ... }:
 
+let
+  openWith = pkgs.writeShellScript "yazi-open-with" ''
+    mime=$(xdg-mime query filetype "$1" 2>/dev/null)
+    [ -z "$mime" ] && mime=$(file --mime-type -b "$1")
+    [ -z "$mime" ] && exit 0
+
+    IFS=: read -ra _xdg_dirs <<< "''${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+    app_dirs=("''${XDG_DATA_HOME:-$HOME/.local/share}" "''${_xdg_dirs[@]}")
+
+    desktop_names=$(
+      for dir in "''${app_dirs[@]}"; do
+        cache="$dir/applications/mimeinfo.cache"
+        [ -f "$cache" ] || continue
+        grep "^''${mime}=" "$cache" | cut -d= -f2- | tr ';' '\n'
+      done | grep -v '^$' | sort -u
+    )
+
+    [ -z "$desktop_names" ] && exit 0
+
+    app_list=$(
+      printf '%s\n' "$desktop_names" | while IFS= read -r df; do
+        [ -z "$df" ] && continue
+        for dir in "''${app_dirs[@]}"; do
+          f="$dir/applications/$df"
+          [ -f "$f" ] || continue
+          name=$(grep -m1 "^Name=" "$f" | cut -d= -f2-)
+          exec_line=$(grep -m1 "^Exec=" "$f" | cut -d= -f2-)
+          [ -n "$name" ] && printf '%s\t%s\n' "$name" "$exec_line"
+          break
+        done
+      done
+    )
+
+    [ -z "$app_list" ] && exit 0
+
+    chosen=$(printf '%s\n' "$app_list" | \
+      fzf --with-nth=1 --delimiter=$'\t' --prompt="Open with: ")
+    [ -z "$chosen" ] && exit 0
+
+    exec_line=$(printf '%s' "$chosen" | cut -f2 | \
+      sed 's/ %[uUfFdDnNickvm]//g; s/%[uUfFdDnNickvm]//g')
+    bash -c "$exec_line \"\$@\"" -- "$@" &
+  '';
+in
+
 {
 
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;
+    shellWrapperName = "yy";
 
     plugins = {
       git = pkgs.yaziPlugins.git;
@@ -183,7 +229,7 @@
         { run = "undo"; on = [ "u" ]; }
         { run = "redo"; on = [ "<C-r>" ]; }
         { run = "shell '$SHELL' --block"; on = [ "<C-t>" ]; desc = "Open shell here (exit to return to yazi)"; }
-        { run = "open --interactive"; on = [ "o" ]; desc = "Open with… (picker)"; }
+        { run = ''shell '${openWith} "$@"' --block''; on = [ "o" ]; desc = "Open with… (system apps)"; }
       ];
     };
 
@@ -204,8 +250,8 @@
           { run = ''mpv "$@"'';         orphan = true; desc = "mpv"; }
         ];
         document = [
-          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
           { run = ''zathura "$@"'';     orphan = true; desc = "zathura"; }
+          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
         ];
       };
       open.rules = [

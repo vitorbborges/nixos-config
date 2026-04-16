@@ -21,10 +21,6 @@
 
   home.packages = [ pkgs.nh ];
 
-  home.sessionVariables = {
-    BROWSER = "zen";
-  };
-
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }

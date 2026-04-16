@@ -3,7 +3,7 @@
 let
   wallpaper-switch = pkgs.writeShellApplication {
     name = "wallpaper-switch";
-    runtimeInputs = with pkgs; [ swww matugen jq libnotify hyprland ];
+    runtimeInputs = with pkgs; [ awww matugen jq libnotify hyprland ];
     text = builtins.readFile ./scripts/wallpaper-switch.sh;
   };
   wallpaper-picker = pkgs.writeShellApplication {

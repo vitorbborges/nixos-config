@@ -37,6 +37,7 @@
     QT_QPA_PLATFORM = "wayland";
     GDK_BACKEND = "wayland";
     XDG_SESSION_TYPE = "wayland";
+    BROWSER = "xdg-open";
     XDG_CURRENT_DESKTOP = "Hyprland";
     EDITOR = "nvim";
     VISUAL = "nvim";

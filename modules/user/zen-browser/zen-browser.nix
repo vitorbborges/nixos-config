@@ -53,8 +53,12 @@
         "browser.theme.content-theme" = 0; # 0 = auto, 1 = light, 2 = dark
         "browser.theme.toolbar-theme" = 0; # 0 = auto, 1 = light, 2 = dark
         
+        # Disable VA-API: vaapitest subprocess crashes on NVIDIA Optimus PRIME
+        "media.ffmpeg.vaapi.enabled" = false;
+
         # Other useful preferences
         "browser.tabs.warnOnClose" = false;
+        "browser.startup.page" = 3; # 3 = restore previous session
         "browser.startup.homepage" = "about:blank";
         "browser.newtabpage.enabled" = false;
         "privacy.trackingprotection.enabled" = true;
@@ -88,17 +92,17 @@
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "text/html" = "zen.desktop";
-      "x-scheme-handler/http" = "zen.desktop";
-      "x-scheme-handler/https" = "zen.desktop";
-      "x-scheme-handler/about" = "zen.desktop";
-      "x-scheme-handler/unknown" = "zen.desktop";
-      "application/x-extension-htm" = "zen.desktop";
-      "application/x-extension-html" = "zen.desktop";
-      "application/x-extension-shtml" = "zen.desktop";
-      "application/x-extension-xht" = "zen.desktop";
-      "application/x-extension-xhtml" = "zen.desktop";
-      "application/xhtml+xml" = "zen.desktop";
+      "text/html" = "zen-beta.desktop";
+      "x-scheme-handler/http" = "zen-beta.desktop";
+      "x-scheme-handler/https" = "zen-beta.desktop";
+      "x-scheme-handler/about" = "zen-beta.desktop";
+      "x-scheme-handler/unknown" = "zen-beta.desktop";
+      "application/x-extension-htm" = "zen-beta.desktop";
+      "application/x-extension-html" = "zen-beta.desktop";
+      "application/x-extension-shtml" = "zen-beta.desktop";
+      "application/x-extension-xht" = "zen-beta.desktop";
+      "application/x-extension-xhtml" = "zen-beta.desktop";
+      "application/xhtml+xml" = "zen-beta.desktop";
     };
   };
 

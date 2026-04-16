@@ -1,9 +1,9 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
-  # Your existing claude-code configuration (unchanged)
   programs.claude-code = {
     enable = true;
     settings = {
@@ -21,18 +21,12 @@
     };
   };
 
-  # ----- NEW: Two‑profile setup -----
+  # Create the two config directories using home-manager's activation
+  home.activation.createClaudeProfiles = config.lib.dag.entryAfter ["writeBoundary"] ''
+    mkdir -p "$HOME/.claude-personal" "$HOME/.claude-friend"
+  '';
 
-  # 1. Create the isolated config directories automatically for your user
-  #    (runs once at first login; safe to keep)
-  system.userActivationScripts.createClaudeProfiles = {
-    text = ''
-      mkdir -p "$HOME/.claude-personal" "$HOME/.claude-friend"
-    '';
-    deps = []; # no dependencies needed
-  };
-
-  # 2. Add shell aliases for bash and zsh (the two most common shells on NixOS)
+  # Shell aliases (these are fine in home-manager)
   programs.bash.shellAliases = {
     claude-personal = "CLAUDE_CONFIG_DIR=~/.claude-personal claude";
     claude-friend = "CLAUDE_CONFIG_DIR=~/.claude-friend claude";

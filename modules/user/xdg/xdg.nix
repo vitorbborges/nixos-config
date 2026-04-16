@@ -13,12 +13,13 @@
     documents = "${config.home.homeDirectory}/Documents";
     desktop = null;
     publicShare = null;
+    setSessionVariables = true;
     extraConfig = {
-      XDG_DOTFILES_DIR = "${config.home.homeDirectory}/.dotfiles";
-      XDG_PROJECTS_DIR = "${config.home.homeDirectory}/Projects";
-      XDG_BOOK_DIR = "${config.home.homeDirectory}/Media/Books";
-      XDG_NOTES_DIR = "${config.home.homeDirectory}/Notes";
-      XDG_SCREENSHOT_DIR = "${config.home.homeDirectory}/Media/Pictures/Screenshots";
+      DOTFILES = "${config.home.homeDirectory}/.dotfiles";
+      PROJECTS = "${config.home.homeDirectory}/Projects";
+      BOOK = "${config.home.homeDirectory}/Media/Books";
+      NOTES = "${config.home.homeDirectory}/Notes";
+      SCREENSHOT = "${config.home.homeDirectory}/Media/Pictures/Screenshots";
     };
   };
   xdg.mime.enable = true;
@@ -52,6 +53,7 @@
       "audio/mp4"   = [ "mpv.desktop" ];
 
       # Documents → zathura
+      "application/pdf"      = [ "org.pwmt.zathura-pdf-mupdf.desktop" ];
       "application/epub+zip" = [ "org.pwmt.zathura-pdf-mupdf.desktop" ];
 
       # Web → zen

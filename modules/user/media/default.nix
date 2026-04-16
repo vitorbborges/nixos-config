@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  programs.btop.enable = true;
+
   home.packages = with pkgs; [
     imv              # Wayland image viewer — minimal, vim-key navigation
     mpv              # video player (superior Wayland support vs VLC)

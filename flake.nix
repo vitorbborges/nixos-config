@@ -33,15 +33,21 @@
     };
 
     nixpkgs-stable.url = "nixpkgs/nixos-25.11";
+
+    # Local dev: points at your clone while the PR is open.
+    # After the PR merges, replace with: github:iyaja/llama-fs
+    llama-fs.url = "git+file:///home/vitor/Projects/OPEN%20SOURCE/llama-fs";
+    llama-fs.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, llama-fs, ... }@inputs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
       pkgs-stable = import nixpkgs-stable {
         inherit system;
         config.allowUnfree = true;
+        config.permittedInsecurePackages = [ "electron-38.8.4" ];
       };
       username = "vitor";
       kbLayout = "us";
@@ -53,7 +59,7 @@
         vivobook = lib.nixosSystem {
           inherit system;
           modules = [
-            { nixpkgs.config.allowUnfree = true; }
+            { nixpkgs.config.allowUnfree = true; nixpkgs.config.permittedInsecurePackages = [ "electron-38.8.4" ]; }
             ./configuration.nix
             ./modules/system
             home-manager.nixosModules.home-manager

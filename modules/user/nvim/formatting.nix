@@ -41,10 +41,10 @@
   # Formatters injected into nvim's PATH via extraPackages (not system-wide home.packages)
   programs.nixvim.extraPackages = with pkgs; [
     stylua
-    nodePackages.prettier
+    prettier
     python3Packages.ruff
     alejandra
-    nodePackages.sql-formatter
+    sql-formatter
     rustfmt
     clang-tools  # provides clang-format
   ];

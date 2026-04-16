@@ -3,24 +3,32 @@
 {
   systemd.services.investments = {
     description = "Investments n8n stack";
-    after = [ "docker.service" "network-online.target" ];
+    after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
-    requires = [ "docker.service" ];
-    wantedBy = [ "multi-user.target" ];
+    # Not wantedBy multi-user.target — started lazily by investments-daily.service.
+    # This prevents nixos-rebuild switch from hanging on first-run image pulls.
 
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
+      User = "vitor";
       WorkingDirectory = "/home/vitor/Investments/infra";
-      ExecStart = "/run/current-system/sw/bin/docker compose up -d --build";
-      ExecStop = "/run/current-system/sw/bin/docker compose down";
-      TimeoutStartSec = "5min"; # image build can be slow
+      # %U in system services always expands to 0 (root). Use id -u at runtime instead.
+      ExecStart = pkgs.writeShellScript "investments-start" ''
+        export DOCKER_HOST="unix:///run/user/$(id -u)/docker.sock"
+        exec /run/current-system/sw/bin/docker compose up -d --build
+      '';
+      ExecStop = pkgs.writeShellScript "investments-stop" ''
+        export DOCKER_HOST="unix:///run/user/$(id -u)/docker.sock"
+        exec /run/current-system/sw/bin/docker compose down
+      '';
+      TimeoutStartSec = "2h"; # first-run image pull can take ~90min on slow connections
     };
   };
 
   systemd.services.investments-daily = {
     description = "Trigger daily investments n8n workflow";
-    after = [ "investments.service" "network-online.target" ];
+    after = [ "investments.service" ];
     requires = [ "investments.service" ];
     serviceConfig = {
       Type = "oneshot";

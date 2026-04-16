@@ -5,6 +5,7 @@ let
   claudeBin      = "/etc/profiles/per-user/vitor/bin/claude";
 
   # Wrapper: waits for internet, then runs a recipe via claude (Pro subscription — no API key needed)
+  # Tries claude-personal first; falls back to claude-friend if the usage limit is hit.
   runRecipe = pkgs.writeShellScript "investments-run-recipe" ''
     set -euo pipefail
     RECIPE="$1"
@@ -22,7 +23,19 @@ let
     done
 
     cd "${investmentsDir}"
-    ${claudeBin} --dangerously-skip-permissions < "$RECIPE"
+
+    tmpfile=$(mktemp)
+    rc=0
+    CLAUDE_CONFIG_DIR="$HOME/.claude-personal" ${claudeBin} --dangerously-skip-permissions < "$RECIPE" > "$tmpfile" 2>&1 || rc=$?
+    if grep -qi "you've hit your limit" "$tmpfile"; then
+      rm "$tmpfile"
+      echo "investments-recipe: claude-personal at limit, falling back to claude-friend" >&2
+      CLAUDE_CONFIG_DIR="$HOME/.claude-friend" ${claudeBin} --dangerously-skip-permissions < "$RECIPE"
+    else
+      cat "$tmpfile"
+      rm "$tmpfile"
+      exit $rc
+    fi
   '';
 
   # Recipe definitions: name → { file, schedule }

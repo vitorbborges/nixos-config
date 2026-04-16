@@ -5,6 +5,9 @@
     inputs.stylix.homeModules.stylix
   ];
 
+  # Silence home-manager 26.05 deprecation warning; keep GTK4 apps using the same theme as GTK3.
+  gtk.gtk4.theme = config.gtk.theme;
+
   stylix = {
     enable = true;
 
@@ -72,6 +75,7 @@
       # waybar: stylix injects @define-color base00..base0F into programs.waybar.style.
       # Our layout CSS (waybar/style.css) uses those variables — no hex values hardcoded.
       waybar.enable = true;
+      btop.enable = true;
       # fuzzel: stylix themes colors automatically; border/radius come from fuzzel.nix.
       fuzzel.enable = true;
       # hyprlock: disabled — hyprlock.nix handles full theming via config.lib.stylix.colors.*

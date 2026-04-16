@@ -12,15 +12,15 @@ fi
 
 WALLPAPER_ABS="$(realpath "$WALLPAPER")"
 
-# 1. Set wallpaper via swww (immediate, no rebuild needed)
-if ! swww img "$WALLPAPER_ABS" --transition-type wipe --transition-angle 30 --transition-duration 1; then
-  notify-send -u critical "wallpaper-switch" "swww failed — is swww-daemon running?"
+# 1. Set wallpaper via awww (immediate, no rebuild needed)
+if ! awww img "$WALLPAPER_ABS" --transition-type wipe --transition-angle 30 --transition-duration 1; then
+  notify-send -u critical "wallpaper-switch" "awww failed — is awww-daemon running?"
   exit 1
 fi
 
 # 2. Persist for next login
-mkdir -p "$HOME/.config/swww"
-echo "$WALLPAPER_ABS" > "$HOME/.config/swww/last-wallpaper"
+mkdir -p "$HOME/.config/awww"
+echo "$WALLPAPER_ABS" > "$HOME/.config/awww/last-wallpaper"
 
 notify-send -t 3000 "󰋩 Wallpaper" "$(basename "$WALLPAPER_ABS")"
 

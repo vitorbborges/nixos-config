@@ -31,7 +31,7 @@ in
       # Apps
       "$mod, RETURN, exec, kitty"
       "$mod SHIFT, RETURN, exec, [float] kitty"
-      "$mod, Z, exec, zen"
+      "$mod, Z, exec, zen-beta"
       "$mod, B, exec, kitty -e bluetui"
       "$mod, W, exec, kitty -e wifitui"
       "$mod, C, exec, codium"

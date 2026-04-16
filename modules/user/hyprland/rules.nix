@@ -25,6 +25,9 @@
       "pin on, match:title Picture-in-Picture"
       "keep_aspect_ratio on, match:title Picture-in-Picture"
       "move 72% 7%, match:title Picture-in-Picture"
+      # Extension popups (e.g. Bitwarden) — keep focused so Hyprland doesn't steal
+      # focus back to the browser window and immediately dismiss them
+      "stay_focused on, match:class zen-beta, match:title ^$"
     ];
   };
 }
