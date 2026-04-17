@@ -16,7 +16,7 @@
   home.stateVersion = "25.05"; # Please read the comment before changing.
 
   imports = [
-    ./modules/user
+    ../../modules/user
   ];
 
   home.packages = [ pkgs.nh ];

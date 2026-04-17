@@ -56,11 +56,11 @@
     in
     {
       nixosConfigurations = {
-        vivobook = lib.nixosSystem {
+        desktop = lib.nixosSystem {
           inherit system;
           modules = [
             { nixpkgs.config.allowUnfree = true; nixpkgs.config.permittedInsecurePackages = [ "electron-38.8.4" ]; }
-            ./configuration.nix
+            ./hosts/desktop/configuration.nix
             ./modules/system
             home-manager.nixosModules.home-manager
             {
@@ -68,7 +68,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs system username kbLayout font pkgs-stable theme; };
               home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
-              home-manager.users.${username} = import ./home.nix;
+              home-manager.users.${username} = import ./hosts/desktop/home.nix;
             }
           ];
           specialArgs = { inherit inputs username kbLayout pkgs-stable theme; };
