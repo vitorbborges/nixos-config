@@ -22,5 +22,7 @@ in {
       ../user/zsh/zsh.nix
       ../user/yazi/yazi.nix
       ../user/git/git.nix
+      ../user/ssh/ssh.nix
+      ../user/nix/default.nix
     ];
 }
