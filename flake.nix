@@ -34,6 +34,11 @@
 
     nixpkgs-stable.url = "nixpkgs/nixos-25.11";
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Local dev: points at your clone while the PR is open.
     # After the PR merges, replace with: github:iyaja/llama-fs
     llama-fs.url = "git+file:///home/vitor/Projects/OPEN%20SOURCE/llama-fs";
@@ -43,7 +48,7 @@
   outputs = { self, nixpkgs, nixpkgs-stable, home-manager, llama-fs, ... }@inputs:
     let
       lib = nixpkgs.lib;
-      system = "x86_64-linux";
+      system = "x86_64-linux"; # desktop system — also passed as extraSpecialArg for llama-fs.nix
       pkgs-stable = import nixpkgs-stable {
         inherit system;
         config.allowUnfree = true;
@@ -57,7 +62,7 @@
     {
       nixosConfigurations = {
         desktop = lib.nixosSystem {
-          inherit system;
+          system = "x86_64-linux";
           modules = [
             { nixpkgs.config.allowUnfree = true; nixpkgs.config.permittedInsecurePackages = [ "electron-38.8.4" ]; }
             ./hosts/desktop/configuration.nix
@@ -72,6 +77,23 @@
             }
           ];
           specialArgs = { inherit inputs username kbLayout pkgs-stable theme; };
+        };
+
+        oci-vps = lib.nixosSystem {
+          system = "aarch64-linux";
+          modules = [
+            ./hosts/oci-vps/default.nix
+            inputs.disko.nixosModules.disko
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs username; };
+              home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
+              home-manager.users.${username} = import ./hosts/oci-vps/home.nix;
+            }
+          ];
+          specialArgs = { inherit inputs username; };
         };
       };
     };
