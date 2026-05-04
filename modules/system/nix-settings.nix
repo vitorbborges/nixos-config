@@ -7,6 +7,9 @@
       auto-optimise-store = true;
       keep-outputs = true;       # keep build inputs for nix develop / nix-direnv
       keep-derivations = true;   # keep .drv files for nix develop
+      trusted-users = [ "root" "@wheel" ];  # required by devenv to add substituters
+      extra-substituters = [ "https://devenv.cachix.org" ];
+      extra-trusted-public-keys = [ "devenv.cachix.org-1:mIBmOfqxIVx3U12oA9a6RpkFkRyoMNy76enCl0LmWEg=" ];
     };
 
     # Pin registry + nixPath to flake's locked nixpkgs so that
