@@ -14,6 +14,10 @@
       # Remove all color options to let stylix handle theming
       # Only keep font setting since it's configuration, not theming
       "font" = "${font} 12";
+      # Wayland has two separate buffers: PRIMARY (mouse-select → middle-click)
+      # and CLIPBOARD (Ctrl+C → Ctrl+V). Zathura defaults to PRIMARY, so
+      # selected text never reaches Ctrl+V. Force it to CLIPBOARD.
+      "selection-clipboard" = "clipboard";
     };
 
     mappings = {
