@@ -39,6 +39,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-matlab = {
+      url = "gitlab:doronbehar/nix-matlab";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Local dev: points at your clone while the PR is open.
     # After the PR merges, replace with: github:iyaja/llama-fs
     llama-fs.url = "git+file:///home/vitor/Projects/OPEN%20SOURCE/llama-fs";
@@ -71,6 +76,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "bak";
               home-manager.extraSpecialArgs = { inherit inputs system username kbLayout font pkgs-stable theme; };
               home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
               home-manager.users.${username} = import ./hosts/desktop/home.nix;
