@@ -47,6 +47,7 @@ let
     "news-scan"      = { file = "passive_news_scan.md";      schedule = "*-*-28 09:00:00"; };
     "provider-audit" = { file = "passive_provider_audit.md"; schedule = "*-01,04,07,10-01 09:00:00"; };
     "banking-review" = { file = "passive_banking_review.md"; schedule = "*-01,04,07,10-01 09:00:00"; };
+    "tr-sync"        = { file = "passive_tr_sync.md";        schedule = "Mon *-*-* 09:00:00"; };
   };
 
 in {
