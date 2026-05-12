@@ -138,7 +138,7 @@ LSP servers, formatters, and linters must come from Nix, not Mason. Add them to 
 
 ## Development Workflow
 
-- Rebuild: `sudo nixos-rebuild switch --flake ~/nixos-config#vivobook`
+- Rebuild: `sudo nixos-rebuild switch --flake ~/nixos-config#desktop`
 - **New files must be `git add`ed before rebuilding** — Nix flakes only see git-tracked files; untracked files are invisible to the evaluator even with a dirty tree
 - Test in VM: `nix build .#nixosConfigurations.vivobook.config.system.build.vm && result/bin/run-nixos-vm`
 - VM image: `~/nixos-config/nixos.qcow2` (gitignored)

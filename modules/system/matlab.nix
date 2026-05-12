@@ -1,8 +1,5 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 {
-  # nix-matlab overlay — provides pkgs.matlab (FHS env wrapper) and pkgs.matlab-shell
-  nixpkgs.overlays = [ inputs.nix-matlab.overlay ];
-
   virtualisation.podman.enable = true;
 
   environment.systemPackages = [

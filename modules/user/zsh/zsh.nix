@@ -48,6 +48,18 @@
     ];
 
     initContent = ''
+      # ── custom functions ─────────────────────────────────────────────
+      nix-update() (
+        set -e
+        cd ~/nixos-config
+        nix flake update
+        sudo nixos-rebuild switch --flake ~/nixos-config#desktop
+        git add flake.lock
+        git commit -m "chore: bump flake inputs"
+        mkdir -p ~/.local/share
+        date +%s > ~/.local/share/nix-update-last
+      )
+
       # ── fzf-tab completions ──────────────────────────────────────────
       zstyle ':completion:*' menu no
       zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"

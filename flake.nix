@@ -59,6 +59,14 @@
         config.allowUnfree = true;
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
       };
+      # Desktop pkgs: allowUnfree + nix-matlab overlay applied at instantiation
+      # so home-manager (useGlobalPkgs) never sees nixpkgs.overlays in module eval.
+      pkgs-desktop = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        config.permittedInsecurePackages = [ "electron-38.8.4" ];
+        overlays = [ inputs.nix-matlab.overlay ];
+      };
       username = "vitor";
       kbLayout = "us";
       font = "JetBrains Mono Nerd Font";
@@ -69,7 +77,7 @@
         desktop = lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            { nixpkgs.config.allowUnfree = true; nixpkgs.config.permittedInsecurePackages = [ "electron-38.8.4" ]; }
+            { nixpkgs.pkgs = pkgs-desktop; }
             ./hosts/desktop/configuration.nix
             ./modules/system
             home-manager.nixosModules.home-manager
@@ -86,7 +94,7 @@
         };
 
         oci-vps = lib.nixosSystem {
-          system = "aarch64-linux";
+          system = "x86_64-linux";
           modules = [
             ./hosts/oci-vps/default.nix
             inputs.disko.nixosModules.disko

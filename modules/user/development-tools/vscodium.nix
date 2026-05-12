@@ -13,7 +13,7 @@ in {
     userSettings.vscodium.enable = lib.mkDefault true;
     # nixpkgs.allowUnfree inherited from system pkgs via useGlobalPkgs = true
 
-    programs.vscode = {
+    programs.vscodium = {
       enable = true;
       package = pkgs-stable.vscodium;
       profiles.default.extensions = with pkgs.vscode-extensions; [

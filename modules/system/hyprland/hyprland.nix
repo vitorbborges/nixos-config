@@ -16,8 +16,12 @@
     trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
   };
 
-  # Power key suspends instead of shutting down
-  services.logind.settings.Login.HandlePowerKey = "suspend";
+  # Power key suspends instead of shutting down; lid close also suspends
+  services.logind.settings.Login = {
+    HandlePowerKey = "suspend";
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "suspend"; # suspend even when plugged in
+  };
 
   # Force xdg-open through the portal so file pickers behave consistently on Wayland
   xdg.portal.xdgOpenUsePortal = true;
