@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # pdf2epub - Convert PDF(s) to EPUB using marker + pandoc
-# Usage: pdf2epub /path/to/file.pdf
-#        pdf2epub /path/to/directory    # converts all *.pdf files in dir
+# Usage: pdf2epub [--output-dir DIR] /path/to/file.pdf
+#        pdf2epub [--output-dir DIR] /path/to/directory    # converts all *.pdf files in dir
 #
 # Optional env vars:
 #   GEMINI_API_KEY  — Gemini API key for LLM-enhanced marker conversion
@@ -15,8 +15,17 @@ export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:T
 die()  { echo "ERROR: $*" >&2; exit 1; }
 warn() { echo "WARNING: $*" >&2; }
 
-input="${1:-}"
-[[ -z "$input" ]] && die "Usage: pdf2epub <pdf-file-or-directory>"
+output_dir=""
+positional=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --output-dir) shift; output_dir="${1:-}"; [[ -z "$output_dir" ]] && die "--output-dir requires a path"; shift ;;
+        *) positional+=("$1"); shift ;;
+    esac
+done
+input="${positional[0]:-}"
+[[ -z "$input" ]] && die "Usage: pdf2epub [--output-dir DIR] <pdf-file-or-directory>"
+[[ -n "$output_dir" ]] && mkdir -p "$output_dir"
 
 # Kill entire process group on Ctrl+C
 trap 'trap - INT TERM; echo "Interrupted." >&2; kill 0; exit 130' INT TERM
@@ -100,7 +109,11 @@ convert_one() {
 
     name=$(basename "$pdf_path" .pdf)
     dir=$(dirname "$pdf_path")
-    output_epub="$dir/${name}.epub"
+    if [[ -n "${output_dir:-}" ]]; then
+        output_epub="$output_dir/${name}.epub"
+    else
+        output_epub="$dir/${name}.epub"
+    fi
 
     if [[ -f "$output_epub" && "${FORCE:-0}" != "1" ]]; then
         echo "Skipping (exists): ${name}.epub  [FORCE=1 to re-convert]"

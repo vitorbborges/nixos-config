@@ -1,7 +1,7 @@
 { pkgs, username, ... }:
 
 {
-  imports = [ ./hardware.nix ];
+  imports = [ ./hardware.nix ./services.nix ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

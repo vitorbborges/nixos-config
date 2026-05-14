@@ -128,7 +128,6 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs username; };
-              home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
               home-manager.users.${username} = import ./hosts/oci-vps/home.nix;
             }
           ];
