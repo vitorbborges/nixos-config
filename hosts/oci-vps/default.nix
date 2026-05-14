@@ -31,13 +31,13 @@
     shell = pkgs.zsh;
     extraGroups = [ "wheel" "docker" ];
     openssh.authorizedKeys.keys = [
-      # TODO: add your SSH public key here before deploying
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2xDBZGkvHMRrb9qP+L23ZDtaNO6tIwX71tsSC/BOzL vitor.bandeira@mail.polimi.it"
     ];
   };
 
   # root access required by nixos-anywhere during initial install
   users.users.root.openssh.authorizedKeys.keys = [
-    # TODO: add your SSH public key here before deploying
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2xDBZGkvHMRrb9qP+L23ZDtaNO6tIwX71tsSC/BOzL vitor.bandeira@mail.polimi.it"
   ];
 
   programs.zsh.enable = true;

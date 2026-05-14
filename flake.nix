@@ -59,13 +59,38 @@
         config.allowUnfree = true;
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
       };
+      # Silence xorg.* deprecation warnings emitted by upstream packages that
+      # haven't migrated to the new top-level names yet (e.g. nvidia-vaapi-driver).
+      # Maps the warned aliases directly to the canonical top-level derivations.
+      suppressXorgWarnings = final: prev: {
+        xorg = prev.xorg // {
+          libICE        = prev.libice;
+          libSM         = prev.libsm;
+          libX11        = prev.libx11;
+          libxcb        = prev.libxcb;
+          libXcomposite = prev.libxcomposite;
+          libXcursor    = prev.libxcursor;
+          libXdamage    = prev.libxdamage;
+          libXext       = prev.libxext;
+          libXfixes     = prev.libxfixes;
+          libXft        = prev.libxft;
+          libXi         = prev.libxi;
+          libXinerama   = prev.libxinerama;
+          libXrandr     = prev.libxrandr;
+          libXrender    = prev.libxrender;
+          libXt         = prev.libxt;
+          libXtst       = prev.libxtst;
+          libXxf86vm    = prev.libxxf86vm;
+        };
+      };
+
       # Desktop pkgs: allowUnfree + nix-matlab overlay applied at instantiation
       # so home-manager (useGlobalPkgs) never sees nixpkgs.overlays in module eval.
       pkgs-desktop = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
-        overlays = [ inputs.nix-matlab.overlay ];
+        overlays = [ inputs.nix-matlab.overlay suppressXorgWarnings ];
       };
       username = "vitor";
       kbLayout = "us";
