@@ -18,7 +18,8 @@
       "vps" = {
         hostname = "150.230.145.134";
         user = "root";
-        identityFile = "~/.ssh/id_ed25519";
+        identityFile = "~/.ssh/id_bitbucket";
+        identitiesOnly = true;
       };
       "kafka-1" = {
         hostname = "51.103.132.227";

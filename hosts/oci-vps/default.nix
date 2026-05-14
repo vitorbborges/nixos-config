@@ -32,12 +32,14 @@
     extraGroups = [ "wheel" "docker" ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2xDBZGkvHMRrb9qP+L23ZDtaNO6tIwX71tsSC/BOzL vitor.bandeira@mail.polimi.it"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPftvkxmQyP2JXL9NryOKMFPmWIFqGVLfzIDsAto+Csv vitorbborges31@gmail.com"
     ];
   };
 
   # root access required by nixos-anywhere during initial install
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2xDBZGkvHMRrb9qP+L23ZDtaNO6tIwX71tsSC/BOzL vitor.bandeira@mail.polimi.it"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPftvkxmQyP2JXL9NryOKMFPmWIFqGVLfzIDsAto+Csv vitorbborges31@gmail.com"
   ];
 
   programs.zsh.enable = true;
