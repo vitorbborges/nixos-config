@@ -8,6 +8,12 @@
       keep-outputs = true;       # keep build inputs for nix develop / nix-direnv
       keep-derivations = true;   # keep .drv files for nix develop
       trusted-users = [ "root" "@wheel" ];  # required by devenv to add substituters
+
+      # Limit parallel builds so the system stays usable during rebuilds.
+      # i9-13980HX has 24 cores: 8 derivations × 4 cores each = 32 threads max,
+      # leaving headroom for the rest of the system.
+      max-jobs = 8;
+      cores = 4;
       extra-substituters = [ "https://devenv.cachix.org" ];
       extra-trusted-public-keys = [ "devenv.cachix.org-1:mIBmOfqxIVx3U12oA9a6RpkFkRyoMNy76enCl0LmWEg=" ];
     };

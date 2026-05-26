@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-stable, ... }:
 
 let
   awatcher = pkgs.rustPlatform.buildRustPackage {
@@ -29,7 +29,10 @@ in
 {
   services.activitywatch = {
     enable = true;
-    package = pkgs.aw-server-rust;
+    # aw-webui in nixpkgs-unstable 26.05 fails its jest check phase (missing
+    # vue-template-compiler). aw-webui is built inside aw-server-rust's own
+    # scope so it can't be patched via an overlay — use stable instead.
+    package = pkgs-stable.aw-server-rust;
     watchers = {
       awatcher = {
         package = awatcher;

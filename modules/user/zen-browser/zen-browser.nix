@@ -56,6 +56,12 @@
         # Disable VA-API: vaapitest subprocess crashes on NVIDIA Optimus PRIME
         "media.ffmpeg.vaapi.enabled" = false;
 
+        # Disable browser-level DoH — system already does DoT via AdGuardHome.
+        # Browser DoH bypasses systemd-resolved and breaks captive portal
+        # detection (port 443 to DoH servers is blocked before portal auth).
+        # 5 = DoH disabled, use system resolver.
+        "network.trr.mode" = 5;
+
         # Other useful preferences
         "browser.tabs.warnOnClose" = false;
         "browser.startup.page" = 3; # 3 = restore previous session
@@ -78,8 +84,10 @@
         "languagetool-webextension@languagetool.org" = "languagetool";
         # Bitwarden Password Manager
         "{446900e4-71c2-419f-a6a7-df9c091e268b}" = "bitwarden-password-manager";
-        # Surfshark VPN Extension
-        "{6ac85729-5d1f-4c24-8d41-5b7f262f31f7}" = "surfshark";
+        # Surfshark: not force-installed — it blocks all browser traffic when its
+        # kill switch is on and it can't reach its servers (e.g. captive portals).
+        # Install manually when needed.
+        # "{6ac85729-5d1f-4c24-8d41-5b7f262f31f7}" = "surfshark";
         # uBlock Origin
         "uBlock0@raymondhill.net" = "ublock-origin";
         # Unhook Remove YouTube Recommended and Shorts

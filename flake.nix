@@ -95,7 +95,7 @@
         inherit system;
         config.allowUnfree = true;
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
-        overlays = [ inputs.nix-matlab.overlay suppressXorgWarnings ];
+        overlays = [ inputs.nix-matlab.overlay suppressXorgWarnings (import ./modules/overlays/default.nix) ];
       };
       username = "vitor";
       kbLayout = "us";
