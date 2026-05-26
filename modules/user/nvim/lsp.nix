@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   programs.nixvim.plugins = {
@@ -51,6 +51,15 @@
 
         # Nix LSP — nixd is more capable than nil, actively maintained
         nixd.enable = true;
+
+        bashls.enable = true;
+
+        ts_ls.enable = true;
+
+        r_language_server = {
+          enable  = true;
+          package = pkgs.rPackages.languageserver;
+        };
       };
     };
   };

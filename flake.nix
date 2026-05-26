@@ -44,6 +44,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Local dev: points at your clone while the PR is open.
     # After the PR merges, replace with: github:iyaja/llama-fs
     llama-fs.url = "git+file:///home/vitor/Projects/OPEN%20SOURCE/llama-fs";

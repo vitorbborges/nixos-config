@@ -12,13 +12,4 @@
 
   # Required for hyprlock PAM authentication
   security.pam.services.hyprlock = {};
-
-  # Allow wallpaper-switch to trigger nixos-rebuild without a password prompt
-  security.sudo.extraRules = [{
-    users = [ username ];
-    commands = [{
-      command = "/run/current-system/sw/bin/nixos-rebuild";
-      options = [ "NOPASSWD" ];
-    }];
-  }];
 }

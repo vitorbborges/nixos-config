@@ -88,8 +88,10 @@ launch_pandoc_bg() {
     (
         if pandoc "$md" \
                 -o "$temp_dir/out.epub" \
-                --to epub3 --mathml --toc \
+                --to epub3 --webtex="https://latex.codecogs.com/svg.latex?" --toc \
+                --css "$MATH_CSS" \
                 --resource-path="$(dirname "$md")"; then
+            python3 "$FIX_EPUB_MATH" "$temp_dir/out.epub"
             mv "$temp_dir/out.epub" "$output_epub"
             echo "  EPUB saved: $output_epub"
         else

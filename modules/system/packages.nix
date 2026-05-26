@@ -5,6 +5,7 @@
     timeshift
     gparted
     wget
+    unzip
   ];
 
   # gvfs: lets Nautilus (and other GTK apps) see and mount removable drives via udisks2

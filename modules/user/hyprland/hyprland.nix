@@ -9,6 +9,7 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "hyprlang";
     settings = {
       monitor = [
         "eDP-1,3200x2000@120,0x0,2"          # built-in: 3200x2000 @ 2.0 scale 120Hz

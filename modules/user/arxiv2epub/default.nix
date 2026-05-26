@@ -12,18 +12,69 @@ let
     fi
   '';
 
+  # Embedded in the EPUB so equations render correctly in crengine (KOReader).
+  # Display SVGs are scaled 2x by fix_epub_math.py so they appear at a proper
+  # display-equation size (~80-100 px) rather than body-text height (~45 px).
+  # Inline equations are pinned to 1em height so they track the reading font size.
+  mathCss = pkgs.writeText "math.css" ''
+    img {
+        width: 100%;
+        height: auto;
+    }
+    span.math.inline img {
+        width: auto;
+        height: 1em;
+        vertical-align: -0.2em;
+    }
+    span.math.display {
+        display: block;
+        text-align: center;
+        margin: 0.8em auto;
+    }
+    span.math.display img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+    }
+  '';
+
+  # Scales display-math SVGs 2x after pandoc embeds them, so they render at a
+  # readable size. Inline SVGs are left alone (CSS controls their height to 1em).
+  fixEpubMath = pkgs.writeText "fix-epub-math.py" (builtins.readFile ./fix_epub_math.py);
+
+  # Shared pandoc flags injected into both conversion scripts
+  pandocPreamble = ''
+    MATH_CSS="${mathCss}"
+    FIX_EPUB_MATH="${fixEpubMath}"
+  '';
+
   arxiv2epub = pkgs.writeShellApplication {
     name = "arxiv2epub";
     # wget: download PDFs; curl: fetch arXiv metadata
     runtimeInputs = with pkgs; [ wget curl python3 pandoc uv ];
-    text = wrapperPreamble + (builtins.readFile ./arxiv2epub.sh);
+    text = wrapperPreamble + pandocPreamble + (builtins.readFile ./arxiv2epub.sh);
   };
 
   pdf2epub = pkgs.writeShellApplication {
     name = "pdf2epub";
     # findutils: find PDFs in directory
     runtimeInputs = with pkgs; [ findutils python3 pandoc uv ];
-    text = wrapperPreamble + (builtins.readFile ./pdf2epub.sh);
+    text = wrapperPreamble + pandocPreamble + (builtins.readFile ./pdf2epub.sh);
+  };
+
+  # Reads Librera Reader's app-Bookmarks.json (synced via Syncthing) and
+  # generates/updates per-paper markdown note files in notes/.
+  libreraNotesScript = pkgs.writeText "librera-notes.py" (builtins.readFile ./librera_notes.py);
+
+  libreraNotesWrapper = pkgs.writeShellApplication {
+    name = "librera-notes";
+    runtimeInputs = with pkgs; [ python3 ];
+    text = ''
+      NOTES_DIR="''${NOTES_DIR:-$HOME/EDF/bibliography/notes}"
+      LIBRERA_DIR="''${LIBRERA_DIR:-$HOME/EDF/bibliography/.librera}"
+      export NOTES_DIR LIBRERA_DIR
+      exec python3 "${libreraNotesScript}" "$@"
+    '';
   };
 
   bibliographyDir = "/home/vitor/EDF/bibliography";
@@ -78,7 +129,7 @@ let
   };
 in
 {
-  home.packages = [ arxiv2epub pdf2epub bibliographyWatcher ];
+  home.packages = [ arxiv2epub pdf2epub bibliographyWatcher libreraNotesWrapper ];
 
   systemd.user.paths.bibliography-watch = {
     Unit.Description = "Watch bibliography pdfs/ for new PDFs";

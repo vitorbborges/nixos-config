@@ -34,12 +34,12 @@
     };
   };
 
-  # Certbot: obtain/renew Let's Encrypt cert for dns.vitorrborges.space
+  # Certbot: obtain/renew Let's Encrypt cert for dns.vitorbborges.space
   # Stops AGH briefly (frees port 80), runs standalone HTTP-01 challenge, then restarts AGH.
   # Certs are copied to /var/lib/adguardhome/conf/ where AGH reads them via
   # certificate_path and private_key_path in AdGuardHome.yaml.
   systemd.services.adguardhome-certbot = {
-    description = "Certbot TLS renewal for dns.vitorrborges.space";
+    description = "Certbot TLS renewal for dns.vitorbborges.space";
     after = [ "network-online.target" "adguardhome.service" ];
     wants = [ "network-online.target" ];
     script = ''
@@ -51,10 +51,10 @@
         --non-interactive \
         --agree-tos \
         --email vitorbborges31@gmail.com \
-        -d dns.vitorrborges.space \
+        -d dns.vitorbborges.space \
         && {
-          cp /etc/letsencrypt/live/dns.vitorrborges.space/fullchain.pem /var/lib/adguardhome/conf/fullchain.pem
-          cp /etc/letsencrypt/live/dns.vitorrborges.space/privkey.pem   /var/lib/adguardhome/conf/privkey.pem
+          cp /etc/letsencrypt/live/dns.vitorbborges.space/fullchain.pem /var/lib/adguardhome/conf/fullchain.pem
+          cp /etc/letsencrypt/live/dns.vitorbborges.space/privkey.pem   /var/lib/adguardhome/conf/privkey.pem
           chmod 640 /var/lib/adguardhome/conf/fullchain.pem /var/lib/adguardhome/conf/privkey.pem
         }
       $compose start

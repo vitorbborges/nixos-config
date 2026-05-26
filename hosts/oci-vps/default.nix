@@ -1,7 +1,7 @@
 { pkgs, username, ... }:
 
 {
-  imports = [ ./hardware.nix ./services.nix ];
+  imports = [ ./hardware.nix ./services.nix ./wireguard.nix ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -14,7 +14,7 @@
       # Port 53 intentionally omitted — DNS amplification attack risk.
       # Plain DNS is only served over WireGuard (added in Phase 6).
       allowedTCPPorts = [ 22 80 443 853 ];
-      allowedUDPPorts = [ 51820 ];
+      allowedUDPPorts = [ 443 ];
     };
   };
 

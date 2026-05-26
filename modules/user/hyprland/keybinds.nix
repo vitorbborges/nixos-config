@@ -36,6 +36,8 @@ in
       "$mod, W, exec, kitty -e wifitui"
       "$mod, C, exec, codium"
       "$mod, M, exec, spotify"
+      "$mod, I, exec, thunderbird"
+      "$mod, T, exec, kitty -e btop"
       "$mod, S, exec, kitty -e wiremix"
       "$mod, E, exec, kitty -e yazi"
       "$mod, EQUAL, exec, kitty -e qalc"
@@ -55,11 +57,13 @@ in
       # System
       "$mod, A, exec, pypr expose"
       "CTRL ALT, L, exec, pidof hyprlock || hyprlock"
+      "CTRL ALT, P, exec, wlogout -b 5"
       "$mod, SPACE, exec, hl-kb-switch"
       "$mod CTRL ALT, B, exec, pkill -SIGUSR1 waybar"
-      # Screenshots (scripts in ./scripts/, packaged as hl-screenshot-*)
+      # Screenshots and screen recording
       ", Print, exec, hl-screenshot-area"
       "SHIFT, Print, exec, hl-screenshot-full"
+      "$mod SHIFT, R, exec, hl-screenrec-toggle"
       # Focus
       "$mod, left,  movefocus, l"
       "$mod, right, movefocus, r"

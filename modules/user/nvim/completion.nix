@@ -22,7 +22,7 @@
           menu.draw.treesitter = [ "lsp" ];
         };
 
-        sources.default = [ "lsp" "path" "snippets" "buffer" ];
+        sources.default = [ "lsp" "path" "snippets" "buffer" "copilot" ];
 
         keymap = {
           preset = "none";

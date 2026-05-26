@@ -120,8 +120,10 @@ sed -i 's/\\rm\([[:space:]{]\)/\\mathrm\1/g; s/\\rm\([a-zA-Z]\)/\\mathrm{\1}/g' 
 echo "Generating EPUB..."
 pandoc "$MARKDOWN_FILE" \
     -o "$TEMP_DIR/paper.epub" \
-    --to epub3 --mathml --toc \
+    --to epub3 --webtex="https://latex.codecogs.com/svg.latex?" --toc \
+    --css "$MATH_CSS" \
     --resource-path="$TEMP_DIR/output/paper"
 
+python3 "$FIX_EPUB_MATH" "$TEMP_DIR/paper.epub"
 mv "$TEMP_DIR/paper.epub" "$OUTPUT_EPUB"
 echo "EPUB saved to: $OUTPUT_EPUB"

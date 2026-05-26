@@ -13,13 +13,13 @@
 
       listener = [
         {
-          # 5 min — lock screen
-          timeout = 300;
+          # 2 min — lock screen
+          timeout = 120;
           on-timeout = "pidof hyprlock || hyprlock";
         }
         {
-          # 5.5 min — DPMS off (screen dark = OLED pixels off)
-          timeout = 330;
+          # 2.5 min — DPMS off (screen dark = OLED pixels off)
+          timeout = 150;
           on-timeout = "hyprctl dispatch dpms off";
           on-resume = "hyprctl dispatch dpms on";
         }

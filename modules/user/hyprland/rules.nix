@@ -7,6 +7,7 @@
       "match:namespace waybar, blur 1"
       "match:namespace swaync-notification-window, blur 0"
       "match:namespace swaync-control-center, blur 1"
+      "match:namespace wlogout, blur 1"
     ];
 
     windowrule = [

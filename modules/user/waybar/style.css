@@ -80,7 +80,7 @@ window#waybar {
 /* ── Shared right-module style ──────────────────────────────────────── */
 #network,
 #pulseaudio,
-#battery,
+#custom-battery,
 #custom-notification {
   padding: 0 12px;
   color: @base05;
@@ -89,7 +89,7 @@ window#waybar {
 /* vertical separator between right modules */
 #network,
 #pulseaudio,
-#battery {
+#custom-battery {
   border-right: 1px solid rgba(255, 255, 255, 0.07);
 }
 
@@ -125,20 +125,24 @@ window#waybar {
 }
 
 /* ── Battery ────────────────────────────────────────────────────────── */
-#battery {
+#custom-battery {
   color: @base0B;
 }
 
-#battery.charging,
-#battery.plugged {
+#custom-battery.charging {
   color: @base0D;
 }
 
-#battery.warning:not(.charging) {
+#custom-battery.full {
+  color: @base0B;
+  opacity: 0.7;
+}
+
+#custom-battery.warning {
   color: @base09;
 }
 
-#battery.critical:not(.charging) {
+#custom-battery.critical {
   color: @base08;
   animation-name: blink;
   animation-duration: 500ms;
@@ -175,7 +179,7 @@ window#waybar {
 #network:hover,
 #temperature:hover,
 #pulseaudio:hover,
-#battery:hover,
+#custom-battery:hover,
 #custom-notification:hover {
   color: @base06;
   background: rgba(255, 255, 255, 0.05);

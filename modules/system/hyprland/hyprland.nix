@@ -21,6 +21,9 @@
     HandlePowerKey = "suspend";
     HandleLidSwitch = "suspend";
     HandleLidSwitchExternalPower = "suspend"; # suspend even when plugged in
+    # Without this, processes holding sleep inhibitors (Docker rootless, VirtualBox)
+    # silently prevent lid-close from triggering suspend.
+    LidSwitchIgnoreInhibited = "yes";
   };
 
   # Force xdg-open through the portal so file pickers behave consistently on Wayland
@@ -43,6 +46,10 @@
       user = "greeter";
     };
   };
+
+  # Suppress "Starting …" / "Started …" status lines on the console so they
+  # don't bleed onto tuigreet's TTY. Only errors are shown.
+  systemd.settings.Manager.ShowStatus = "error";
 
   services.upower.enable = true;
 

@@ -11,6 +11,45 @@ let
     fi
   '';
 
+  battery-custom = pkgs.writeShellScript "waybar-battery" ''
+    cap_file="/sys/class/power_supply/BAT0/capacity"
+    status_file="/sys/class/power_supply/BAT0/status"
+
+    if [[ ! -f "$cap_file" ]]; then
+      printf '{"text": "󰂑  --%%", "class": "unknown"}\n'
+      exit 0
+    fi
+
+    raw=$(< "$cap_file")
+    status=$(< "$status_file")
+
+    display=$(( raw * 100 / 80 ))
+    [[ "$display" -gt 100 ]] && display=100
+
+    case "$status" in
+      Charging)
+        icon="󰂄"; class="charging" ;;
+      Full)
+        icon="󰁹"; display=100; class="full" ;;
+      *)
+        if   [[ "$display" -ge 90 ]]; then icon="󰂂"
+        elif [[ "$display" -ge 70 ]]; then icon="󰂀"
+        elif [[ "$display" -ge 50 ]]; then icon="󰁾"
+        elif [[ "$display" -ge 30 ]]; then icon="󰁼"
+        elif [[ "$display" -ge 10 ]]; then icon="󰁻"
+        else                               icon="󰁺"
+        fi
+        if   [[ "$display" -le 10 ]]; then class="critical"
+        elif [[ "$display" -le 25 ]]; then class="warning"
+        else                               class="discharging"
+        fi
+        ;;
+    esac
+
+    printf '{"text": "%s  %d%%", "class": "%s", "percentage": %d, "tooltip": "Raw: %d%% | %s"}\n' \
+      "$icon" "$display" "$class" "$display" "$raw" "$status"
+  '';
+
   weather = pkgs.writeShellScript "waybar-weather" ''
     set -euo pipefail
     data=$(${pkgs.curl}/bin/curl -sf --max-time 10 "https://wttr.in/?format=j1") || {
@@ -58,7 +97,7 @@ in
 
       modules-left   = [ "hyprland/workspaces" ];
       modules-center = [ "clock" ];
-      modules-right  = [ "custom/weather" "custom/cpu-temp" "network" "pulseaudio" "battery" "custom/notification" ];
+      modules-right  = [ "custom/weather" "custom/cpu-temp" "network" "pulseaudio" "custom/battery" "custom/notification" ];
 
       "hyprland/workspaces" = {
         format = "{name}";
@@ -109,14 +148,11 @@ in
         tooltip-format = "{desc}";
       };
 
-      battery = {
-        states = { warning = 30; critical = 15; };
-        format          = "{icon}  {capacity}%";
-        format-charging = "󰂄  {capacity}%";
-        format-plugged  = "󰚥  {capacity}%";
-        format-full     = "󰁹  {capacity}%";
-        format-icons    = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
-        tooltip-format  = "{timeTo}\n{power:.1f} W";
+      "custom/battery" = {
+        exec        = "${battery-custom}";
+        return-type = "json";
+        interval    = 10;
+        tooltip     = true;
       };
 
       "custom/notification" = {
