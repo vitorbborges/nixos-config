@@ -58,7 +58,6 @@
     };
 
     dwindle = {
-      pseudotile = true;
       preserve_split = true;
     };
 
@@ -72,9 +71,12 @@
       force_default_wallpaper = 0;
       disable_hyprland_logo = true;
       disable_splash_rendering = true;
-      vfr = true;
       mouse_move_enables_dpms = true;  # mouse movement wakes screen after DPMS off
       focus_on_activate = false;        # apps cannot steal focus
+    };
+
+    debug = {
+      vfr = true;
     };
 
     # Prevents XWayland apps from rendering blurry at 2× scale on 3200x2000

@@ -5,9 +5,6 @@
     inputs.stylix.homeModules.stylix
   ];
 
-  # Silence home-manager 26.05 deprecation warning; keep GTK4 apps using the same theme as GTK3.
-  gtk.gtk4.theme = config.gtk.theme;
-
   stylix = {
     enable = true;
 

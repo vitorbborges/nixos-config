@@ -48,7 +48,7 @@ in
       "$mod, F, fullscreen"
       "$mod CTRL, F, fullscreen, 1"        # fake fullscreen: maximized without true FS
       "$mod, P, pseudo"
-      "$mod, J, togglesplit"
+      "$mod, J, layoutmsg, togglesplit"
       # Launchers and utilities
       "$mod, R, exec, fuzzel"
       "$mod, V, exec, cliphist list | fuzzel --dmenu -p '  Clipboard' | cliphist decode | wl-copy"

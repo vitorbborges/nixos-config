@@ -70,7 +70,7 @@
 
   # Diagnostic display: signs in gutter, no inline virtual text (clean look)
   # Toggle with <leader>vw (wired in linting.nix)
-  programs.nixvim.diagnostics = {
+  programs.nixvim.diagnostic.settings = {
     virtual_text = false;
     signs = true;
     underline = false;
