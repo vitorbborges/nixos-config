@@ -15,7 +15,7 @@ services" with no manual re-keying.
   boot. No manual DNS step needed.
 - Vaultwarden vault + AdGuardHome config: restored from the restic backup in
   `hosts/oci-vps/backup.nix` (Backblaze B2) or from the desktop-side pull in
-   the restic backup described below.
+  `modules/user/vaultwarden-backup/backup.nix`.
 
 ## What's explicitly NOT covered (acceptable loss)
 

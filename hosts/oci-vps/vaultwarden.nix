@@ -9,9 +9,10 @@
     enable = true;
 
     # NixOS's built-in backup timer — safe (non-corrupting) sqlite backup,
-    # no hand-rolled script needed. Offsite copy handled by the restic
-    # backup (./backup.nix) — this alone only protects against local data
-    # loss on the VPS, not losing the whole instance.
+    # no hand-rolled script needed. Offsite copy is pulled by a desktop-side
+    # timer (modules/user/vaultwarden-backup/backup.nix) and mirrored to B2
+    # (./backup.nix) — this alone only protects against local data loss on
+    # the VPS, not losing the whole instance.
     backupDir = "/var/backup/vaultwarden";
 
     # Holds ADMIN_TOKEN. sops-managed (hosts/oci-vps/secrets.nix) — encrypted

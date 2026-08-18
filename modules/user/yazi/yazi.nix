@@ -91,7 +91,7 @@ in
         # `?` normally does `find --previous`; remap it to the keybind cheatsheet
         # (built-in `~` / <F1> still work too). Find-previous moves to <A-/>.
         { run = "help"; on = [ "?" ]; desc = "Open help (all keybinds)"; }
-        { run = "find --previous --smart"; on = [ "<A-/>" ]; desc = "Find previous file"; }
+        { run = "find --previous --smart"; on = [ "<A-n>" ]; desc = "Find previous file"; }
 
         # ── navigation ──
         { run = "cd ~/Projects"; on = [ "g" "p" ]; desc = "Go to projects"; }
@@ -110,7 +110,7 @@ in
         { run = "shell ' %s' --cursor=0 --interactive"; on = [ "R" ]; desc = "Run command (detached)"; }
 
         # ── archives ──
-        { run = ''plugin compress -- -pls''; on = [ "c" "z" ]; desc = "Compress (password/level)"; }
+        { run = ''plugin compress -pls''; on = [ "c" "z" ]; desc = "Compress (password/level)"; }
         { run = "plugin ouch"; on = [ "c" "Z" ]; desc = "Compress with ouch"; }
 
         # ── yank / copy / paste ──

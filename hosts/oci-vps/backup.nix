@@ -1,8 +1,10 @@
 { config, ... }:
 
 {
-  # Offsite backup (encrypted restic → Backblaze B2) so a single machine
-  # dying doesn't take out the only copy. Covers state that isn't already
+  # Offsite backup (encrypted restic → Backblaze B2, independent of the
+  # desktop-side pull in modules/user/vaultwarden-backup/backup.nix) so a
+  # single machine dying doesn't take out the only copy. Covers state that
+  # isn't already
   # reproducible from this git repo: AdGuardHome's filter rules/config and
   # Vaultwarden's own backup dir. Credentials are sops-managed — see
   # ./secrets.nix.

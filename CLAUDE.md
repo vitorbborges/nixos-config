@@ -94,7 +94,22 @@ Each `.nix` file in `modules/user/` or `modules/system/` owns exactly one concer
 - Affects the user environment, dotfiles, programs → `modules/user/`
 - Cross-cutting (e.g., MIME associations) → dedicated file (`xdg/xdg.nix`), not spread across modules
 
-### 4. Threading Flake Inputs Into Modules
+### 4. No Foreign Code Inline in Nix — Extract to Dedicated Files
+
+Bash, CSS, Lua, TOML, and any other non-Nix code must never live inside Nix strings (`text = ''...''`). Put it in a sibling file and import it:
+
+- **Plain content** (no Nix values needed): `builtins.readFile ./scripts/foo.sh`, `./style.css`
+- **Content needing Nix values** (store paths, stylix colors): template file with `@placeholder@` tokens substituted at eval time:
+  ```nix
+  text = builtins.replaceStrings
+    [ "@base00@" "@font@" ]
+    [ c.base00 font ]
+    (builtins.readFile ./style.css.in);
+  ```
+- **Caveat:** `builtins.replaceStrings` does NOT coerce derivations to strings — wrap them as `"${drv}"` in the replacement list (interpolation does the coercion).
+- Conventions: scripts → `scripts/`; templates → `*.in` files; nvim Lua → `lua/`. Omit the shebang in `writeShellApplication` `text` (it adds one); keep `#!/usr/bin/env bash` for `home.file` sources.
+
+### 5. Threading Flake Inputs Into Modules
 
 External flake inputs (spicetify-nix, stylix, zen-browser, hyprland) are NOT available in modules by default. They must be threaded via `inputs` in `extraSpecialArgs`, then imported explicitly inside the module that needs them:
 
@@ -113,9 +128,9 @@ External flake inputs (spicetify-nix, stylix, zen-browser, hyprland) are NOT ava
 
 **Rule:** Inputs are explicit. If a module uses a flake input, declare `inputs` as a function argument and import its module/package directly. Never assume an input's packages are in `pkgs`.
 
-### 5. Stable vs Unstable Packages
+### 6. Stable vs Unstable Packages
 
-Most packages use `pkgs` (nixos-unstable). Use `pkgs-stable` only when a package has known instability on unstable or requires strict reproducibility (e.g., RStudio, VSCodium). `pkgs-stable` is passed via `extraSpecialArgs` and available in any module that declares it as an argument.
+Most packages use `pkgs` (nixos-unstable). Use `pkgs-stable` only when a package has known instability on unstable or requires strict reproducibility (e.g., VSCodium). `pkgs-stable` is passed via `extraSpecialArgs` and available in any module that declares it as an argument.
 
 ```nix
 { pkgs, pkgs-stable, ... }:
@@ -127,14 +142,14 @@ Most packages use `pkgs` (nixos-unstable). Use `pkgs-stable` only when a package
 }
 ```
 
-### 6. useGlobalPkgs — No Duplicate nixpkgs Imports
+### 7. useGlobalPkgs — No Duplicate nixpkgs Imports
 
 `home-manager.useGlobalPkgs = true` is set. Home-manager shares the system's `nixpkgs` instance. **Consequences:**
 - Never add `nixpkgs.config.*` inside home-manager modules — it has no effect and emits a warning
 - `allowUnfree` is set once in `flake.nix` only
 - `pkgs` in any home-manager module is the same `pkgs` as the system
 
-### 7. Mason Cannot Install Binaries on NixOS
+### 8. Mason Cannot Install Binaries on NixOS
 
 LSP servers, formatters, and linters must come from Nix, not Mason. Add them to `home.packages` in `modules/user/nvim/nvim.nix` (or `lsp.nix`). Mason's `:MasonInstall` will silently fail or produce broken binaries because NixOS has no FHS.
 

@@ -9,7 +9,7 @@ if [ -z "$mime" ] || [ "$mime" = "application/octet-stream" ]; then
 fi
 
 # ── known terminal commands (without file args; files appended at runtime) ──
-term_cmds=(
+term_cmds_all=(
   "nvim  (editor)"$'\t'"nvim"
   "helix (editor)"$'\t'"helix"
   "nano  (editor)"$'\t'"nano"
@@ -19,6 +19,13 @@ term_cmds=(
   "cat   (viewer)"$'\t'"cat"
   "emacs (editor)"$'\t'"emacs"
 )
+
+# Only offer commands that actually exist on this system.
+term_cmds=()
+for entry in "${term_cmds_all[@]}"; do
+  bin=$(printf '%s' "$entry" | cut -f2- | cut -d' ' -f1)
+  command -v "$bin" >/dev/null 2>&1 && term_cmds+=("$entry")
+done
 
 # ── collect .desktop apps from mimeinfo.cache ──
 IFS=: read -ra _xdg_dirs <<< "${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
@@ -54,6 +61,8 @@ for file in "$@"; do
   printf -v quoted ' %q' "$file"
   file_args+="$quoted"
 done
+printf -v first_q '%q' "$1"
+printf -v dir_q '%q' "$(dirname -- "$1")"
 
 # ── build fzf list: "label\tcommand [files]" ──
 {
@@ -69,9 +78,9 @@ done
     done
   fi
 
-  printf '%s\t%s\n' "xdg-open  (system default)" "xdg-open $1"
+  printf '%s\t%s\n' "xdg-open  (system default)" "xdg-open $first_q"
   printf '%s\t%s%s\n' "nvim      (force)" "nvim" "$file_args"
-  printf '%s\t%s%s\n' "  shell here" "$SHELL" "$file_args"
+  printf '%s\t%s\n' "  shell here" "cd $dir_q && exec $SHELL"
 } | grep -v '^$' | while IFS= read -r raw; do
   label=$(printf '%s' "$raw" | cut -f1)
   cmd=$(printf '%s' "$raw" | cut -f2- | sed 's/ %[uUfFdDnNickvm]//g; s/%[uUfFdDnNickvm]//g')
@@ -99,6 +108,8 @@ cmd=$(printf '%s' "$chosen" | cut -f2-)
 case "$cmd" in
   nvim*|helix*|nano*|micro*|emacs*|"$SHELL"*)
     eval "exec $cmd" ;;
+  cd\ *)
+    eval "$cmd" ;;
   *)
     eval "$cmd" &>/dev/null & disown ;;
 esac
