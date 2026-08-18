@@ -110,7 +110,7 @@ in
         { run = "shell ' %s' --cursor=0 --interactive"; on = [ "R" ]; desc = "Run command (detached)"; }
 
         # ── archives ──
-        { run = ''plugin compress -pls''; on = [ "c" "z" ]; desc = "Compress (password/level)"; }
+        { run = "plugin compress"; on = [ "c" "z" ]; desc = "Compress selection"; }
         { run = "plugin ouch"; on = [ "c" "Z" ]; desc = "Compress with ouch"; }
 
         # ── yank / copy / paste ──
@@ -176,8 +176,16 @@ in
         archive = [
           { run = ''ouch d -y %s''; desc = "ouch (extract)"; }
         ];
+        codium = [
+          { run = ''codium --new-window %s''; orphan = true; desc = "codium"; }
+        ];
       };
       open.rules = [
+        # ── Jupyter notebooks → codium (before json rule, which would claim them) ──
+        { mime = "application/x-ipynb+json"; use = "codium"; }
+        { mime = "application/ipynb+json"; use = "codium"; }
+        { url = "*.ipynb"; use = "codium"; }
+
         # Directories opened from Yazi should become the nvim tree root.
         { url = "*/"; use = "text"; }
 

@@ -1,6 +1,6 @@
 # OpenClaw — personal AI assistant, Nix-declarative install via nix-openclaw.
 #
-# Integration pattern (CLAUDE.md design principle #5):
+# Integration pattern (AGENTS.md design principle #5):
 #   External flake inputs arrive via extraSpecialArgs → imported here.
 #
 # Workspace bootstrap:

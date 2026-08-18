@@ -1,4 +1,14 @@
-# Claude Code Guidelines — nixos-config
+# Agent Guidelines — nixos-config
+
+## Development Workflow
+
+- Rebuild: `sudo nixos-rebuild switch --flake ~/nixos-config#desktop`
+- Validate without sudo: `nix build .#nixosConfigurations.desktop.config.system.build.toplevel --no-link`
+- **New files must be `git add`ed before rebuilding** — Nix flakes only see git-tracked files; untracked files are invisible to the evaluator even with a dirty tree
+- Test in VM: `nix build .#nixosConfigurations.desktop.config.system.build.vm && result/bin/run-nixos-vm`
+- VM image: `~/nixos-config/nixos.qcow2` (gitignored)
+
+---
 
 ## User Preferences
 
@@ -26,7 +36,7 @@
 ## Architecture
 
 - NixOS flake-based config with home-manager as a NixOS module (single `nixos-rebuild switch`)
-- Target machine: ASUS Vivobook, Intel i7 + NVIDIA RTX 4070 (Optimus PRIME hybrid), 3200x2000 HiDPI display
+- Two hosts: `desktop` (ASUS Vivobook Pro 16X, Intel Core i9-13980HX + NVIDIA RTX 4070 Optimus PRIME, 3200x2000 HiDPI) and `oci-vps` (Oracle Cloud VPS — Vaultwarden, AdGuardHome, WireGuard)
 - Desktop: Hyprland (Wayland) via UWSM
 - Theming: stylix handles GTK, Qt, fonts, colors globally — do not add manual theme overrides
 
@@ -152,15 +162,6 @@ Most packages use `pkgs` (nixos-unstable). Use `pkgs-stable` only when a package
 ### 8. Mason Cannot Install Binaries on NixOS
 
 LSP servers, formatters, and linters must come from Nix, not Mason. Add them to `home.packages` in `modules/user/nvim/nvim.nix` (or `lsp.nix`). Mason's `:MasonInstall` will silently fail or produce broken binaries because NixOS has no FHS.
-
----
-
-## Development Workflow
-
-- Rebuild: `sudo nixos-rebuild switch --flake ~/nixos-config#desktop`
-- **New files must be `git add`ed before rebuilding** — Nix flakes only see git-tracked files; untracked files are invisible to the evaluator even with a dirty tree
-- Test in VM: `nix build .#nixosConfigurations.vivobook.config.system.build.vm && result/bin/run-nixos-vm`
-- VM image: `~/nixos-config/nixos.qcow2` (gitignored)
 
 ---
 
