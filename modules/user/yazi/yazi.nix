@@ -161,7 +161,7 @@ in
         { run = "hidden toggle"; on = [ "<C-h>" ]; desc = "Toggle hidden"; }
 
         # ── shell ──
-        { run = "shell '$SHELL' --block"; on = [ "<C-t>" ]; desc = "Open shell here (exit to return)"; }
+        { run = "shell 'HERDR_NO_ATTACH=1 $SHELL' --block"; on = [ "<C-t>" ]; desc = "Open shell here (exit to return)"; }
         { run = "shell ' %s' --cursor=0 --interactive"; on = [ "@" ]; desc = "Shell with selection"; }
       ];
     };

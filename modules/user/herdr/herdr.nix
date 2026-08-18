@@ -25,14 +25,15 @@ in
     (builtins.readFile ./config.toml.in);
 
   # Auto-attach to the persistent herdr session on interactive shell start,
-  # unless already inside one (HERDR_ENV) or in a non-interactive shell
-  # (e.g. a scripted SSH command) — avoids nested-launch and breaking
+  # unless already inside one (HERDR_ENV), explicitly opted out
+  # (HERDR_NO_ATTACH, e.g. yazi's Ctrl-T shell), or in a non-interactive
+  # shell (e.g. a scripted SSH command) — avoids nested-launch and breaking
   # non-interactive tooling.
   programs.zsh.initContent = ''
     if [[ -n "$HERDR_ENV" ]]; then
       source ${config.xdg.configHome}/herdr/pair-restore.zsh
     fi
-    if [[ -z "$HERDR_ENV" && $- == *i* ]]; then
+    if [[ -z "$HERDR_ENV" && -z "$HERDR_NO_ATTACH" && $- == *i* ]]; then
       exec herdr
     fi
   '';
