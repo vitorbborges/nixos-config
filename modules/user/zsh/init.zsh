@@ -1,10 +1,3 @@
-nix-rebuild() {
-  cd ~/nixos-config
-  git add ~/nixos-config
-  sudo nixos-rebuild switch --flake ~/nixos-config#desktop && \
-    git commit -m "rebuild: $(date '+%Y-%m-%d %H:%M')"
-}
-
 nix-update() (
   set -e
   cd ~/nixos-config
