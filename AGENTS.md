@@ -167,7 +167,7 @@ LSP servers, formatters, and linters must come from Nix, not Mason. Add them to 
 
 ### 9. Skills Are Auto-Discovered — No Registration
 
-Skills live in `modules/user/agents/skills/<name>/` and are materialized to `~/.claude/skills/` by `modules/user/agents/skills.nix` (recursive `home.file`). Adding a skill = create the directory with `SKILL.md`, `git add`, rebuild. No import list to edit. Follow Anthropic's skill best practices: gerund `name`, third-person `description` with triggers, body <500 lines, progressive disclosure via `references/`.
+Skills live in `modules/user/agents/skills/<name>/` and are materialized to `~/.config/opencode/skills/` by `modules/user/agents/skills.nix` (recursive `home.file`). Adding a skill = create the directory with `SKILL.md`, `git add`, rebuild. No import list to edit. Follow Anthropic's skill best practices: gerund `name`, third-person `description` with triggers, body <500 lines, progressive disclosure via `references/`.
 
 ---
 
