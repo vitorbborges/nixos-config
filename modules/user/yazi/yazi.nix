@@ -30,6 +30,19 @@ let
                        'local _ic = th.icon:match(hovered); local icon = _ic and _ic.text or ""'
     '';
   });
+
+  # compress 0.6 calls `fs.unique_name()`, which was removed in Yazi 26 and
+  # replaced by `fs.unique(type, url)` (which also creates the entry). Without
+  # this, the plugin silently dies after the archive-name prompt.
+  compress = pkgs.yaziPlugins.compress.overrideAttrs (o: {
+    postPatch = (o.postPatch or "") + ''
+      substituteInPlace main.lua \
+        --replace-fail 'temp_dir = tostring(fs.unique_name(Url(temp_dir)))' \
+                       'local _uniq, _uerr = fs.unique("dir", Url(temp_dir)); if not _uniq then notify("Failed to create temp directory, error code: " .. tostring(_uerr), "error"); return end; temp_dir = tostring(_uniq)' \
+        --replace-fail 'final_output_url = tostring(fs.unique_name(Url(final_output_url)))' \
+                       'local _funiq, _fuerr = fs.unique("file", Url(final_output_url)); if not _funiq then notify("Failed to create unique output file, error code: " .. tostring(_fuerr), "error"); cleanup_temp_dir(temp_dir); return end; final_output_url = tostring(_funiq)'
+    '';
+  });
 in
 
 {
@@ -48,7 +61,7 @@ in
       piper = pkgs.yaziPlugins.piper;
       inherit yatline;
       smart-enter = pkgs.yaziPlugins.smart-enter;
-      compress = pkgs.yaziPlugins.compress;
+      inherit compress;
       ouch = pkgs.yaziPlugins.ouch;
     };
     initLua = builtins.readFile ./yatline-config.lua;

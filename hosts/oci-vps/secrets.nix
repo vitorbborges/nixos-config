@@ -11,7 +11,5 @@
 
   sops.secrets.wireguard_private_key = { };
   sops.secrets.vaultwarden_env = { };
-  sops.secrets.restic_password = { };
-  sops.secrets.restic_b2_env = { };
   sops.secrets.cloudflare_api_token = { };
 }

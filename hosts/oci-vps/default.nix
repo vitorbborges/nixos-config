@@ -1,7 +1,7 @@
 { pkgs, username, ... }:
 
 {
-  imports = [ ./hardware.nix ./services.nix ./wireguard.nix ./swap.nix ./certbot.nix ./vaultwarden.nix ./secrets.nix ./backup.nix ./ddns-cloudflare.nix ];
+  imports = [ ./hardware.nix ./services.nix ./wireguard.nix ./swap.nix ./certbot.nix ./vaultwarden.nix ./secrets.nix ./ddns-cloudflare.nix ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

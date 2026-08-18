@@ -13,13 +13,15 @@ services" with no manual re-keying.
 - DNS: `hosts/oci-vps/ddns-cloudflare.nix` repoints `dns.*` / `vault.*` /
   `wg.*` A records at whatever IP the box currently has, within ~1 minute of
   boot. No manual DNS step needed.
-- Vaultwarden vault + AdGuardHome config: restored from the restic backup in
-  `hosts/oci-vps/backup.nix` (Backblaze B2) or from the desktop-side pull in
-  `modules/user/vaultwarden-backup/backup.nix`.
+- Vaultwarden vault: restored from the desktop-side pull in
+  `modules/user/vaultwarden-backup/backup.nix` (daily rsync of
+  `/var/backup/vaultwarden` to `~/vaultwarden-backups` on the laptop).
 
 ## What's explicitly NOT covered (acceptable loss)
 
 - ActivityWatch's local aggregated history — cosmetic, not backed up.
+- AdGuardHome's filter rules/config — recreatable via the web UI, not backed
+  up offsite.
 - Let's Encrypt's account/cert cache — cheap to reissue, not backed up.
 
 ## One-time setup (do this now, before you need it)
@@ -29,30 +31,21 @@ services" with no manual re-keying.
    survives this desktop dying too — e.g. an encrypted export in a password
    manager that *isn't* Vaultwarden (circular: Vaultwarden is one of the
    things you're recovering). This key is the one thing that isn't git-able.
-2. **Backblaze B2**: create a private bucket (e.g. `oci-vps-backup`) and an
-   application key scoped to it **without delete capability**. Update the
-   bucket name in `hosts/oci-vps/backup.nix` if you name it differently.
-3. **Cloudflare API token**: My Profile → API Tokens → create one scoped to
+2. **Cloudflare API token**: My Profile → API Tokens → create one scoped to
    `Zone.DNS: Edit` for `vitorbborges.space` only.
-4. **Populate real secret values** (run locally, never paste these into
+3. **Populate real secret values** (run locally, never paste these into
    chat/Claude):
    ```sh
-   # existing WireGuard key + vaultwarden admin token, pulled from the live box
-   ssh vps sudo cat /etc/wireguard/private.key
-   ssh vps sudo cat /etc/vaultwarden.env
-
    # edit in place with your $EDITOR, sops re-encrypts on save
    sops hosts/oci-vps/secrets.yaml
    ```
-   Fill in: `wireguard_private_key`, `vaultwarden_env` (the full file
-   content), `restic_password` (make one up, this *is* the backup
-   encryption key — store it alongside the age key), `restic_b2_env`
-   (`B2_ACCOUNT_ID=...` / `B2_ACCOUNT_KEY=...`), `cloudflare_api_token`.
-5. **DNS**: create the `wg.vitorbborges.space` A record in Cloudflare
+   Fill in: `wireguard_private_key`, `vaultwarden_env` (full file content),
+   `cloudflare_api_token`. Already populated — only needed if rotating.
+4. **DNS**: create the `wg.vitorbborges.space` A record in Cloudflare
    (any IP, the reconciler will fix it), and consider pointing your
    WireGuard client configs (desktop, phones) at `wg.vitorbborges.space`
    instead of the raw IP — then a redeploy needs *zero* client-side changes.
-6. Rebuild once (`sudo nixos-rebuild switch --target-host vps --flake .#oci-vps`)
+5. Rebuild once (`sudo nixos-rebuild switch --target-host vps --flake .#oci-vps`)
    so the current box picks up sops-nix and the new services.
 
 ## Recovery steps (when the box is actually gone)
@@ -79,14 +72,11 @@ services" with no manual re-keying.
    ```sh
    ssh vps systemctl start vps-certbot.service
    ```
-6. Restore data:
+6. Restore data from the laptop copy:
    ```sh
-   nix run nixpkgs#restic -- -r b2:oci-vps-backup:restic restore latest --target /
-   systemctl restart adguardhome vaultwarden
+   rsync -az ~/vaultwarden-backups/ root@<new-ip>:/var/lib/vaultwarden/
+   ssh root@<new-ip> 'chown -R vaultwarden:vaultwarden /var/lib/vaultwarden && systemctl restart vaultwarden'
    ```
-   (run on the box itself, with `RESTIC_PASSWORD_FILE`/`B2_ACCOUNT_ID`/
-   `B2_ACCOUNT_KEY` sourced from the same secrets — or just decrypt them
-   locally and export as env vars for the one-off restore command.)
 7. If any WireGuard client still hard-codes the old IP, update its Endpoint
    (or switch it to `wg.vitorbborges.space` now, per step 5 above, so this
    never has to happen again).

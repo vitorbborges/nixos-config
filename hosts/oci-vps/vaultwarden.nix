@@ -3,7 +3,16 @@
 {
   # Owned by the vaultwarden service user so it can read its TLS cert;
   # populated by the shared certbot service in ./certbot.nix.
-  systemd.tmpfiles.rules = [ "d /var/lib/vaultwarden-certs 0750 vaultwarden vaultwarden -" ];
+  systemd.tmpfiles.rules = [
+    "d /var/lib/vaultwarden-certs 0750 vaultwarden vaultwarden -"
+    # World-readable backup dir so the desktop-side pull
+    # (modules/user/vaultwarden-backup) can rsync it over SSH as `vitor`.
+    # Content is client-side-encrypted ciphertext; the live db stays 0700.
+    "d /var/backup/vaultwarden 0755 vaultwarden vaultwarden -"
+  ];
+
+  # Same reason: backup script's umask decides file modes.
+  systemd.services.backup-vaultwarden.serviceConfig.UMask = "0022";
 
   services.vaultwarden = {
     enable = true;
