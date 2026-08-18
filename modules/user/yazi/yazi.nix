@@ -4,6 +4,22 @@ let
   openWith = pkgs.writeShellScript "yazi-open-with"
     (builtins.readFile ./scripts/open-with.sh);
 
+  nvimOpen = pkgs.writeShellScript "yazi-nvim-open" ''
+    set -euo pipefail
+
+    [ "$#" -gt 0 ] || exit 2
+    target=$1
+
+    if [ -d "$target" ]; then
+      cd -- "$target"
+      exec nvim .
+    fi
+
+    # Start nvim in the file's directory so its tree/root follows the file.
+    cd -- "$(dirname -- "$target")"
+    exec nvim -- "$@"
+  '';
+
   # yatline 0.5.0 still calls the removed `File:icon()` API, which makes yazi
   # pop a "Deprecated API" toast on every hover. Patch it to the current
   # `th.icon:match(file)` API instead of losing the extension icon.
@@ -84,14 +100,14 @@ in
         { run = "plugin smart-enter"; on = [ "l" ]; desc = "Enter dir / open file"; }
 
         # ── open / execute ──
-        { run = ''shell '${openWith} "$@"' --block''; on = [ "o" ]; desc = "Open with… (all apps)"; }
+        { run = ''shell '${openWith} %s' --block''; on = [ "o" ]; desc = "Open with… (all apps)"; }
         {
-          run = "shell 'if [ -d \"$1\" ]; then cd \"$1\" && nvim .; else nvim \"$@\"; fi' --block";
+          run = ''shell '${nvimOpen} %s' --block'';
           on = [ "e" ];
           desc = "Open in nvim";
         }
-        { run = ''shell ' "$@"' --interactive --block''; on = [ "r" ]; desc = "Run command (blocking)"; }
-        { run = ''shell ' "$@"' --interactive''; on = [ "R" ]; desc = "Run command (detached)"; }
+        { run = "shell ' %s' --cursor=0 --interactive --block"; on = [ "r" ]; desc = "Run command (blocking)"; }
+        { run = "shell ' %s' --cursor=0 --interactive"; on = [ "R" ]; desc = "Run command (detached)"; }
 
         # ── archives ──
         { run = ''plugin compress -- -pls''; on = [ "c" "z" ]; desc = "Compress (password/level)"; }
@@ -133,35 +149,38 @@ in
 
         # ── shell ──
         { run = "shell '$SHELL' --block"; on = [ "<C-t>" ]; desc = "Open shell here (exit to return)"; }
-        { run = "shell ' \"$@\"' --interactive"; on = [ "@" ]; desc = "Shell with selection"; }
+        { run = "shell ' %s' --cursor=0 --interactive"; on = [ "@" ]; desc = "Shell with selection"; }
       ];
     };
 
     settings = {
       opener = {
-        text = [{ run = ''nvim "$@"''; block = true; desc = "nvim"; }];
+        text = [{ run = ''${nvimOpen} %s''; block = true; desc = "nvim"; }];
         image = [
-          { run = ''xdg-open "$1"''; orphan = true; desc = "Default (MIME)"; }
-          { run = ''imv "$@"''; orphan = true; desc = "imv"; }
-          { run = ''gimp "$@"''; orphan = true; desc = "GIMP"; }
+          { run = ''xdg-open %s1''; orphan = true; desc = "Default (MIME)"; }
+          { run = ''imv %s''; orphan = true; desc = "imv"; }
+          { run = ''gimp %s''; orphan = true; desc = "GIMP"; }
         ];
         video = [
-          { run = ''xdg-open "$1"''; orphan = true; desc = "Default (MIME)"; }
-          { run = ''mpv "$@"''; orphan = true; desc = "mpv"; }
+          { run = ''xdg-open %s1''; orphan = true; desc = "Default (MIME)"; }
+          { run = ''mpv %s''; orphan = true; desc = "mpv"; }
         ];
         audio = [
-          { run = ''xdg-open "$1"''; orphan = true; desc = "Default (MIME)"; }
-          { run = ''mpv "$@"''; orphan = true; desc = "mpv"; }
+          { run = ''xdg-open %s1''; orphan = true; desc = "Default (MIME)"; }
+          { run = ''mpv %s''; orphan = true; desc = "mpv"; }
         ];
         document = [
-          { run = ''zathura "$@"''; orphan = true; desc = "zathura"; }
-          { run = ''xdg-open "$1"''; orphan = true; desc = "Default (MIME)"; }
+          { run = ''zathura %s''; orphan = true; desc = "zathura"; }
+          { run = ''xdg-open %s1''; orphan = true; desc = "Default (MIME)"; }
         ];
         archive = [
-          { run = ''ouch d -y "$@"''; desc = "ouch (extract)"; }
+          { run = ''ouch d -y %s''; desc = "ouch (extract)"; }
         ];
       };
       open.rules = [
+        # Directories opened from Yazi should become the nvim tree root.
+        { url = "*/"; use = "text"; }
+
         # ── text MIME types ──
         { mime = "text/*"; use = "text"; }
 

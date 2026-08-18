@@ -1,5 +1,7 @@
 set -euo pipefail
 
+[ "$#" -gt 0 ] || exit 2
+
 # ── robust MIME detection ──
 mime=$(xdg-mime query filetype "$1" 2>/dev/null || true)
 if [ -z "$mime" ] || [ "$mime" = "application/octet-stream" ]; then
@@ -46,25 +48,30 @@ if [ -n "$mime" ]; then
   )
 fi
 
-all_files="$*"
+# Keep file paths shell-quoted; plain "$*" breaks paths containing spaces.
+file_args=""
+for file in "$@"; do
+  printf -v quoted ' %q' "$file"
+  file_args+="$quoted"
+done
 
 # ── build fzf list: "label\tcommand [files]" ──
 {
   for entry in "${term_cmds[@]}"; do
-    printf '%s %s\n' "$entry" "$all_files"
+    printf '%s%s\n' "$entry" "$file_args"
   done
 
   if [ -n "$desktop_list" ]; then
     printf '%s\n' "$desktop_list" | while IFS= read -r line; do
       app_name=$(printf '%s' "$line" | cut -f1)
       app_exec=$(printf '%s' "$line" | cut -f2-)
-      printf '%s\t%s %s\n' "$app_name" "$app_exec" "$all_files"
+      printf '%s\t%s%s\n' "$app_name" "$app_exec" "$file_args"
     done
   fi
 
   printf '%s\t%s\n' "xdg-open  (system default)" "xdg-open $1"
-  printf '%s\t%s\n' "nvim      (force)" "nvim $all_files"
-  printf '%s\t%s %s\n' "  shell here" "$SHELL" "$all_files"
+  printf '%s\t%s%s\n' "nvim      (force)" "nvim" "$file_args"
+  printf '%s\t%s%s\n' "  shell here" "$SHELL" "$file_args"
 } | grep -v '^$' | while IFS= read -r raw; do
   label=$(printf '%s' "$raw" | cut -f1)
   cmd=$(printf '%s' "$raw" | cut -f2- | sed 's/ %[uUfFdDnNickvm]//g; s/%[uUfFdDnNickvm]//g')
@@ -74,11 +81,14 @@ done > /tmp/yazi-openwith-cache.$$
 [ ! -s /tmp/yazi-openwith-cache.$$ ] && { rm -f /tmp/yazi-openwith-cache.$$; exit 0; }
 
 # ── fzf picker ──
-chosen=$(fzf --delimiter=$'\t' --with-nth=1 \
-             --prompt="open with → " \
-             --height=40% --layout=reverse --border=rounded \
-             --header=" $(basename "$1")  |  $mime " \
-             < /tmp/yazi-openwith-cache.$$)
+if ! chosen=$(fzf --delimiter=$'\t' --with-nth=1 \
+                 --prompt="open with → " \
+                 --height=40% --layout=reverse --border=rounded \
+                 --header=" $(basename "$1")  |  $mime " \
+                 < /tmp/yazi-openwith-cache.$$); then
+  rm -f /tmp/yazi-openwith-cache.$$
+  exit 0
+fi
 rm -f /tmp/yazi-openwith-cache.$$
 
 [ -z "$chosen" ] && exit 0

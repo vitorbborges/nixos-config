@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, ... }:
+{ pkgs, ... }:
 
 {
   programs.nixvim.plugins = {
@@ -55,13 +55,6 @@
         bashls.enable = true;
 
         ts_ls.enable = true;
-
-        r_language_server = {
-          enable  = true;
-          # pkgs-stable: r-ps on unstable currently fails the Nix sandbox
-          # check (output illegally references build-time gcc)
-          package = pkgs-stable.rPackages.languageserver;
-        };
       };
     };
   };

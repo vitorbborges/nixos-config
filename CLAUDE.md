@@ -122,7 +122,7 @@ Most packages use `pkgs` (nixos-unstable). Use `pkgs-stable` only when a package
 {
   home.packages = [
     pkgs.ripgrep          # unstable — fine for most CLI tools
-    pkgs-stable.rstudio   # stable — complex deps, reproducibility matters
+    pkgs-stable.vscodium  # stable — complex deps, reproducibility matters
   ];
 }
 ```
