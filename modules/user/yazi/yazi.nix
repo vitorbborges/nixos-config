@@ -190,7 +190,10 @@ in
           { run = ''ouch d -y %s''; desc = "ouch (extract)"; }
         ];
         codium = [
-          { run = ''codium --new-window %s''; orphan = true; desc = "codium"; }
+          # --force-device-scale-factor pins the UI scale to the monitor default
+          # (2) regardless of ozone backend; without it codium launched from yazi
+          # can fall back to XWayland and render at 1x (xwayland force_zero_scaling).
+          { run = ''codium --new-window --force-device-scale-factor=2 %s''; orphan = true; desc = "codium"; }
         ];
       };
       open.rules = [

@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 {
   # Owned by the vaultwarden service user so it can read its TLS cert;
@@ -11,17 +11,23 @@
     "d /var/backup/vaultwarden 0755 vaultwarden vaultwarden -"
   ];
 
-  # Same reason: backup script's umask decides file modes.
-  systemd.services.backup-vaultwarden.serviceConfig.UMask = "0022";
+  # Same reason: backup script's umask decides fresh-file modes, and
+  # copied files keep their (0600) source modes — so make everything
+  # readable after each run. Runs as the vaultwarden user, which owns
+  # the backup dir.
+  systemd.services.backup-vaultwarden.serviceConfig = {
+    UMask = "0022";
+    ExecStartPost = [ "${pkgs.coreutils}/bin/chmod -R a+rX /var/backup/vaultwarden" ];
+  };
 
   services.vaultwarden = {
     enable = true;
 
     # NixOS's built-in backup timer — safe (non-corrupting) sqlite backup,
     # no hand-rolled script needed. Offsite copy is pulled by a desktop-side
-    # timer (modules/user/vaultwarden-backup/backup.nix) and mirrored to B2
-    # (./backup.nix) — this alone only protects against local data loss on
-    # the VPS, not losing the whole instance.
+    # timer (modules/user/vaultwarden-backup/backup.nix) — this alone only
+    # protects against local data loss on the VPS, not losing the whole
+    # instance.
     backupDir = "/var/backup/vaultwarden";
 
     # Holds ADMIN_TOKEN. sops-managed (hosts/oci-vps/secrets.nix) — encrypted

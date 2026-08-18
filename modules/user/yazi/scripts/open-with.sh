@@ -27,6 +27,20 @@ for entry in "${term_cmds_all[@]}"; do
   command -v "$bin" >/dev/null 2>&1 && term_cmds+=("$entry")
 done
 
+# ── known GUI apps (offered for every file; filtered by availability) ──
+known_apps_all=(
+  "codium  (editor)"$'\t'"codium --force-device-scale-factor=2"
+  "zathura (documents)"$'\t'"zathura"
+  "gimp    (images)"$'\t'"gimp"
+  "imv     (images)"$'\t'"imv"
+  "mpv     (media)"$'\t'"mpv"
+)
+known_apps=()
+for entry in "${known_apps_all[@]}"; do
+  bin=$(printf '%s' "$entry" | cut -f2- | cut -d' ' -f1)
+  command -v "$bin" >/dev/null 2>&1 && known_apps+=("$entry")
+done
+
 # ── collect .desktop apps from mimeinfo.cache ──
 IFS=: read -ra _xdg_dirs <<< "${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 app_dirs=("${XDG_DATA_HOME:-$HOME/.local/share}" "${_xdg_dirs[@]}")
@@ -67,6 +81,10 @@ printf -v dir_q '%q' "$(dirname -- "$1")"
 # ── build fzf list: "label\tcommand [files]" ──
 {
   for entry in "${term_cmds[@]}"; do
+    printf '%s%s\n' "$entry" "$file_args"
+  done
+
+  for entry in "${known_apps[@]}"; do
     printf '%s%s\n' "$entry" "$file_args"
   done
 
