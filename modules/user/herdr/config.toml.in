@@ -1,0 +1,30 @@
+onboarding = false
+
+[theme.custom]
+accent   = "@base0D@"
+panel_bg = "@base00@"
+surface0 = "@base01@"
+surface1 = "@base02@"
+overlay0 = "@base03@"
+overlay1 = "@base04@"
+text     = "@base05@"
+subtext0 = "@base04@"
+red      = "@base08@"
+peach    = "@base09@"
+yellow   = "@base0A@"
+green    = "@base0B@"
+teal     = "@base0C@"
+blue     = "@base0D@"
+mauve    = "@base0E@"
+
+[terminal]
+new_cwd = "follow"
+
+[session]
+resume_agents_on_restore = true
+
+[remote]
+manage_ssh_config = false
+
+[ui.toast]
+delivery = "system"

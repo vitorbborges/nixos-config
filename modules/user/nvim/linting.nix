@@ -15,11 +15,7 @@
   programs.nixvim.autoCmd = [
     {
       event = [ "BufEnter" "BufWritePost" "InsertLeave" ];
-      callback.__raw = ''
-        function()
-          require("lint").try_lint()
-        end
-      '';
+      callback.__raw = builtins.readFile ./lua/lint-autotrigger.lua;
       desc = "Run linter on buffer events";
     }
   ];
@@ -34,21 +30,7 @@
     {
       mode = "n";
       key = "<leader>vw";
-      action.__raw = ''
-        function()
-          local config = vim.diagnostic.config()
-          if config.virtual_text then
-            vim.diagnostic.config({ virtual_text = false, underline = false })
-            vim.notify("Inline diagnostics hidden")
-          else
-            vim.diagnostic.config({
-              virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
-              underline = true,
-            })
-            vim.notify("Inline diagnostics shown")
-          end
-        end
-      '';
+      action.__raw = builtins.readFile ./lua/lint-toggle.lua;
       options.desc = "Toggle inline diagnostics";
     }
   ];

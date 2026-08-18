@@ -1,0 +1,8 @@
+keys:
+  - &infra age1kn0r75fcx8eznezprggr6npfe0fn6ufxkp9q2jx6xnra2su7jvqqy6jquh
+
+creation_rules:
+  - path_regex: hosts/oci-vps/secrets\.yaml$
+    key_groups:
+      - age:
+          - *infra

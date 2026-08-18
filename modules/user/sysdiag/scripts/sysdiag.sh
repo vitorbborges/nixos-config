@@ -357,7 +357,7 @@ for dev in /dev/nvme*n1; do
   NVME_FOUND=true
   dname=$(basename "${dev}")
 
-  if SMART=$(smartctl -a "${dev}" 2>/dev/null); then
+  if SMART=$(/run/wrappers/bin/sudo -n smartctl -a "${dev}" 2>/dev/null); then
     SMART_HEALTH=$(printf '%s' "${SMART}" | grep "SMART overall" | awk '{print $NF}')
     NVME_TEMP=$(printf '%s'    "${SMART}" | grep -i "^Temperature:"    | grep -oP '[0-9]+'   | head -1 || echo "N/A")
     NVME_WEAR=$(printf '%s'    "${SMART}" | grep -i "Percentage Used:" | grep -oP '[0-9]+'   | head -1 || echo "N/A")
@@ -371,8 +371,8 @@ for dev in /dev/nvme*n1; do
     dim_line "  Temp: ${NVME_TEMP} C   Wear: ${NVME_WEAR}%   Power-on: ${NVME_HOURS} h"
   else
     printf '  %s  %s: needs sudo for SMART data\n' "$(badge_info)" "${dname}"
-    dim_line "  Run: sudo sysdiag -- or add smartctl NOPASSWD to sudoers"
-    if NLOG=$(nvme smart-log "${dev}" 2>/dev/null); then
+    dim_line "  NOPASSWD sudoers rule should cover this -- check modules/system/hardware-maintenance.nix if it doesn't"
+    if NLOG=$(/run/wrappers/bin/sudo -n nvme smart-log "${dev}" 2>/dev/null); then
       NVME_TEMP=$(printf '%s' "${NLOG}" | grep "temperature"  | grep -oP '[0-9]+' | head -1 || echo "N/A")
       NVME_WEAR=$(printf '%s' "${NLOG}" | grep "percent_used" | grep -oP '[0-9]+' | head -1 || echo "N/A")
       dim_line "  Temp: ~${NVME_TEMP} C   Wear: ${NVME_WEAR}%"

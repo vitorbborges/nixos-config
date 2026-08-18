@@ -5,38 +5,14 @@ let
   claudeBin      = "/etc/profiles/per-user/vitor/bin/claude";
 
   # Wrapper: waits for internet, then runs a recipe via claude (Pro subscription — no API key needed)
-  # Tries claude-personal first; falls back to claude-friend if the usage limit is hit.
-  runRecipe = pkgs.writeShellScript "investments-run-recipe" ''
-    set -euo pipefail
-    RECIPE="$1"
-
-    # Wait for internet — 30 × 10 s = 5 minutes max
-    for i in $(seq 1 30); do
-      if ${pkgs.curl}/bin/curl -sf --max-time 3 https://1.1.1.1 >/dev/null 2>&1; then
-        break
-      fi
-      if [ "$i" -eq 30 ]; then
-        echo "investments-recipe: no internet after 5 minutes, skipping $RECIPE" >&2
-        exit 1
-      fi
-      sleep 10
-    done
-
-    cd "${investmentsDir}"
-
-    tmpfile=$(mktemp)
-    rc=0
-    CLAUDE_CONFIG_DIR="$HOME/.claude-personal" ${claudeBin} --dangerously-skip-permissions < "$RECIPE" > "$tmpfile" 2>&1 || rc=$?
-    if grep -qi "you've hit your limit" "$tmpfile"; then
-      rm "$tmpfile"
-      echo "investments-recipe: claude-personal at limit, falling back to claude-friend" >&2
-      CLAUDE_CONFIG_DIR="$HOME/.claude-friend" ${claudeBin} --dangerously-skip-permissions < "$RECIPE"
-    else
-      cat "$tmpfile"
-      rm "$tmpfile"
-      exit $rc
-    fi
-  '';
+  runRecipe = pkgs.writeShellApplication {
+    name = "investments-run-recipe";
+    runtimeInputs = with pkgs; [ curl coreutils ];
+    text = builtins.replaceStrings
+      [ "@investmentsDir@" "@claudeBin@" ]
+      [ investmentsDir claudeBin ]
+      (builtins.readFile ./scripts/run-recipe.sh);
+  };
 
   # Recipe definitions: name → { file, schedule }
   # schedule uses systemd OnCalendar format (man systemd.time)
@@ -57,7 +33,7 @@ in {
       Service = {
         Type = "oneshot";
         WorkingDirectory = investmentsDir;
-        ExecStart = "${runRecipe} ${investmentsDir}/recipes/${cfg.file}";
+        ExecStart = "${runRecipe}/bin/investments-run-recipe ${investmentsDir}/recipes/${cfg.file}";
       };
     })
     recipes;

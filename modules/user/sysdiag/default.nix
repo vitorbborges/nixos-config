@@ -15,22 +15,27 @@ let
     text = builtins.readFile ./scripts/sysdiag.sh;
   };
 
-  snapshot = pkgs.writeShellScript "sysdiag-snapshot" ''
-    dir="$HOME/.local/share/sysdiag"
-    mkdir -p "$dir"
-    stamp=$(date '+%Y-%m-%dT%H:%M:%S')
-    printf '\n=== Snapshot %s ===\n' "$stamp" >> "$dir/snapshots.log"
-    ${sysdiag}/bin/sysdiag --notify >> "$dir/snapshots.log" 2>&1 || true
-  '';
+  snapshot = pkgs.writeShellApplication {
+    name = "sysdiag-snapshot";
+    runtimeInputs = with pkgs; [ coreutils ];
+    text = builtins.readFile ./scripts/sysdiag-snapshot.sh;
+  };
 in
 {
-  home.packages = [ sysdiag ];
+  home.packages = [
+    sysdiag
+    pkgs.nvtopPackages.full
+    pkgs.s-tui
+    pkgs.inxi
+    pkgs.powertop
+  ];
 
   systemd.user.services.sysdiag-snapshot = {
     Unit.Description = "Weekly system diagnostics snapshot";
     Service = {
       Type = "oneshot";
-      ExecStart = "${snapshot}";
+      ExecStart = "${snapshot}/bin/sysdiag-snapshot";
+      Environment = "SYSDIAG_BIN=${sysdiag}/bin/sysdiag";
     };
   };
 

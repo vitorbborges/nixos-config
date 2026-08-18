@@ -7,37 +7,37 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
+    settings = {
       "*" = {
         # Automatically add keys to the agent on first use, caching them for the session.
-        addKeysToAgent = "yes";
+        AddKeysToAgent = "yes";
       };
       "github.com" = {
-        identityFile = "~/.ssh/id_ed25519";
+        IdentityFile = "~/.ssh/id_ed25519";
       };
       "vps" = {
-        hostname = "150.230.145.134";
-        user = "root";
-        identityFile = "~/.ssh/id_bitbucket";
-        identitiesOnly = true;
+        HostName = "150.230.145.134";
+        User = "vitor";
+        IdentityFile = "~/.ssh/id_bitbucket";
+        IdentitiesOnly = true;
       };
       "kafka-1" = {
-        hostname = "51.103.132.227";
-        user = "nsds-group";
-        identityFile = "~/.ssh/nsds-key.pem";
-        identitiesOnly = true;
+        HostName = "51.103.132.227";
+        User = "nsds-group";
+        IdentityFile = "~/.ssh/nsds-key.pem";
+        IdentitiesOnly = true;
       };
       "kafka-2" = {
-        hostname = "20.250.53.240";
-        user = "nsds-group";
-        identityFile = "~/.ssh/nsds-key.pem";
-        identitiesOnly = true;
+        HostName = "20.250.53.240";
+        User = "nsds-group";
+        IdentityFile = "~/.ssh/nsds-key.pem";
+        IdentitiesOnly = true;
       };
       "kafka-3" = {
-        hostname = "20.250.74.170";
-        user = "nsds-group";
-        identityFile = "~/.ssh/nsds-key.pem";
-        identitiesOnly = true;
+        HostName = "20.250.74.170";
+        User = "nsds-group";
+        IdentityFile = "~/.ssh/nsds-key.pem";
+        IdentitiesOnly = true;
       };
     };
   };

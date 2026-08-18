@@ -2,6 +2,8 @@
 
   description = "Flake of VitorBandeiraBorges";
 
+  nixConfig = { };
+
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager/master";
@@ -32,10 +34,25 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    herdr = {
+      url = "github:herdrdev/herdr/v0.8.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-openclaw = {
+      url = "github:openclaw/nix-openclaw";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixpkgs-stable.url = "nixpkgs/nixos-25.11";
 
     disko = {
       url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -49,16 +66,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Local dev: points at your clone while the PR is open.
-    # After the PR merges, replace with: github:iyaja/llama-fs
-    llama-fs.url = "git+file:///home/vitor/Projects/OPEN%20SOURCE/llama-fs";
-    llama-fs.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, llama-fs, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, ... }@inputs:
     let
       lib = nixpkgs.lib;
-      system = "x86_64-linux"; # desktop system — also passed as extraSpecialArg for llama-fs.nix
+      system = "x86_64-linux";
       pkgs-stable = import nixpkgs-stable {
         inherit system;
         config.allowUnfree = true;
@@ -95,7 +108,7 @@
         inherit system;
         config.allowUnfree = true;
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
-        overlays = [ inputs.nix-matlab.overlay suppressXorgWarnings (import ./modules/overlays/default.nix) ];
+        overlays = [ suppressXorgWarnings inputs.nix-matlab.overlay inputs.nix-openclaw.overlays.default ];
       };
       username = "vitor";
       kbLayout = "us";
@@ -128,6 +141,7 @@
           modules = [
             ./hosts/oci-vps/default.nix
             inputs.disko.nixosModules.disko
+            inputs.sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

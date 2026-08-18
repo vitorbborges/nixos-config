@@ -39,70 +39,12 @@ in
       # stylix has no Thunderbird target — inject colors manually.
       # GTK theme (stylix.targets.gtk) handles most chrome; this CSS
       # overrides the XUL-specific variables that GTK doesn't reach.
-      userChrome = ''
-        :root {
-          /* surface layers */
-          --sidebar-background-color:   ${c.base01} !important;
-          --sidebar-text-color:         ${c.base05} !important;
-          --sidebar-border-color:       ${c.base02} !important;
-
-          /* toolbar / search field */
-          --toolbar-bgcolor:                      ${c.base01} !important;
-          --lwt-toolbar-field-background-color:   ${c.base00} !important;
-          --lwt-toolbar-field-color:              ${c.base05} !important;
-          --lwt-toolbar-field-border-color:       ${c.base03} !important;
-          --lwt-toolbar-field-focus:              ${c.base01} !important;
-
-          /* tabs */
-          --tabline-color:                  ${c.base0D} !important;
-          --tabs-tabbar-background-color:   ${c.base00} !important;
-
-          /* buttons */
-          --toolbarbutton-icon-fill:          ${c.base05} !important;
-          --toolbarbutton-hover-background:   ${c.base02} !important;
-          --toolbarbutton-active-background:  ${c.base03} !important;
-
-          /* focus ring */
-          --focus-outline-color: ${c.base0D} !important;
-
-          /* font size from stylix */
-          --default-font-size: ${fontSize}px !important;
-        }
-
-        /* Folder pane */
-        #folderTree,
-        #folderPaneBox {
-          background-color: ${c.base00} !important;
-          color:            ${c.base05} !important;
-        }
-
-        /* Thread pane */
-        #threadTree {
-          background-color: ${c.base00} !important;
-          color:            ${c.base05} !important;
-        }
-
-        /* Selected row accent */
-        .selected,
-        [selected="true"],
-        richlistitem[selected="true"] {
-          background-color: ${c.base02} !important;
-          color:            ${c.base05} !important;
-          outline-color:    ${c.base0D} !important;
-        }
-
-        /* Unread count badge */
-        .folderNameCell .unreadCount {
-          color: ${c.base0D} !important;
-        }
-
-        /* Tag / label colors pulled from stylix */
-        .tag-1 { color: ${c.base08} !important; } /* Important → red   */
-        .tag-2 { color: ${c.base0A} !important; } /* Work      → yellow */
-        .tag-3 { color: ${c.base0B} !important; } /* Personal  → green  */
-        .tag-4 { color: ${c.base09} !important; } /* To Do     → orange */
-        .tag-5 { color: ${c.base0E} !important; } /* Later     → purple */
-      '';
+      # The CSS lives in ./userChrome.css.in with @placeholder@ tokens
+      # substituted at eval time from stylix colors.
+      userChrome = builtins.replaceStrings
+        [ "@fontSize@" "@base00@" "@base01@" "@base02@" "@base03@" "@base05@" "@base08@" "@base09@" "@base0A@" "@base0B@" "@base0D@" "@base0E@" ]
+        [ fontSize c.base00 c.base01 c.base02 c.base03 c.base05 c.base08 c.base09 c.base0A c.base0B c.base0D c.base0E ]
+        (builtins.readFile ./userChrome.css.in);
     };
   };
 }

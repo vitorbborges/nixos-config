@@ -1,5 +1,8 @@
 { pkgs, config, ... }:
 
+let
+  cfg = "${config.home.homeDirectory}/nixos-config";
+in
 {
   programs.zsh = {
     enable = true;
@@ -13,6 +16,8 @@
       cat   = "bat";
       mamba = "micromamba";
       man   = "tldr";
+      nr    = "sudo nixos-rebuild switch --flake ${cfg}#desktop";
+      nrc   = "git add ${cfg} && sudo nixos-rebuild switch --flake ${cfg}#desktop && git -C ${cfg} commit -m \"$(date '+%Y-%m-%d %H:%M:%S')\" && git -C ${cfg} push";
     };
 
     history = {
@@ -47,58 +52,13 @@
       }
     ];
 
-    initContent = ''
-      # ── custom functions ─────────────────────────────────────────────
-      nix-update() (
-        set -e
-        cd ~/nixos-config
-        nix flake update
-        sudo nixos-rebuild switch --flake ~/nixos-config#desktop
-        git add flake.lock
-        git commit -m "chore: bump flake inputs"
-        mkdir -p ~/.local/share
-        date +%s > ~/.local/share/nix-update-last
-      )
-
-      # ── fzf-tab completions ──────────────────────────────────────────
-      zstyle ':completion:*' menu no
-      zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
-      zstyle ':fzf-tab:complete:cd:*'         fzf-preview 'eza --color=always $realpath'
-      zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --color=always $realpath'
-
-      # ── zsh-vi-mode overwrites Ctrl+R; restore fzf + history bindings
-      # after vi-mode finishes its own init (zvm_after_init_commands runs
-      # just before the first prompt, after the full .zshrc is sourced).
-      zvm_after_init_commands+=(
-        'source ${pkgs.fzf}/share/fzf/key-bindings.zsh'
-        'bindkey "^p" history-substring-search-backward'
-        'bindkey "^n" history-substring-search-forward'
-        # Esc Esc → prepend/strip sudo (replaces oh-my-zsh sudo plugin)
-        'bindkey "^[^[" sudo-command-line'
-      )
-
-      # sudo plugin replacement: toggle sudo prefix on current command
-      sudo-command-line() {
-        [[ -z $BUFFER ]] && zle up-history
-        if [[ $BUFFER == sudo\ * ]]; then
-          LBUFFER="''${LBUFFER#sudo }"
-        else
-          LBUFFER="sudo $LBUFFER"
-        fi
-      }
-      zle -N sudo-command-line
-
-      # Load optional API keys (file is not tracked by git)
-      [[ -f "$HOME/.config/secrets/api-keys.sh" ]] && source "$HOME/.config/secrets/api-keys.sh"
-
-      # git-auto-fetch: silently fetch on every directory change into a git repo
-      _git_auto_fetch() {
-        if git rev-parse --git-dir &>/dev/null 2>&1; then
-          git fetch --all &>/dev/null &!
-        fi
-      }
-      add-zsh-hook chpwd _git_auto_fetch
-    '';
+    # Custom functions, zstyle completions, vi-mode re-bindings, sudo widget
+    # and git-auto-fetch hook live in ./init.zsh. The fzf key-bindings source
+    # path is a Nix store path, injected at eval time via replaceStrings.
+    initContent = builtins.replaceStrings
+      [ "__ZVM_FZF_SOURCE__" ]
+      [ "'source ${pkgs.fzf}/share/fzf/key-bindings.zsh'" ]
+      (builtins.readFile ./init.zsh);
   };
 
   # enableZshIntegration sources completion.zsh (needed for ** expansion and

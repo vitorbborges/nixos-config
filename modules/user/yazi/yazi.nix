@@ -1,51 +1,25 @@
 { pkgs, ... }:
 
 let
-  openWith = pkgs.writeShellScript "yazi-open-with" ''
-    mime=$(xdg-mime query filetype "$1" 2>/dev/null)
-    [ -z "$mime" ] && mime=$(file --mime-type -b "$1")
-    [ -z "$mime" ] && exit 0
+  openWith = pkgs.writeShellScript "yazi-open-with"
+    (builtins.readFile ./scripts/open-with.sh);
 
-    IFS=: read -ra _xdg_dirs <<< "''${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
-    app_dirs=("''${XDG_DATA_HOME:-$HOME/.local/share}" "''${_xdg_dirs[@]}")
-
-    desktop_names=$(
-      for dir in "''${app_dirs[@]}"; do
-        cache="$dir/applications/mimeinfo.cache"
-        [ -f "$cache" ] || continue
-        grep "^''${mime}=" "$cache" | cut -d= -f2- | tr ';' '\n'
-      done | grep -v '^$' | sort -u
-    )
-
-    [ -z "$desktop_names" ] && exit 0
-
-    app_list=$(
-      printf '%s\n' "$desktop_names" | while IFS= read -r df; do
-        [ -z "$df" ] && continue
-        for dir in "''${app_dirs[@]}"; do
-          f="$dir/applications/$df"
-          [ -f "$f" ] || continue
-          name=$(grep -m1 "^Name=" "$f" | cut -d= -f2-)
-          exec_line=$(grep -m1 "^Exec=" "$f" | cut -d= -f2-)
-          [ -n "$name" ] && printf '%s\t%s\n' "$name" "$exec_line"
-          break
-        done
-      done
-    )
-
-    [ -z "$app_list" ] && exit 0
-
-    chosen=$(printf '%s\n' "$app_list" | \
-      fzf --with-nth=1 --delimiter=$'\t' --prompt="Open with: ")
-    [ -z "$chosen" ] && exit 0
-
-    exec_line=$(printf '%s' "$chosen" | cut -f2 | \
-      sed 's/ %[uUfFdDnNickvm]//g; s/%[uUfFdDnNickvm]//g')
-    bash -c "$exec_line \"\$@\"" -- "$@" &
-  '';
+  # yatline 0.5.0 still calls the removed `File:icon()` API, which makes yazi
+  # pop a "Deprecated API" toast on every hover. Patch it to the current
+  # `th.icon:match(file)` API instead of losing the extension icon.
+  yatline = pkgs.yaziPlugins.yatline.overrideAttrs (o: {
+    postPatch = (o.postPatch or "") + ''
+      substituteInPlace main.lua \
+        --replace-fail 'local icon = hovered:icon().text' \
+                       'local _ic = th.icon:match(hovered); local icon = _ic and _ic.text or ""'
+    '';
+  });
 in
 
 {
+  home.packages = with pkgs; [
+    ouch
+  ];
 
   programs.yazi = {
     enable = true;
@@ -56,101 +30,12 @@ in
       git = pkgs.yaziPlugins.git;
       sudo = pkgs.yaziPlugins.sudo;
       piper = pkgs.yaziPlugins.piper;
-      yatline = pkgs.yaziPlugins.yatline;
+      inherit yatline;
+      smart-enter = pkgs.yaziPlugins.smart-enter;
+      compress = pkgs.yaziPlugins.compress;
+      ouch = pkgs.yaziPlugins.ouch;
     };
-    initLua = ''
-      require("git"):setup()
-      require("yatline"):setup({
-	--theme = my_theme,
-	section_separator = { open = "\u{e0b2}", close = "\u{e0b0}" },
-	part_separator = { open = "\u{e0b3}", close = "\u{e0b1}" },
-	inverse_separator = { open = "\u{e0d6}", close = "\u{e0d7}" },
-
-	style_a = {
-		fg = "black",
-		bg_mode = {
-			normal = "white",
-			select = "brightyellow",
-			un_set = "brightred"
-		}
-	},
-	style_b = { bg = "brightblack", fg = "brightwhite" },
-	style_c = { bg = "black", fg = "brightwhite" },
-
-	permissions_t_fg = "green",
-	permissions_r_fg = "yellow",
-	permissions_w_fg = "red",
-	permissions_x_fg = "cyan",
-	permissions_s_fg = "white",
-
-	tab_width = 20,
-	tab_use_inverse = false,
-
-	selected = { icon = "\u{f0eed}", fg = "yellow" },
-	copied = { icon = "\u{f0c5}", fg = "green" },
-	cut = { icon = "\u{f0c4}", fg = "red" },
-
-	total = { icon = "\u{f0b8d}", fg = "yellow" },
-	succ = { icon = "\u{f05d}", fg = "green" },
-	fail = { icon = "\u{f05c}", fg = "red" },
-	found = { icon = "\u{f0b95}", fg = "blue" },
-	processed = { icon = "\u{f040d}", fg = "green" },
-
-	show_background = true,
-
-	display_header_line = true,
-	display_status_line = true,
-
-	component_positions = { "header", "tab", "status" },
-
-	header_line = {
-		left = {
-			section_a = {
-                			{type = "line", custom = false, name = "tabs", params = {"left"}},
-			},
-			section_b = {
-			},
-			section_c = {
-			}
-		},
-		right = {
-			section_a = {
-			},
-			section_b = {
-			},
-			section_c = {
-			}
-		}
-	},
-
-	status_line = {
-		left = {
-			section_a = {
-                			{type = "string", custom = false, name = "tab_mode"},
-			},
-			section_b = {
-                			{type = "string", custom = false, name = "hovered_size"},
-			},
-			section_c = {
-                			{type = "string", custom = false, name = "hovered_path"},
-                			{type = "coloreds", custom = false, name = "count"},
-			}
-		},
-		right = {
-			section_a = {
-                			{type = "string", custom = false, name = "cursor_position"},
-			},
-			section_b = {
-                			{type = "string", custom = false, name = "cursor_percentage"},
-			},
-			section_c = {
-                			{type = "string", custom = false, name = "hovered_file_extension", params = {true}},
-                			{type = "coloreds", custom = false, name = "permissions"},
-			}
-		}
-	},
-      })
-    '';
+    initLua = builtins.readFile ./yatline-config.lua;
 
     theme.icon = {
       dirs = [
@@ -186,40 +71,56 @@ in
 
     keymap = {
       mgr.prepend_keymap = [
+        # ── help ──
+        # `?` normally does `find --previous`; remap it to the keybind cheatsheet
+        # (built-in `~` / <F1> still work too). Find-previous moves to <A-/>.
+        { run = "help"; on = [ "?" ]; desc = "Open help (all keybinds)"; }
+        { run = "find --previous --smart"; on = [ "<A-/>" ]; desc = "Find previous file"; }
+
+        # ── navigation ──
         { run = "cd ~/Projects"; on = [ "g" "p" ]; desc = "Go to projects"; }
         { run = "cd ~/Media/Pictures/Screenshots"; on = [ "g" "s" ]; desc = "Go to screenshots"; }
-        { run = "shell ' \"$@\"' --cursor=0 --interactive"; on = [ "@" ]; }
-        { run = "hidden toggle"; on = [ "<C-h>" ]; }
-        { run = "yank"; on = [ "y" "y" ]; }
-        { run = "copy path"; on = [ "y" "p" ]; }
-        { run = "copy dirname"; on = [ "y" "d" ]; }
-        { run = "copy filename"; on = [ "y" "n" ]; }
-        { run = "copy name_without_ext"; on = [ "y" "N" ]; }
-        { run = "yank --cut"; on = [ "d" "d" ]; }
-        { run = "remove --force"; on = [ "d" "D" ]; }
-        { run = "paste"; on = [ "p" "p" ]; }
-        { run = "paste --force"; on = [ "p" "P" ]; }
-        { run = "cd --interactive"; on = [ "c" "d" ]; }
+        { run = "cd --interactive"; on = [ "c" "d" ]; desc = "Jump to directory"; }
+        { run = "plugin smart-enter"; on = [ "l" ]; desc = "Enter dir / open file"; }
 
-        # Sort bindings
-        { run = "sort mtime --reverse=no"; on = [ "s" "t" ]; desc = "Sort by modification time"; }
-        { run = "sort mtime --reverse=yes"; on = [ "s" "T" ]; desc = "Sort by modification time (reverse)"; }
-        { run = "sort natural --reverse=no"; on = [ "s" "n" ]; desc = "Sort by name (natural)"; }
-        { run = "sort natural --reverse=yes"; on = [ "s" "N" ]; desc = "Sort by name (natural, reverse)"; }
-        { run = "sort alphabetical --reverse=no"; on = [ "s" "a" ]; desc = "Sort by name (alphabetical)"; }
-        { run = "sort alphabetical --reverse=yes"; on = [ "s" "A" ]; desc = "Sort by name (alphabetical, reverse)"; }
-        { run = "sort extension --reverse=no"; on = [ "s" "x" ]; desc = "Sort by extension"; }
-        { run = "sort extension --reverse=yes"; on = [ "s" "X" ]; desc = "Sort by extension (reverse)"; }
-        { run = "sort size --reverse=no"; on = [ "s" "s" ]; desc = "Sort by size"; }
-        { run = "sort size --reverse=yes"; on = [ "s" "S" ]; desc = "Sort by size (reverse)"; }
-
-        # Open hovered file(s) in nvim; for directories, cd in and restore session
+        # ── open / execute ──
+        { run = ''shell '${openWith} "$@"' --block''; on = [ "o" ]; desc = "Open with… (all apps)"; }
         {
           run = "shell 'if [ -d \"$1\" ]; then cd \"$1\" && nvim .; else nvim \"$@\"; fi' --block";
           on = [ "e" ];
           desc = "Open in nvim";
         }
+        { run = ''shell ' "$@"' --interactive --block''; on = [ "r" ]; desc = "Run command (blocking)"; }
+        { run = ''shell ' "$@"' --interactive''; on = [ "R" ]; desc = "Run command (detached)"; }
 
+        # ── archives ──
+        { run = ''plugin compress -- -pls''; on = [ "c" "z" ]; desc = "Compress (password/level)"; }
+        { run = "plugin ouch"; on = [ "c" "Z" ]; desc = "Compress with ouch"; }
+
+        # ── yank / copy / paste ──
+        { run = "yank"; on = [ "y" "y" ]; desc = "Yank"; }
+        { run = "copy path"; on = [ "y" "p" ]; desc = "Copy path"; }
+        { run = "copy dirname"; on = [ "y" "d" ]; desc = "Copy dirname"; }
+        { run = "copy filename"; on = [ "y" "n" ]; desc = "Copy filename"; }
+        { run = "copy name_without_ext"; on = [ "y" "N" ]; desc = "Copy name (no ext)"; }
+        { run = "yank --cut"; on = [ "d" "d" ]; desc = "Cut"; }
+        { run = "remove --force"; on = [ "d" "D" ]; desc = "Delete (force)"; }
+        { run = "paste"; on = [ "p" "p" ]; desc = "Paste"; }
+        { run = "paste --force"; on = [ "p" "P" ]; desc = "Paste (overwrite)"; }
+
+        # ── sort ──
+        { run = "sort mtime --reverse=no"; on = [ "s" "t" ]; desc = "Sort by mtime"; }
+        { run = "sort mtime --reverse=yes"; on = [ "s" "T" ]; desc = "Sort by mtime (rev)"; }
+        { run = "sort natural --reverse=no"; on = [ "s" "n" ]; desc = "Sort by name"; }
+        { run = "sort natural --reverse=yes"; on = [ "s" "N" ]; desc = "Sort by name (rev)"; }
+        { run = "sort alphabetical --reverse=no"; on = [ "s" "a" ]; desc = "Sort alphabetical"; }
+        { run = "sort alphabetical --reverse=yes"; on = [ "s" "A" ]; desc = "Sort alphabetical (rev)"; }
+        { run = "sort extension --reverse=no"; on = [ "s" "x" ]; desc = "Sort by extension"; }
+        { run = "sort extension --reverse=yes"; on = [ "s" "X" ]; desc = "Sort by extension (rev)"; }
+        { run = "sort size --reverse=no"; on = [ "s" "s" ]; desc = "Sort by size"; }
+        { run = "sort size --reverse=yes"; on = [ "s" "S" ]; desc = "Sort by size (rev)"; }
+
+        # ── tabs & UI ──
         { run = "tab_create --current"; on = [ "t" ]; }
         { run = "close"; on = [ "x" ]; }
         { run = "tab_switch 1 --relative"; on = [ "J" ]; }
@@ -228,40 +129,112 @@ in
         { run = "tab_switch -1 --relative"; on = [ "<C-BackTab>" ]; }
         { run = "undo"; on = [ "u" ]; }
         { run = "redo"; on = [ "<C-r>" ]; }
-        { run = "shell '$SHELL' --block"; on = [ "<C-t>" ]; desc = "Open shell here (exit to return to yazi)"; }
-        { run = ''shell '${openWith} "$@"' --block''; on = [ "o" ]; desc = "Open with… (system apps)"; }
+        { run = "hidden toggle"; on = [ "<C-h>" ]; desc = "Toggle hidden"; }
+
+        # ── shell ──
+        { run = "shell '$SHELL' --block"; on = [ "<C-t>" ]; desc = "Open shell here (exit to return)"; }
+        { run = "shell ' \"$@\"' --interactive"; on = [ "@" ]; desc = "Shell with selection"; }
       ];
     };
 
     settings = {
       opener = {
-        text  = [{ run = ''nvim "$@"''; block = true; }];
+        text = [{ run = ''nvim "$@"''; block = true; desc = "nvim"; }];
         image = [
-          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
-          { run = ''imv "$@"'';         orphan = true; desc = "imv"; }
-          { run = ''gimp "$@"'';        orphan = true; desc = "GIMP"; }
+          { run = ''xdg-open "$1"''; orphan = true; desc = "Default (MIME)"; }
+          { run = ''imv "$@"''; orphan = true; desc = "imv"; }
+          { run = ''gimp "$@"''; orphan = true; desc = "GIMP"; }
         ];
         video = [
-          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
-          { run = ''mpv "$@"'';         orphan = true; desc = "mpv"; }
+          { run = ''xdg-open "$1"''; orphan = true; desc = "Default (MIME)"; }
+          { run = ''mpv "$@"''; orphan = true; desc = "mpv"; }
         ];
         audio = [
-          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
-          { run = ''mpv "$@"'';         orphan = true; desc = "mpv"; }
+          { run = ''xdg-open "$1"''; orphan = true; desc = "Default (MIME)"; }
+          { run = ''mpv "$@"''; orphan = true; desc = "mpv"; }
         ];
         document = [
-          { run = ''zathura "$@"'';     orphan = true; desc = "zathura"; }
-          { run = ''xdg-open "$1"'';    orphan = true; desc = "Default (MIME)"; }
+          { run = ''zathura "$@"''; orphan = true; desc = "zathura"; }
+          { run = ''xdg-open "$1"''; orphan = true; desc = "Default (MIME)"; }
+        ];
+        archive = [
+          { run = ''ouch d -y "$@"''; desc = "ouch (extract)"; }
         ];
       };
       open.rules = [
-        { mime = "text/*";               use = "text"; }
-        { mime = "inode/x-empty";        use = "text"; }
-        { mime = "image/*";              use = "image"; }
-        { mime = "video/*";              use = "video"; }
-        { mime = "audio/*";              use = "audio"; }
-        { mime = "application/pdf";      use = "document"; }
+        # ── text MIME types ──
+        { mime = "text/*"; use = "text"; }
+
+        # ── application types that are text-based ──
+        { mime = "application/json"; use = "text"; }
+        { mime = "application/ld+json"; use = "text"; }
+        { mime = "application/javascript"; use = "text"; }
+        { mime = "application/xml"; use = "text"; }
+        { mime = "application/xhtml+xml"; use = "text"; }
+        { mime = "application/x-yaml"; use = "text"; }
+        { mime = "application/x-shellscript"; use = "text"; }
+        { mime = "application/x-python"; use = "text"; }
+        { mime = "application/x-lua"; use = "text"; }
+        { mime = "application/x-rust"; use = "text"; }
+        { mime = "application/x-perl"; use = "text"; }
+        { mime = "application/x-ruby"; use = "text"; }
+        { mime = "application/x-php"; use = "text"; }
+        { mime = "application/x-httpd-php"; use = "text"; }
+        { mime = "application/x-awk"; use = "text"; }
+        { mime = "application/x-sql"; use = "text"; }
+        { mime = "application/x-desktop"; use = "text"; }
+        { mime = "application/x-cmake"; use = "text"; }
+        { mime = "application/x-meson"; use = "text"; }
+        { mime = "application/x-toml"; use = "text"; }
+        { mime = "application/x-dos-batch"; use = "text"; }
+
+        # ── empty & special inodes ──
+        { mime = "inode/x-empty"; use = "text"; }
+
+        # ── images ──
+        { mime = "image/*"; use = "image"; }
+        { mime = "image/svg+xml"; use = "image"; }
+
+        # ── video ──
+        { mime = "video/*"; use = "video"; }
+
+        # ── audio ──
+        { mime = "audio/*"; use = "audio"; }
+
+        # ── documents ──
+        { mime = "application/pdf"; use = "document"; }
         { mime = "application/epub+zip"; use = "document"; }
+        { mime = "application/x-fictionbook+xml"; use = "document"; }
+        { mime = "application/vnd.comicbook+zip"; use = "document"; }
+        { mime = "application/vnd.comicbook-rar"; use = "document"; }
+        { mime = "application/x-djvu"; use = "document"; }
+
+        # ── archives ──
+        { mime = "application/zip"; use = "archive"; }
+        { mime = "application/x-rar"; use = "archive"; }
+        { mime = "application/vnd.rar"; use = "archive"; }
+        { mime = "application/x-7z-compressed"; use = "archive"; }
+        { mime = "application/x-tar"; use = "archive"; }
+        { mime = "application/gzip"; use = "archive"; }
+        { mime = "application/zstd"; use = "archive"; }
+        { mime = "application/x-xz"; use = "archive"; }
+        { mime = "application/x-bzip2"; use = "archive"; }
+        { mime = "application/x-lz4"; use = "archive"; }
+        { mime = "application/x-lzip"; use = "archive"; }
+        { mime = "application/x-lzma"; use = "archive"; }
+        { mime = "application/x-cpio"; use = "archive"; }
+        { mime = "application/x-compress"; use = "archive"; }
+        { mime = "application/vnd.debian.binary-package"; use = "archive"; }
+        { mime = "application/x-rpm"; use = "archive"; }
+        { mime = "application/x-java-archive"; use = "archive"; }
+        { mime = "application/x-archive"; use = "archive"; }
+        { mime = "application/x-cab"; use = "archive"; }
+
+        # ── catch-all: everything else opens in nvim ──
+        { url = "*"; use = "text"; }
+      ];
+      plugin.prepend_previewers = [
+        { mime = "application/{*zip,tar,bzip2,7z*,rar,xz,zstd,lz4,java-archive,*archive}"; run = "ouch"; }
       ];
     };
   };

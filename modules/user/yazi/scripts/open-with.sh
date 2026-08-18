@@ -1,0 +1,94 @@
+set -euo pipefail
+
+# ── robust MIME detection ──
+mime=$(xdg-mime query filetype "$1" 2>/dev/null || true)
+if [ -z "$mime" ] || [ "$mime" = "application/octet-stream" ]; then
+  mime=$(file --brief --mime-type "$1" 2>/dev/null || true)
+fi
+
+# ── known terminal commands (without file args; files appended at runtime) ──
+term_cmds=(
+  "nvim  (editor)"$'\t'"nvim"
+  "helix (editor)"$'\t'"helix"
+  "nano  (editor)"$'\t'"nano"
+  "micro (editor)"$'\t'"micro"
+  "bat   (viewer)"$'\t'"bat --paging=always"
+  "less  (viewer)"$'\t'"less"
+  "cat   (viewer)"$'\t'"cat"
+  "emacs (editor)"$'\t'"emacs"
+)
+
+# ── collect .desktop apps from mimeinfo.cache ──
+IFS=: read -ra _xdg_dirs <<< "${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+app_dirs=("${XDG_DATA_HOME:-$HOME/.local/share}" "${_xdg_dirs[@]}")
+
+desktop_list=""
+if [ -n "$mime" ]; then
+  desktop_list=$(
+    for dir in "${app_dirs[@]}"; do
+      cache="$dir/applications/mimeinfo.cache"
+      [ -f "$cache" ] || continue
+      grep "^${mime}=" "$cache" 2>/dev/null | cut -d= -f2- | tr ';' '\n'
+    done | sort -u | while IFS= read -r desktop_name; do
+      [ -z "$desktop_name" ] && continue
+      for adir in "${app_dirs[@]}"; do
+        f="$adir/applications/$desktop_name"
+        [ -f "$f" ] || continue
+        name=$(grep -m1 "^Name=" "$f" 2>/dev/null | cut -d= -f2-)
+        exec_line=$(grep -m1 "^Exec=" "$f" 2>/dev/null | cut -d= -f2-)
+        terminal=$(grep -m1 "^Terminal=" "$f" 2>/dev/null | cut -d= -f2-)
+        [ -n "$name" ] && [ -n "$exec_line" ] || continue
+        [ "$terminal" = "true" ] && name="$name (terminal)"
+        printf '%s\t%s\n' "$name" "$exec_line"
+        break
+      done
+    done
+  )
+fi
+
+all_files="$*"
+
+# ── build fzf list: "label\tcommand [files]" ──
+{
+  for entry in "${term_cmds[@]}"; do
+    printf '%s %s\n' "$entry" "$all_files"
+  done
+
+  if [ -n "$desktop_list" ]; then
+    printf '%s\n' "$desktop_list" | while IFS= read -r line; do
+      app_name=$(printf '%s' "$line" | cut -f1)
+      app_exec=$(printf '%s' "$line" | cut -f2-)
+      printf '%s\t%s %s\n' "$app_name" "$app_exec" "$all_files"
+    done
+  fi
+
+  printf '%s\t%s\n' "xdg-open  (system default)" "xdg-open $1"
+  printf '%s\t%s\n' "nvim      (force)" "nvim $all_files"
+  printf '%s\t%s %s\n' "  shell here" "$SHELL" "$all_files"
+} | grep -v '^$' | while IFS= read -r raw; do
+  label=$(printf '%s' "$raw" | cut -f1)
+  cmd=$(printf '%s' "$raw" | cut -f2- | sed 's/ %[uUfFdDnNickvm]//g; s/%[uUfFdDnNickvm]//g')
+  printf '%s\t%s\n' "$label" "$cmd"
+done > /tmp/yazi-openwith-cache.$$
+
+[ ! -s /tmp/yazi-openwith-cache.$$ ] && { rm -f /tmp/yazi-openwith-cache.$$; exit 0; }
+
+# ── fzf picker ──
+chosen=$(fzf --delimiter=$'\t' --with-nth=1 \
+             --prompt="open with → " \
+             --height=40% --layout=reverse --border=rounded \
+             --header=" $(basename "$1")  |  $mime " \
+             < /tmp/yazi-openwith-cache.$$)
+rm -f /tmp/yazi-openwith-cache.$$
+
+[ -z "$chosen" ] && exit 0
+
+cmd=$(printf '%s' "$chosen" | cut -f2-)
+
+# terminal editors run blocking; GUI apps are detached
+case "$cmd" in
+  nvim*|helix*|nano*|micro*|emacs*|"$SHELL"*)
+    eval "exec $cmd" ;;
+  *)
+    eval "$cmd" &>/dev/null & disown ;;
+esac

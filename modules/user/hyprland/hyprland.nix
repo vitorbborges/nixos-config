@@ -9,21 +9,22 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    configType = "hyprlang";
-    settings = {
-      monitor = [
-        "eDP-1,3200x2000@120,0x0,2"          # built-in: 3200x2000 @ 2.0 scale 120Hz
-        "HDMI-A-1,preferred,auto,1"           # external: auto-detect, verify name with `hyprctl monitors`
-        "Unknown-1,disabled"                  # phantom monitor on NVIDIA hybrid systems
-      ];
+    # Hyprland 0.55+ auto-generates ~/.config/hypr/hyprland.lua on first run and
+    # unconditionally prefers it over hyprland.conf whenever it exists, with no
+    # bridge back to hyprlang. configType = "lua" makes home-manager write the
+    # file Hyprland actually loads. Binds/rules/animations/monitors live in
+    # ./generated.lua (converted from the old hyprlang config via hyprlang2lua,
+    # hand-reviewed) — edit that file directly, not a Nix attrset, to change them.
+    configType = "lua";
 
-      "$mod" = "SUPER";
+    # Polkit agent must be launched from exec-once — binary lives in libexec (not
+    # PATH) — so it needs a live Nix interpolation, not frozen text in generated.lua.
+    extraConfig = (builtins.readFile ./generated.lua) + ''
 
-      # Polkit agent must be launched from exec-once — binary lives in libexec (not PATH)
-      exec-once = [
-        "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-      ];
-    };
+      hl.on("hyprland.start", function()
+        hl.exec_cmd("${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent")
+      end)
+    '';
   };
 
   home.sessionVariables = {

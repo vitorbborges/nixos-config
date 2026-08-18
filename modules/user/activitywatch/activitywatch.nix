@@ -131,4 +131,5 @@ in
   home.packages = [
     (pkgs.writeShellScriptBin "update-aw-filters" (builtins.readFile ./update-filters.sh))
   ];
+
 }

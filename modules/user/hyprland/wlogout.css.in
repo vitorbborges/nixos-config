@@ -1,0 +1,30 @@
+* {
+  background-image: none;
+  box-shadow: none;
+}
+window {
+  background-color: @base00_88@;
+  font-family: "@font@";
+  color: @base05@;
+}
+button {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 25%;
+  background-color: @base00_65@;
+  border: none;
+  margin: 5px;
+  transition: background-color 0.2s ease-in-out;
+}
+#lock     { background-image: image(url("@icons@/lock.png"));     }
+#logout   { background-image: image(url("@icons@/logout.png"));   }
+#suspend  { background-image: image(url("@icons@/suspend.png"));  }
+#reboot   { background-image: image(url("@icons@/reboot.png"));   }
+#shutdown { background-image: image(url("@icons@/shutdown.png")); }
+button:hover {
+  background-color: @base02_30@;
+}
+button:focus {
+  background-color: @base0D_20@;
+  outline-style: none;
+}

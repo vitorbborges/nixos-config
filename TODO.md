@@ -18,6 +18,6 @@
 
 - [ ] **`asusctl` keyboard RGB** — `services.asusd` already enabled; set profiles with `asusctl aura -m static -c RRGGBB`.
 
-- [ ] **ActivityWatch** — verify `services.activitywatch` works on baremetal.
+- [x] **ActivityWatch** — local tracking works; VPS sync removed (never worked).
 
 - [ ] **`hosts/` abstraction** — isolate per-machine specifics into `hosts/vivobook/` (hardware config, monitor layout, PRIME bus IDs).

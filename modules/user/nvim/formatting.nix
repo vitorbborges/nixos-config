@@ -29,11 +29,7 @@
     {
       mode = [ "n" "v" ];
       key = "<leader>mp";
-      action.__raw = ''
-        function()
-          require("conform").format({ lsp_fallback = true, async = false, timeout_ms = 1000 })
-        end
-      '';
+      action.__raw = builtins.readFile ./lua/formatting.lua;
       options.desc = "Format file or selection";
     }
   ];

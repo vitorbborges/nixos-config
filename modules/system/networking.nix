@@ -61,6 +61,52 @@
     ];
   };
 
+  # Self-healing backstop for the captive-portal DNS routing above.
+  #
+  # Problem: the dispatcher's "connectivity-change" action only fires on
+  # state *transitions*. On trusted networks the very first connectivity
+  # check often already reports FULL, so there is no UNKNOWN->FULL
+  # transition for the dispatcher to catch, and the per-link "~." override
+  # set by the "up" action never gets cleared — silently routing all DNS
+  # through the local (plaintext) DHCP resolver instead of the OCI VPS DoT
+  # resolver. The dispatcher's D-Bus activation has also been observed to
+  # fail intermittently at boot ("unit is invalid" in the NetworkManager
+  # journal), which would drop a clear-override event on the floor too.
+  #
+  # Fix: poll every minute and clear the override on any up interface
+  # whenever connectivity is FULL. Idempotent and a no-op while a portal
+  # is active (state won't be "full", so the loop exits immediately).
+  systemd.services.captive-dns-routing-reconcile = {
+    description = "Clear stale per-link DNS routing domain when connectivity is FULL";
+    script = ''
+      STATE=$(${pkgs.networkmanager}/bin/nmcli -g CONNECTIVITY general 2>/dev/null || echo unknown)
+      [ "$STATE" = "full" ] || exit 0
+
+      for IFACE in $(${pkgs.iproute2}/bin/ip -o link show up | awk -F': ' '{print $2}'); do
+        [ "$IFACE" = lo ] && continue
+        ${pkgs.systemd}/bin/resolvectl domain "$IFACE" "" 2>/dev/null || true
+      done
+    '';
+    serviceConfig.Type = "oneshot";
+  };
+
+  systemd.timers.captive-dns-routing-reconcile = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "30s";
+      OnUnitActiveSec = "60s";
+    };
+  };
+
+  # Syncthing (modules/user/syncthing) runs via home-manager, whose module has
+  # no openFirewall option (that only exists on the NixOS system module). Without
+  # these, the firewall silently drops LAN discovery and sync connections, so
+  # devices can be paired but never actually connect.
+  networking.firewall = {
+    allowedTCPPorts = [ 22000 ]; # sync protocol
+    allowedUDPPorts = [ 22000 21027 ]; # sync protocol (QUIC) + local discovery
+  };
+
   # DoT to OCI AGH with ordered fallback:
   # 1. OCI VPS via DoT (port 853) — privacy + ad blocking
   # 2. 1.1.1.1 / 9.9.9.9 plain UDP — captive portal fallback (portal hijacks

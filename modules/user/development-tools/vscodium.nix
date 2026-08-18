@@ -21,6 +21,8 @@ in {
           github.copilot-chat
           ms-toolsai.jupyter
           ms-python.python
+          ms-python.vscode-pylance
+          charliermarsh.ruff
           pkief.material-icon-theme
           gruntfuggly.todo-tree
           redhat.vscode-yaml

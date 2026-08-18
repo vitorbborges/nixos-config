@@ -2,20 +2,24 @@
 
 ## User Preferences
 
-- **Prefer TUIs over GUIs** whenever a well-maintained, aesthetic TUI exists. Before suggesting or implementing a GUI tool, check if a good TUI alternative is available in nixpkgs.
+- TUIs are preferred for system utilities (file management, monitoring, audio, networking) — see table below.
+- For media, communication, and productivity apps the user has settled on preferred desktop clients after testing TUI alternatives — don't second-guess those choices.
+- Before suggesting a new tool, check whether a good TUI alternative exists in nixpkgs, but accept that some categories (email, music, photo management) already have settled desktop answers.
 
-### Vetted TUI replacements (nixpkgs package in parentheses)
+### Current tool choices
 
-| Category | Use | nixpkgs |
-|----------|-----|---------|
-| Bluetooth | `bluetui` — Rust/ratatui, vim keys | `bluetui` |
-| WiFi | `wifitui` — Go/Bubble Tea, NM-native | `wifitui` |
-| Network (fallback) | `nmtui` — official NM curses UI | bundled in `networkmanager` |
-| System monitor | `btop` | `btop` |
-| Audio mixer | `wiremix` — PipeWire-native | `wiremix` |
-| Music (Spotify) | `spotify-player` | `spotify-player` |
-| Disk usage | `dua-cli` | `dua` |
-| File manager | `yazi` (in use) | `yazi` |
+| Category | Use | nixpkgs | Type |
+|----------|-----|---------|------|
+| Bluetooth | `bluetui` — Rust/ratatui, vim keys | `bluetui` | TUI |
+| WiFi | `wifitui` — Go/Bubble Tea, NM-native | `wifitui` | TUI |
+| Network (fallback) | `nmtui` — official NM curses UI | bundled in `networkmanager` | TUI |
+| System monitor | `btop` | `btop` | TUI |
+| Audio mixer | `wiremix` — PipeWire-native | `wiremix` | TUI |
+| Music (Spotify) | Spotify official desktop + spicetify | `spotify` + `spicetify-cli` | Desktop |
+| Disk usage | `dua-cli` | `dua` | TUI |
+| File manager | `yazi` | `yazi` | TUI |
+| Email | Thunderbird | `thunderbird` | Desktop |
+| Photo management | DigiKam | `digikam` | Desktop |
 
 ---
 

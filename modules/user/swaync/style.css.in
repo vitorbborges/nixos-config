@@ -1,0 +1,185 @@
+* {
+  font-family: "@font@", monospace;
+  font-size: @sz@px;
+  transition: background-color 150ms ease-out,
+              color 150ms ease-out,
+              opacity 150ms ease-out;
+}
+
+/* ── Notification popup ─────────────────────────────────────── */
+window,
+window > box,
+.floating-notifications,
+.floating-notifications > box,
+.floating-notifications > box > box,
+.notifications {
+  background: transparent;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.notification-row {
+  outline: none;
+  background: transparent;
+  padding: 4px 12px;
+}
+
+.notification {
+  background: @base01@;
+  border-radius: 12px;
+  border: 1px solid @base02@;
+  padding: 0;
+}
+
+.notification-content {
+  padding: 12px 14px;
+}
+
+.notification-default-action {
+  background: transparent;
+  border-radius: 12px;
+  padding: 0;
+  border: none;
+}
+
+.notification-default-action:hover {
+  background: @base02@;
+}
+
+.notification.low    { border-left: 3px solid @base0B@; }
+.notification.normal { border-left: 3px solid @base0D@; }
+.notification.critical {
+  border-left: 3px solid @base08@;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink { 50% { opacity: 0.6; } }
+
+.notification-action {
+  background: @base02@;
+  color: @base05@;
+  border-radius: 8px;
+  border: none;
+  margin: 0 4px 8px 4px;
+  padding: 4px 12px;
+  font-size: @szSm@px;
+}
+
+.notification-action:hover { background: @base03@; }
+
+.notification-action:first-child {
+  margin-left: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.notification-action:last-child {
+  margin-right: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.summary {
+  font-weight: 700;
+  color: @base05@;
+  font-size: @sz@px;
+}
+
+.body {
+  color: @base04@;
+  font-size: @szSm@px;
+  margin-top: 2px;
+}
+
+.time {
+  color: @base03@;
+  font-size: @szSm@px;
+}
+
+.close-button {
+  background: transparent;
+  color: @base03@;
+  border: none;
+  border-radius: 100%;
+  margin: 6px;
+  padding: 2px 5px;
+  font-size: @szSm@px;
+}
+
+.close-button:hover {
+  background: @base08@;
+  color: @base00@;
+}
+
+/* ── Control center ─────────────────────────────────────────── */
+.control-center {
+  background: @base00@;
+  border-radius: 16px;
+  border: 1px solid @base02@;
+  padding: 8px 4px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.control-center-list { background: transparent; }
+
+.control-center-list-placeholder {
+  opacity: 0.4;
+  color: @base03@;
+}
+
+.widget-title {
+  color: @base05@;
+  font-size: @sz@px;
+  font-weight: 700;
+  margin: 4px 8px 0 8px;
+  padding: 8px 4px;
+  border-bottom: 1px solid @base02@;
+}
+
+.widget-title > button {
+  background: @base02@;
+  color: @base05@;
+  border-radius: 8px;
+  border: none;
+  padding: 4px 12px;
+  font-size: @szSm@px;
+}
+
+.widget-title > button:hover { background: @base03@; }
+
+.widget-dnd {
+  padding: 8px 12px;
+  margin: 0 8px;
+}
+
+.widget-dnd > label {
+  color: @base05@;
+  font-size: @sz@px;
+}
+
+.widget-dnd > switch {
+  border-radius: 20px;
+  background: @base02@;
+  border: 1px solid @base03@;
+  min-height: 22px;
+  min-width: 44px;
+}
+
+.widget-dnd > switch:checked {
+  background: @base0D@;
+  border-color: @base0D@;
+}
+
+.widget-dnd > switch slider {
+  border-radius: 20px;
+  background: @base05@;
+  min-width: 18px;
+  min-height: 18px;
+  margin: 2px;
+}
+
+.widget-inhibitors {
+  padding: 4px 12px;
+  margin: 0 8px;
+  color: @base04@;
+  font-size: @szSm@px;
+}

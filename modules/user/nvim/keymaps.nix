@@ -32,11 +32,7 @@
       {
         mode = "n";
         key = "<leader>tt";
-        action.__raw = ''
-          function()
-            vim.fn.system(string.format("tmux split-window -v -l 20 -c %s", vim.fn.shellescape(vim.fn.getcwd())))
-          end
-        '';
+        action.__raw = builtins.readFile ./lua/keymaps.lua;
         options.desc = "New tmux pane (20% height)";
       }
 

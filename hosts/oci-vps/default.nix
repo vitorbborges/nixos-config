@@ -1,7 +1,7 @@
 { pkgs, username, ... }:
 
 {
-  imports = [ ./hardware.nix ./services.nix ./wireguard.nix ];
+  imports = [ ./hardware.nix ./services.nix ./wireguard.nix ./swap.nix ./certbot.nix ./vaultwarden.nix ./secrets.nix ./backup.nix ./ddns-cloudflare.nix ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -13,7 +13,7 @@
       enable = true;
       # Port 53 intentionally omitted — DNS amplification attack risk.
       # Plain DNS is only served over WireGuard (added in Phase 6).
-      allowedTCPPorts = [ 22 80 443 853 ];
+      allowedTCPPorts = [ 22 80 443 853 8443 ];
       allowedUDPPorts = [ 443 ];
     };
   };
@@ -49,9 +49,12 @@
     autoPrune.enable = true;
   };
 
-  environment.systemPackages = with pkgs; [ git ];
+  environment.systemPackages = with pkgs; [ git tcpdump ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # Lets `vitor` deploy via `nixos-rebuild --target-host` without the nix
+  # daemon rejecting the copied closure as an untrusted/unsigned store path.
+  nix.settings.trusted-users = [ "vitor" ];
 
   system.stateVersion = "25.05";
 }

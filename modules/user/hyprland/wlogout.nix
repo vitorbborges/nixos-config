@@ -24,37 +24,11 @@ in
       { label = "shutdown"; action = "systemctl poweroff";    text = ""; keybind = "s"; }
     ];
 
-    style = ''
-      * {
-        background-image: none;
-        box-shadow: none;
-      }
-      window {
-        background-color: ${rgba c.base00 0.88};
-        font-family: "${font}";
-        color: #${c.base05};
-      }
-      button {
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 25%;
-        background-color: ${rgba c.base00 0.65};
-        border: none;
-        margin: 5px;
-        transition: background-color 0.2s ease-in-out;
-      }
-      #lock     { background-image: image(url("${icons}/lock.png"));     }
-      #logout   { background-image: image(url("${icons}/logout.png"));   }
-      #suspend  { background-image: image(url("${icons}/suspend.png"));  }
-      #reboot   { background-image: image(url("${icons}/reboot.png"));   }
-      #shutdown { background-image: image(url("${icons}/shutdown.png")); }
-      button:hover {
-        background-color: ${rgba c.base02 0.3};
-      }
-      button:focus {
-        background-color: ${rgba c.base0D 0.2};
-        outline-style: none;
-      }
-    '';
+    # CSS lives in ./wlogout.css.in; rgba() values are pre-computed here
+    # because GTK3 CSS has no 8-digit hex support.
+    style = builtins.replaceStrings
+      [ "@font@" "@base05@" "@base00_88@" "@base00_65@" "@base02_30@" "@base0D_20@" "@icons@" ]
+      [ font "#${c.base05}" (rgba c.base00 0.88) (rgba c.base00 0.65) (rgba c.base02 0.3) (rgba c.base0D 0.2) icons ]
+      (builtins.readFile ./wlogout.css.in);
   };
 }
