@@ -1,6 +1,13 @@
 { config, lib, pkgs, pkgs-stable, ... }:
 let
   cfg = config.userSettings.vscodium;
+
+  pdf-viewer = pkgs.vscode-utils.extensionFromVscodeMarketplace {
+    name = "preview-pdf";
+    publisher = "analytic-signal";
+    version = "1.0.0";
+    hash = "sha256-m8Y9gySPEg9aAMYNm2+4+j1ywg+w8Tq7PaqXNiaLuH0=";
+  };
 in {
   options = {
     userSettings.vscodium = {
@@ -26,6 +33,7 @@ in {
           pkief.material-icon-theme
           gruntfuggly.todo-tree
           redhat.vscode-yaml
+          pdf-viewer
       ];
       profiles.default.userSettings = {
         "keyboard.dispatch" = "keyCode";

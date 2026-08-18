@@ -1,3 +1,26 @@
+# ── history hardening ─────────────────────────────────────────────
+# A single NUL byte in a history line makes zsh refuse the whole file
+# ("corrupt history file") in every shell that reads it. zsh never
+# writes NULs itself — they come from outside the shell (session
+# restore replaying terminal output, etc.). Strip them before zsh's
+# first history read so one bad byte can't spam errors everywhere.
+_hist_strip_nuls() {
+  [[ -f $HISTFILE ]] || return
+  if LC_ALL=C tr -cd '\0' < "$HISTFILE" | grep -qa .; then
+    tr -d '\0' < "$HISTFILE" > "$HISTFILE.clean" && mv "$HISTFILE.clean" "$HISTFILE"
+  fi
+}
+_hist_strip_nuls
+
+# Reject history entries containing raw control characters (terminal
+# output replayed into input by session restore/paste, etc.) so junk
+# never reaches the history file.
+_hist_reject_control() {
+  [[ "$1" == *[$'\001'-$'\010'$'\013'$'\014'$'\016'-$'\037'$'\177']* ]] && return 1
+  return 0
+}
+add-zsh-hook zshaddhistory _hist_reject_control
+
 nix-update() (
   set -e
   cd ~/nixos-config
