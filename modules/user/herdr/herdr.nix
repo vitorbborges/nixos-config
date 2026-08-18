@@ -14,6 +14,9 @@ in
   # Re-extract after bumping the herdr flake input.
   xdg.configFile."opencode/plugins/herdr-agent-state.js".source = ./herdr-agent-state.js;
 
+  # Self-healing for panes sharing one session (herdr dedupes native restore).
+  xdg.configFile."herdr/pair-restore.zsh".source = ./scripts/pair-restore.zsh;
+
   # TOML lives in ./config.toml.in with @placeholder@ tokens substituted
   # at eval time from stylix colors.
   xdg.configFile."herdr/config.toml".text = builtins.replaceStrings
@@ -26,6 +29,9 @@ in
   # (e.g. a scripted SSH command) — avoids nested-launch and breaking
   # non-interactive tooling.
   programs.zsh.initContent = ''
+    if [[ -n "$HERDR_ENV" ]]; then
+      source ${config.xdg.configHome}/herdr/pair-restore.zsh
+    fi
     if [[ -z "$HERDR_ENV" && $- == *i* ]]; then
       exec herdr
     fi

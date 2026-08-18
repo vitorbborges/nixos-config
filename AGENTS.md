@@ -3,6 +3,8 @@
 ## Development Workflow
 
 - Rebuild: `sudo nixos-rebuild switch --flake ~/nixos-config#desktop`
+- Aliases (defined in `modules/user/zsh/zsh.nix`): `nr` rebuilds; `nrc` = `git add` + rebuild + commit + push (timestamp message)
+- Deploy VPS: `sudo nixos-rebuild switch --target-host vps --flake ~/nixos-config#oci-vps`
 - Validate without sudo: `nix build .#nixosConfigurations.desktop.config.system.build.toplevel --no-link`
 - **New files must be `git add`ed before rebuilding** — Nix flakes only see git-tracked files; untracked files are invisible to the evaluator even with a dirty tree
 - Test in VM: `nix build .#nixosConfigurations.desktop.config.system.build.vm && result/bin/run-nixos-vm`
@@ -162,6 +164,10 @@ Most packages use `pkgs` (nixos-unstable). Use `pkgs-stable` only when a package
 ### 8. Mason Cannot Install Binaries on NixOS
 
 LSP servers, formatters, and linters must come from Nix, not Mason. Add them to `home.packages` in `modules/user/nvim/nvim.nix` (or `lsp.nix`). Mason's `:MasonInstall` will silently fail or produce broken binaries because NixOS has no FHS.
+
+### 9. Skills Are Auto-Discovered — No Registration
+
+Skills live in `modules/user/agents/skills/<name>/` and are materialized to `~/.claude/skills/` by `modules/user/agents/skills.nix` (recursive `home.file`). Adding a skill = create the directory with `SKILL.md`, `git add`, rebuild. No import list to edit. Follow Anthropic's skill best practices: gerund `name`, third-person `description` with triggers, body <500 lines, progressive disclosure via `references/`.
 
 ---
 

@@ -12,6 +12,7 @@
     bluetui          # Bluetooth TUI manager ($mod+B)
     wl-clipboard     # wl-copy / wl-paste — required by cliphist
     wifitui          # WiFi TUI manager ($mod+W)
+    dua              # disk usage TUI — interactive, fastest way to find space hogs
     qalculate-gtk    # calculator: powerful (unit conversion, symbolic math); CLI: `qalc`
     nautilus         # GUI file manager for drag-and-drop heavy tasks
     prismlauncher    # Minecraft launcher — set JVM arg -Dsun.java2d.uiScale=2 for HiDPI

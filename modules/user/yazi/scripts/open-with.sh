@@ -37,15 +37,15 @@ if [ -n "$mime" ]; then
     for dir in "${app_dirs[@]}"; do
       cache="$dir/applications/mimeinfo.cache"
       [ -f "$cache" ] || continue
-      grep "^${mime}=" "$cache" 2>/dev/null | cut -d= -f2- | tr ';' '\n'
+      grep "^${mime}=" "$cache" 2>/dev/null | cut -d= -f2- | tr ';' '\n' || true
     done | sort -u | while IFS= read -r desktop_name; do
       [ -z "$desktop_name" ] && continue
       for adir in "${app_dirs[@]}"; do
         f="$adir/applications/$desktop_name"
         [ -f "$f" ] || continue
-        name=$(grep -m1 "^Name=" "$f" 2>/dev/null | cut -d= -f2-)
-        exec_line=$(grep -m1 "^Exec=" "$f" 2>/dev/null | cut -d= -f2-)
-        terminal=$(grep -m1 "^Terminal=" "$f" 2>/dev/null | cut -d= -f2-)
+        name=$(grep -m1 "^Name=" "$f" 2>/dev/null | cut -d= -f2- || true)
+        exec_line=$(grep -m1 "^Exec=" "$f" 2>/dev/null | cut -d= -f2- || true)
+        terminal=$(grep -m1 "^Terminal=" "$f" 2>/dev/null | cut -d= -f2- || true)
         [ -n "$name" ] && [ -n "$exec_line" ] || continue
         [ "$terminal" = "true" ] && name="$name (terminal)"
         printf '%s\t%s\n' "$name" "$exec_line"
@@ -85,7 +85,7 @@ printf -v dir_q '%q' "$(dirname -- "$1")"
   label=$(printf '%s' "$raw" | cut -f1)
   cmd=$(printf '%s' "$raw" | cut -f2- | sed 's/ %[uUfFdDnNickvm]//g; s/%[uUfFdDnNickvm]//g')
   printf '%s\t%s\n' "$label" "$cmd"
-done > /tmp/yazi-openwith-cache.$$
+done > /tmp/yazi-openwith-cache.$$ || true
 
 [ ! -s /tmp/yazi-openwith-cache.$$ ] && { rm -f /tmp/yazi-openwith-cache.$$; exit 0; }
 
