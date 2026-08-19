@@ -129,6 +129,10 @@ in
       "$schema" = "https://opencode.ai/config.json";
       plugin = [ "@slkiser/opencode-quota@4.8.2" ];
     };
+    # opencode rewrites this file at runtime, which makes home-manager back it up
+    # on every activation; once a .bak exists the next activation fails. Nix owns
+    # this file (plugin pin is declared here), so overwrite without backing up.
+    force = true;
   };
 
   # opencode-quota settings: minimal compact status line (short quota text on

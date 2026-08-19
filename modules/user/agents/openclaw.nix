@@ -12,6 +12,7 @@
 # Secrets:
 #   Create ~/.secrets/openclaw-gateway-token.env with:
 #     OPENCLAW_GATEWAY_TOKEN=<openssl rand -hex 32>
+#     OPENCODE_API_KEY=sk-...         (opencode Zen/Go — opencode.ai/auth or ~/.local/share/opencode/auth.json)
 #     ANTHROPIC_API_KEY=sk-ant-...    (or OPENAI_API_KEY, etc.)
 #   The systemd service reads this file via EnvironmentFile.
 
@@ -39,7 +40,11 @@
         providers = {
           "opencode" = {
             baseUrl = "https://opencode.ai/zen/go/v1";
-            apiKey = "OPENAI_API_KEY";
+            # opencode-issued key (opencode-go) — routes billing to the opencode
+            # Go subscription via the zen/go endpoint. Zen key available as
+            # OPENCODE_ZEN_API_KEY (alias). The old OPENAI_API_KEY value was
+            # actually the Go key (mislabeled), not OpenAI.
+            apiKey = "OPENCODE_API_KEY";
             api = "openai-completions";
             models = [
               {
@@ -292,6 +297,26 @@
 
       agents = {
         defaults.model.primary = "opencode/deepseek-v4-pro";
+      };
+
+      # Telegram channel: token comes from TELEGRAM_BOT_TOKEN in the secrets
+      # env file (created in BotFather). First DM is approved via pairing.
+      channels = {
+        telegram = {
+          enabled = true;
+          dmPolicy = "pairing";
+        };
+      };
+
+      # herdr lifecycle hook: reports working/idle to herdr panes as
+      # custom:openclaw agents. Code lives at ~/.openclaw/hooks/herdr-status.
+      hooks = {
+        internal = {
+          enabled = true;
+          entries = {
+            "herdr-status" = { enabled = true; };
+          };
+        };
       };
     };
 

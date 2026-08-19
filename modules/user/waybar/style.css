@@ -198,3 +198,10 @@ tooltip {
 tooltip label {
   color: @base05;
 }
+
+/* ── Calendar tooltip (waybar reads these colors into {calendar}) ───── */
+tooltip .calendar-days     { color: @base05; }
+tooltip .calendar-weekdays { color: @base04; }
+tooltip .calendar-weeks    { color: @base03; }
+tooltip .calendar-months   { color: @base0E; }
+tooltip .calendar-today    { color: @base0D; }

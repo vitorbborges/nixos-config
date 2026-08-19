@@ -17,6 +17,12 @@ in
   # Self-healing for panes sharing one session (herdr dedupes native restore).
   xdg.configFile."herdr/pair-restore.zsh".source = ./scripts/pair-restore.zsh;
 
+  # Per-workspace OpenClaw session restore: after a reboot, panes in
+  # HERDR_OPENCLAW_WORKSPACES come back as bare shells; this hook claims them
+  # with `openclaw tui --session <label>` so each herdr workspace keeps its
+  # own OpenClaw session. Add more workspace labels to the list as needed.
+  xdg.configFile."herdr/openclaw-restore.zsh".source = ./scripts/openclaw-restore.zsh;
+
   # TOML lives in ./config.toml.in with @placeholder@ tokens substituted
   # at eval time from stylix colors.
   xdg.configFile."herdr/config.toml".text = builtins.replaceStrings
@@ -32,6 +38,8 @@ in
   programs.zsh.initContent = ''
     if [[ -n "$HERDR_ENV" ]]; then
       source ${config.xdg.configHome}/herdr/pair-restore.zsh
+      export HERDR_OPENCLAW_WORKSPACES="openclaw"
+      source ${config.xdg.configHome}/herdr/openclaw-restore.zsh
     fi
     if [[ -z "$HERDR_ENV" && -z "$HERDR_NO_ATTACH" && $- == *i* ]]; then
       exec herdr

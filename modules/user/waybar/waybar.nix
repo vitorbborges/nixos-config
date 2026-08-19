@@ -43,6 +43,18 @@ in
         format = "{:%H:%M · %a %d %b %Y}";
         format-alt = "{:%A, %d %B %Y}";
         tooltip-format = "<big>{:%A, %d %B %Y}</big>\n<tt><small>{calendar}</small></tt>";
+        calendar = {
+          mode = "month";
+          mode-mon-col = 4;
+          weeks-pos = "right";
+          first-day-of-week = 1;
+          on-scroll = 1;
+        };
+        actions = {
+          on-click-right = "mode";
+          on-scroll-up = "shift_up";
+          on-scroll-down = "shift_down";
+        };
       };
 
       "custom/weather" = {
