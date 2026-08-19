@@ -31,10 +31,267 @@
     config = {
       gateway = {
         mode = "local";
-        # The gateway auth token is injected at runtime via
-        # OPENCLAW_GATEWAY_TOKEN env var (from the EnvironmentFile).
-        # The string below is a fallback — the env var takes precedence.
         auth.token = "placeholder-set-via-env";
+      };
+
+      models = {
+        mode = "merge";
+        providers = {
+          "opencode" = {
+            baseUrl = "https://opencode.ai/zen/go/v1";
+            apiKey = "OPENAI_API_KEY";
+            api = "openai-completions";
+            models = [
+              {
+                id = "deepseek-v4-pro";
+                name = "DeepSeek V4 Pro";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "deepseek-v4-flash";
+                name = "DeepSeek V4 Flash";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "gpt-5.6-luna";
+                name = "GPT-5.6 Luna";
+                reasoning = false;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "grok-4.5";
+                name = "Grok 4.5";
+                reasoning = false;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "glm-5.3";
+                name = "GLM-5.3";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "glm-5.2";
+                name = "GLM-5.2";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "glm-5.1";
+                name = "GLM-5.1";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "glm-5";
+                name = "GLM-5";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "kimi-k3";
+                name = "Kimi K3";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "kimi-k2.7-code";
+                name = "Kimi K2.7 Code";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "kimi-k2.6";
+                name = "Kimi K2.6";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "kimi-k2.5";
+                name = "Kimi K2.5";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "qwen3.8-max";
+                name = "Qwen3.8 Max";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "qwen3.7-max";
+                name = "Qwen3.7 Max";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "qwen3.7-plus";
+                name = "Qwen3.7 Plus";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "qwen3.6-plus";
+                name = "Qwen3.6 Plus";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "qwen3.5-plus";
+                name = "Qwen3.5 Plus";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "minimax-m3";
+                name = "MiniMax-M3";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "minimax-m2.7";
+                name = "MiniMax-M2.7";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "minimax-m2.5";
+                name = "MiniMax-M2.5";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "mimo-v2.5-pro";
+                name = "MiMo V2.5 Pro";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "mimo-v2.5";
+                name = "MiMo V2.5";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "mimo-v2-pro";
+                name = "MiMo V2 Pro";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "mimo-v2-omni";
+                name = "MiMo V2 Omni";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "hy3";
+                name = "Hy3";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "hy3-preview";
+                name = "Hy3 Preview";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+              {
+                id = "muse-spark-1.2-contributor";
+                name = "Muse Spark 1.2";
+                reasoning = true;
+                input = [ "text" ];
+                cost = { input = 0; output = 0; cacheRead = 0; cacheWrite = 0; };
+                contextWindow = 200000;
+                maxTokens = 8192;
+              }
+            ];
+          };
+        };
+      };
+
+      agents = {
+        defaults.model.primary = "opencode/deepseek-v4-pro";
       };
     };
 
