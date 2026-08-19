@@ -1,6 +1,6 @@
 # OpenClaw — personal AI assistant, Nix-declarative install via nix-openclaw.
 #
-# Integration pattern (AGENTS.md design principle #5):
+# Integration pattern (CLAUDE.md design principle #5):
 #   External flake inputs arrive via extraSpecialArgs → imported here.
 #
 # Workspace bootstrap:
@@ -43,8 +43,11 @@
     systemd.enable = true;
   };
 
-  # Inject the secrets EnvironmentFile into the systemd user service.
+  # Inject the secrets EnvironmentFile + Install section (auto-start on boot).
   systemd.user.services.openclaw-gateway = {
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
     Service = {
       EnvironmentFile = [
         "%h/.secrets/openclaw-gateway-token.env"

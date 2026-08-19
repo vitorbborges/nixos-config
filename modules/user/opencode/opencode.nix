@@ -117,6 +117,31 @@ in
     text = builtins.toJSON {
       "$schema" = "https://opencode.ai/tui.json";
       theme = "stylix";
+      plugin = [ "@slkiser/opencode-quota@4.8.2" ];
+    };
+  };
+
+  # Global opencode config. The npm plugin is fetched by opencode itself into
+  # ~/.config/opencode/node_modules at startup (version pinned here for
+  # reproducibility — bump both entries when upgrading opencode-quota).
+  xdg.configFile."opencode/opencode.jsonc" = {
+    text = builtins.toJSON {
+      "$schema" = "https://opencode.ai/config.json";
+      plugin = [ "@slkiser/opencode-quota@4.8.2" ];
+    };
+  };
+
+  # opencode-quota settings: minimal compact status line (short quota text on
+  # Home and below the message input). Sidebar panel, toasts, prompt bar and
+  # maintainer notices stay off.
+  xdg.configFile."opencode/opencode-quota/quota-toast.json" = {
+    text = builtins.toJSON {
+      enabledProviders = "auto";
+      tuiCommandDisplay = "inline";
+      tuiSidebarPanel.enabled = false;
+      enableToast = false;
+      tuiCompactStatus.enabled = true;
+      maintainerAnnouncements.enabled = false;
     };
   };
 }

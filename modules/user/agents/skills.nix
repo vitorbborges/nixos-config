@@ -25,7 +25,7 @@ in
 {
   home.file = builtins.listToAttrs (map
     (relPath: lib.nameValuePair
-      ".config/opencode/skills/${relPath}"
+      ".claude/skills/${relPath}"
       { source = ./skills/${relPath}; })
     skillFiles);
 }
