@@ -64,6 +64,16 @@ zle -N sudo-command-line
 # Load optional API keys (file is not tracked by git)
 [[ -f "$HOME/.config/secrets/api-keys.sh" ]] && source "$HOME/.config/secrets/api-keys.sh"
 
+# Load gateway/provider secrets for interactive shells (env-file format, not
+# tracked by git). Exports OPENCLAW_GATEWAY_TOKEN so CLI tools (dashboard,
+# status, tui, gateway) can resolve the gateway SecretRef and authenticate.
+# set -a / set +a exports the assignments sourced from this file.
+if [[ -f "$HOME/.secrets/openclaw-gateway-token.env" ]]; then
+  set -a
+  source "$HOME/.secrets/openclaw-gateway-token.env"
+  set +a
+fi
+
 # git-auto-fetch: silently fetch on every directory change into a git repo
 _git_auto_fetch() {
   if git rev-parse --git-dir &>/dev/null 2>&1; then

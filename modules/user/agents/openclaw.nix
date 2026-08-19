@@ -32,7 +32,18 @@
     config = {
       gateway = {
         mode = "local";
-        auth.token = "placeholder-set-via-env";
+        # Real token comes from OPENCLAW_GATEWAY_TOKEN (secrets env file). Using a
+        # SecretRef (not a literal) so every CLI (dashboard/status/tui) and the
+        # gateway resolve the SAME real value. A literal placeholder here caused
+        # "gateway token mismatch" because clients sent the placeholder text.
+        auth = {
+          mode = "token";
+          token = {
+            source = "env";
+            provider = "default";
+            id = "OPENCLAW_GATEWAY_TOKEN";
+          };
+        };
       };
 
       models = {

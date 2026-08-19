@@ -19,7 +19,9 @@
 # for the hook to claim it on the next restore.
 
 _HERDR_OC_PANES="$HOME/.openclaw/herdr-panes.json"
-_HERDR_OC_BIN="${HERDR_BIN_PATH:-herdr}"
+# Prefer the in-pane bin path; fall back to an absolute PATH resolution so the
+# gateway hook (which may lack herdr on its PATH) gets a real binary path.
+_HERDR_OC_BIN="${HERDR_BIN_PATH:-$(command -v herdr 2>/dev/null || printf herdr)}"
 
 # Register this pane as a live OpenClaw agent and persist the session->pane map.
 _herdr_openclaw_register() {

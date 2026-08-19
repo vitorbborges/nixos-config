@@ -173,6 +173,14 @@ hl.window_rule({
 
 hl.window_rule({
     match = {
+        class = "gsimplecal",
+    },
+    float = true,
+    move = "45.5% 48",
+})
+
+hl.window_rule({
+    match = {
         fullscreen = true,
     },
     idle_inhibit = "always",

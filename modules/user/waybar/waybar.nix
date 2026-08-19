@@ -1,6 +1,8 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
+  c = config.lib.stylix.colors.withHashtag;
+
   cpu-temp = pkgs.writeShellScript "waybar-cpu-temp"
     (builtins.readFile ./scripts/cpu-temp.sh);
 
@@ -43,12 +45,23 @@ in
         format = "{:%H:%M · %a %d %b %Y}";
         format-alt = "{:%A, %d %B %Y}";
         tooltip-format = "<big>{:%A, %d %B %Y}</big>\n<tt><small>{calendar}</small></tt>";
+        on-click = "gsimplecal";
         calendar = {
           mode = "month";
           mode-mon-col = 4;
           weeks-pos = "right";
-          first-day-of-week = 1;
+          iso8601 = true;  # Monday start (waybar 0.15 has no first-day-of-week)
           on-scroll = 1;
+          # Waybar 0.15 colors the calendar only via pango markup; CSS
+          # .calendar-* classes are a master-only feature. Stylix palette
+          # injected as Nix strings (pattern (c) in AGENTS.md).
+          format = {
+            months   = "<span color='${c.base0E}'><b>{}</b></span>";
+            weekdays = "<span color='${c.base04}'><b>{}</b></span>";
+            days     = "<span color='${c.base05}'>{}</span>";
+            today    = "<span color='${c.base0D}'><b><u>{}</u></b></span>";
+            weeks    = "<span color='${c.base03}'><b>W{}</b></span>";
+          };
         };
         actions = {
           on-click-right = "mode";
