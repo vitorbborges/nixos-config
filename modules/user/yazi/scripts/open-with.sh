@@ -29,7 +29,7 @@ done
 
 # ── known GUI apps (offered for every file; filtered by availability) ──
 known_apps_all=(
-  "codium  (editor)"$'\t'"codium --force-device-scale-factor=2"
+  "codium  (editor)"$'\t'"codium"
   "zathura (documents)"$'\t'"zathura"
   "gimp    (images)"$'\t'"gimp"
   "imv     (images)"$'\t'"imv"

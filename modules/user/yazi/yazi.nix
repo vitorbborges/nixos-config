@@ -27,11 +27,11 @@ let
     target=$1
 
     if [ -d "$target" ]; then
-      exec codium --force-device-scale-factor=2 "$target"
+      exec codium "$target"
     fi
 
     # Open the file's directory as the workspace root, with the file opened.
-    exec codium --force-device-scale-factor=2 "$(dirname -- "$target")" -- "$@"
+    exec codium "$(dirname -- "$target")" -- "$@"
   '';
 
   # yatline 0.5.0 still calls the removed `File:icon()` API, which makes yazi
