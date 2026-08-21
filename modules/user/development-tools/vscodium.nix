@@ -8,6 +8,13 @@ let
     version = "1.0.0";
     hash = "sha256-m8Y9gySPEg9aAMYNm2+4+j1ywg+w8Tq7PaqXNiaLuH0=";
   };
+
+  better-markdown-preview = pkgs.vscode-utils.extensionFromVscodeMarketplace {
+    name = "better-markdown-preview";
+    publisher = "jimeh";
+    version = "1.3.0";
+    hash = "sha256-Sv1pAGo2MaSrTNJYBJARpstzI8DHG62JlBGmm3LUFFs=";
+  };
 in {
   options = {
     userSettings.vscodium = {
@@ -34,6 +41,7 @@ in {
           gruntfuggly.todo-tree
           redhat.vscode-yaml
           pdf-viewer
+          better-markdown-preview
       ];
       profiles.default.userSettings = {
         "keyboard.dispatch" = "keyCode";
