@@ -20,6 +20,20 @@ let
     exec nvim -- "$@"
   '';
 
+  codiumOpen = pkgs.writeShellScript "yazi-codium-open" ''
+    set -euo pipefail
+
+    [ "$#" -gt 0 ] || exit 2
+    target=$1
+
+    if [ -d "$target" ]; then
+      exec codium "$target"
+    fi
+
+    # Open the file's directory as the workspace root, with the file opened.
+    exec codium "$(dirname -- "$target")" -- "$@"
+  '';
+
   # yatline 0.5.0 still calls the removed `File:icon()` API, which makes yazi
   # pop a "Deprecated API" toast on every hover. Patch it to the current
   # `th.icon:match(file)` API instead of losing the extension icon.
@@ -105,6 +119,11 @@ in
           run = ''shell '${nvimOpen} %s' --block'';
           on = [ "e" ];
           desc = "Open in nvim";
+        }
+        {
+          run = ''shell '${codiumOpen} %s' --orphan'';
+          on = [ "c" "o" ];
+          desc = "Open in codium";
         }
         { run = "shell ' %s' --cursor=0 --interactive --block"; on = [ "r" ]; desc = "Run command (blocking)"; }
         { run = "shell ' %s' --cursor=0 --interactive"; on = [ "R" ]; desc = "Run command (detached)"; }
