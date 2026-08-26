@@ -92,6 +92,9 @@
       "application/pdf"      = [ "org.pwmt.zathura-pdf-mupdf.desktop" ];
       "application/epub+zip" = [ "org.pwmt.zathura-pdf-mupdf.desktop" ];
 
+      # LaTeX sources → nvim
+      "text/x-tex" = [ "nvim.desktop" ];
+
       # Web → zen
       "text/html"              = [ "zen-beta.desktop" ];
       "x-scheme-handler/http"  = [ "zen-beta.desktop" ];

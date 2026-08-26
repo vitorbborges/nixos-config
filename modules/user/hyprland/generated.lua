@@ -171,6 +171,17 @@ hl.window_rule({
     center = true,
 })
 
+-- sioyek (LaTeX preview via VimTeX): always open tiled on the active
+-- workspace so it lands beside nvim for the dual-window edit+preview layout.
+-- Dwindle splits it right of the focused window automatically.
+hl.window_rule({
+    match = {
+        class = "sioyek",
+    },
+    open_on = "active",
+    float = false,
+})
+
 hl.window_rule({
     match = {
         class = "gsimplecal",
