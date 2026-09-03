@@ -7,6 +7,9 @@
   # Includes latexmk, pdfTeX/XeTeX/LuaLaTeX, and all CTAN packages.
   home.packages = with pkgs; [
     texliveFull
+    # poppler CLI (pdftotext, pdfinfo) — the CV pipeline's ATS gates
+    # (keyword-coverage grep, page/word checks) depend on it.
+    poppler-utils
   ];
 
   # sioyek: the live-preview half of the dual-window VimTeX setup (see
