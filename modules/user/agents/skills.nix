@@ -18,7 +18,7 @@ let
       (builtins.attrNames (builtins.readDir dir));
 
   skillFiles = builtins.filter
-    (f: lib.hasSuffix ".md" f || lib.hasSuffix ".toml" f || lib.hasSuffix ".json" f)
+    (f: lib.hasSuffix ".md" f || lib.hasSuffix ".toml" f || lib.hasSuffix ".json" f || lib.hasSuffix ".sh" f)
     (builtins.attrNames (walk skillsDir ""));
 
 in
