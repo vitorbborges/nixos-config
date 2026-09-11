@@ -2,6 +2,17 @@
 
 let
   cfg = "${config.home.homeDirectory}/nixos-config";
+
+  # zsh-vi-mode 0.12.0: zvm_widget_wrapper declares `local -i retval=0`;
+  # through zsh's dynamic scoping that integer attribute leaks into
+  # zvm_navigation_handler's `retval=$keys`, so pressing `^`, `$`, or any
+  # ESC-sequence key triggers "bad math expression: operand expected at `^'".
+  # A plain string local fixes it — the wrapper only ever assigns exit codes.
+  zsh-vi-mode = pkgs.zsh-vi-mode.overrideAttrs (old: {
+    postPatch = (old.postPatch or "") + ''
+      sed -i '0,/local -i retval=0/s//local retval=0/' zsh-vi-mode.zsh
+    '';
+  });
 in
 {
   programs.zsh = {
@@ -32,7 +43,7 @@ in
     plugins = [
       {
         name = "zsh-vi-mode";
-        src  = pkgs.zsh-vi-mode;
+        src  = zsh-vi-mode;
         file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
       }
       {
