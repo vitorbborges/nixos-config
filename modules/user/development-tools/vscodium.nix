@@ -15,6 +15,15 @@ let
     version = "1.3.0";
     hash = "sha256-Sv1pAGo2MaSrTNJYBJARpstzI8DHG62JlBGmm3LUFFs=";
   };
+
+  table-viewer = pkgs.vscode-utils.extensionFromVscodeMarketplace {
+    name = "table-viewer";
+    publisher = "jbearak";
+    # engine ^1.127.0 starts at 0.8.0; 0.7.0 is the latest compatible with
+    # our vscodium (1.126). Bump once we're on 1.127+.
+    version = "0.7.0";
+    hash = "sha256-b7idE/83uLP/oIadKzXaS91lLSjPisxp2fqZ1ibmKok=";
+  };
 in {
   options = {
     userSettings.vscodium = {
@@ -42,6 +51,7 @@ in {
           redhat.vscode-yaml
           pdf-viewer
           better-markdown-preview
+          table-viewer
       ];
       profiles.default.userSettings = {
         "keyboard.dispatch" = "keyCode";

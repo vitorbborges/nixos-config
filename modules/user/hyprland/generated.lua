@@ -282,6 +282,9 @@ hl.config({
         focus_on_activate = false,
         force_default_wallpaper = 0,
         mouse_move_enables_dpms = true,
+        -- Let a fresh hyprlock re-attach if the lock client crashes (Hyprland 0.56
+        -- keeps the orphaned session lock otherwise — "oopsie daisy" wall forever).
+        allow_session_lock_restore = true,
     },
     xwayland = {
         force_zero_scaling = true,
