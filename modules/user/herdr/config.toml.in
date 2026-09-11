@@ -26,5 +26,21 @@ resume_agents_on_restore = true
 [remote]
 manage_ssh_config = false
 
+# herdr is updated via the nix flake + rebuild, never its built-in updater
+# (which downloads a binary into the immutable nix store). Disable the
+# background version check so it stops asking to "detach to update".
+[update]
+version_check = false
+
 [ui.toast]
 delivery = "system"
+
+# Daily journal: popup nvim on today's note (journal-open creates the file
+# from the AM/PM template and carries over open tasks from yesterday).
+[[keys.command]]
+key = "ctrl+alt+j"
+type = "popup"
+description = "Open daily journal"
+command = "nvim \"$(journal-open)\""
+width = "90%"
+height = "90%"

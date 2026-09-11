@@ -29,6 +29,7 @@
           { __unkeyed-1 = "<leader>b"; group = "Buffers"; }
           { __unkeyed-1 = "<leader>v"; group = "View / diagnostics"; }
           { __unkeyed-1 = "<leader>n"; group = "Nix / docs"; }
+          { __unkeyed-1 = "<leader>j"; group = "Journal"; }
         ];
       };
     };
