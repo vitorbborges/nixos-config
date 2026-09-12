@@ -99,7 +99,29 @@ let
       license = pkgs.lib.licenses.unfree;
     };
   });
+
+  # Watches for the client's "ShareRecord" capture stream and switches the
+  # default sink/source to the virtual device while casting, so projector
+  # audio is automatic (and the laptop speakers come back when casting stops).
+  projector-audio-watch = pkgs.writeShellApplication {
+    name = "projector-audio-watch";
+    runtimeInputs = with pkgs; [ pulseaudio ];
+    text = builtins.readFile ./scripts/projector-audio-watch.sh;
+  };
 in
 {
   home.packages = [ exceedshare ];
+
+  systemd.user.services.projector-audio-watch = {
+    Unit = {
+      Description = "Route system audio to the ExceedShare virtual sink while casting";
+      After = [ "pipewire-pulse.service" ];
+    };
+    Service = {
+      ExecStart = "${projector-audio-watch}/bin/projector-audio-watch";
+      Restart = "always";
+      RestartSec = 2;
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
 }
