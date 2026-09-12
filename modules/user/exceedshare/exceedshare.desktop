@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=ExceedShare
+GenericName=Wireless screen share
+Comment=Cast this screen to MAXHUB / MHshare receivers (projectors)
+Exec=exceedshare
+Icon=exceedshare
+Terminal=false
+Categories=AudioVideo;Utility;
+Keywords=cast;projector;screen;share;maxhub;mhshare;
