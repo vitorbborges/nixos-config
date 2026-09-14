@@ -1,8 +1,8 @@
 # Investments passive-recipe REMINDERS — notify-send, not execution.
 #
 # Each timer fires a notify-send telling the user which recipe to run today.
-# Recipes are run manually (claude < recipes/foo.md) — claude's session tokens
-# can't refresh non-interactively, and this avoids wifi/wake races entirely.
+# Recipes are run manually (opencode run "$(cat recipes/foo.md)") — recipes
+# may need fresh provider auth, and manual runs avoid wifi/wake races entirely.
 #
 # Failure contract: the service NEVER exits non-zero and NEVER writes to
 # journal/stderr. If connectivity can't be verified, it exits 0 silently —

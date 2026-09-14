@@ -61,13 +61,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Agent-skill sources: vendored into ~/.claude/skills by
+    # Agent-skill sources: vendored into ~/.config/opencode/skills by
     # modules/user/agents/skills.nix and into ~/.config/opencode/AGENTS.md by
     # modules/user/agents/instructions.nix. flake = false — pure source trees,
     # no output schema; bump with `nix flake update`.
     ponytail = { url = "github:DietrichGebert/ponytail"; flake = false; };
     superpowers = { url = "github:obra/superpowers"; flake = false; };
-    i-have-adhd = { url = "github:ayghri/i-have-adhd"; flake = false; };
     humanizer = { url = "github:blader/humanizer"; flake = false; };
 
   };

@@ -647,22 +647,6 @@
         "type": "github"
       }
     },
-    "i-have-adhd": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1789344358,
-        "narHash": "sha256-nwp682Hd3G6/KxTve/cI+udfhb4/SyWiR4qUgWVpJfk=",
-        "owner": "ayghri",
-        "repo": "i-have-adhd",
-        "rev": "4092de07ce3ed88389d77c0d623b7af89b40ac0e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ayghri",
-        "repo": "i-have-adhd",
-        "type": "github"
-      }
-    },
     "nix-index-database": {
       "inputs": {
         "nixpkgs": [
@@ -825,7 +809,6 @@
         "home-manager": "home-manager",
         "humanizer": "humanizer",
         "hyprland": "hyprland",
-        "i-have-adhd": "i-have-adhd",
         "nix-index-database": "nix-index-database",
         "nix-matlab": "nix-matlab",
         "nixpkgs": "nixpkgs",

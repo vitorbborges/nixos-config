@@ -27,7 +27,7 @@ fi
 
 # --- Reminder ----------------------------------------------------------------
 BODY="Recipe: recipes/$RECIPE
-Run in @investmentsDir@: claude < recipes/$RECIPE"
+Run in @investmentsDir@: opencode run \"\$(cat recipes/$RECIPE)\""
 
 if [ -n "$HINT" ]; then
   BODY="$BODY

@@ -2,6 +2,7 @@
 
 let
   bootstrap = builtins.readFile ./bootstrap.md;
+  outputStyle = builtins.readFile ./output-style.md;
 
   # Ponytail's instruction-only mode: its repo-root AGENTS.md is the always-on
   # ruleset (the opencode plugin's equivalent of the npm plugin hook injection).
@@ -13,10 +14,15 @@ let
 in
 {
   # Global opencode instructions — loaded into every session regardless of
-  # project. Two layers: the skill-activation bootstrap, and ponytail's
-  # lazy-dev ruleset (always-on, no invocation needed).
+  # project. Three layers: the skill-activation bootstrap, the always-on
+  # ADHD output style (default, off-switch: "normal mode"), and ponytail's
+  # lazy-dev ruleset.
   home.file.".config/opencode/AGENTS.md".text = ''
     ${bootstrap}
+
+    ---
+
+    ${outputStyle}
 
     ---
 

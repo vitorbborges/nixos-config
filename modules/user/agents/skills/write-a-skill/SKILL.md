@@ -83,14 +83,7 @@ Full benchmark harnesses (Anthropic's internal `skill-creator` runs paired with/
 
 This is a NixOS system — files outside of `nixos-config` don't survive a rebuild. To make a skill persistent:
 
-1. Write it to `modules/user/agents/skills/<skill-name>/SKILL.md` (plus any `references/`, `scripts/`, `assets/` alongside it).
-2. Add an entry to the `skills` attribute set in `modules/user/agents/claude-code.nix`:
-   ```nix
-   skills = {
-     <skill-name> = ./skills/<skill-name>;  # directory form pulls in references/ etc. too
-   };
-   ```
-   Use the directory form (not a path to the `.md` file directly) whenever the skill has any bundled resources.
-3. `git add` the new files — untracked files are invisible to the flake evaluator even with a dirty tree.
-4. Validate before asking the user to switch: `nix build .#nixosConfigurations.desktop.config.system.build.toplevel --no-link` catches evaluation errors without needing sudo.
-5. Ask the user to run `sudo nixos-rebuild switch --flake ~/nixos-config#desktop` themselves — this session cannot run sudo interactively.
+1. Write it to `modules/user/agents/skills/<skill-name>/SKILL.md` (plus any `references/`, `scripts/`, `assets/` alongside it). `modules/user/agents/skills.nix` walks that directory recursively and materializes every `.md`/`.toml`/`.json`/`.sh` file to `~/.config/opencode/skills/<skill-name>/` — no registration step.
+2. `git add` the new files — untracked files are invisible to the flake evaluator even with a dirty tree.
+3. Validate before asking the user to switch: `nix build .#nixosConfigurations.desktop.config.system.build.toplevel --no-link` catches evaluation errors without needing sudo.
+4. Ask the user to run `sudo nixos-rebuild switch --flake ~/nixos-config#desktop` themselves — this session cannot run sudo interactively.
