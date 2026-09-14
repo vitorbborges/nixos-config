@@ -25,14 +25,34 @@ let
 
     [ "$#" -gt 0 ] || exit 2
     target=$1
+    workdir=$(dirname -- "$target")
+
+    # Cold start: see scripts/codium-open.sh — the first window is racy for
+    # custom editors (Table Viewer), so open a window first and hand off the
+    # file warm once the instance accepts IPC.
+    if ! pgrep -x codium >/dev/null 2>&1; then
+      if [ -d "$target" ]; then
+        codium --new-window "$target" >/dev/null 2>&1 &
+      else
+        codium --new-window "$workdir" >/dev/null 2>&1 &
+      fi
+      for _ in $(seq 1 150); do
+        codium --status >/dev/null 2>&1 && break
+        sleep 0.2
+      done
+      sleep 1
+    fi
 
     if [ -d "$target" ]; then
       exec codium "$target"
     fi
 
     # Open the file's directory as the workspace root, with the file opened.
-    exec codium "$(dirname -- "$target")" -- "$@"
+    exec codium "$workdir" -- "$@"
   '';
+
+  codiumOpenPicker = pkgs.writeShellScriptBin "codium-open"
+    (builtins.readFile ./scripts/codium-open.sh);
 
   # yatline 0.5.0 still calls the removed `File:icon()` API, which makes yazi
   # pop a "Deprecated API" toast on every hover. Patch it to the current
@@ -49,6 +69,7 @@ in
 {
   home.packages = with pkgs; [
     ouch
+    codiumOpenPicker
   ];
 
   programs.yazi = {

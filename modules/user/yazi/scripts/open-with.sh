@@ -29,7 +29,7 @@ done
 
 # ── known GUI apps (offered for every file; filtered by availability) ──
 known_apps_all=(
-  "codium  (editor)"$'\t'"codium"
+  "codium  (editor)"$'\t'"codium-open"
   "zathura (documents)"$'\t'"zathura"
   "gimp    (images)"$'\t'"gimp"
   "imv     (images)"$'\t'"imv"
