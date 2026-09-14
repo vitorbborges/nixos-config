@@ -39,11 +39,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-openclaw = {
-      url = "github:openclaw/nix-openclaw";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nixpkgs-stable.url = "nixpkgs/nixos-25.11";
 
     disko = {
@@ -118,7 +113,7 @@
         inherit system;
         config.allowUnfree = true;
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
-        overlays = [ suppressXorgWarnings inputs.nix-matlab.overlay inputs.nix-openclaw.overlays.default waybarHyprland056Fix ];
+        overlays = [ suppressXorgWarnings inputs.nix-matlab.overlay waybarHyprland056Fix ];
       };
       username = "vitor";
       kbLayout = "us";
