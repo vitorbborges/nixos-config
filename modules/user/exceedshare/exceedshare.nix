@@ -102,10 +102,11 @@ let
 
   # Watches for the client's "ShareRecord" capture stream and switches the
   # default sink/source to the virtual device while casting, so projector
-  # audio is automatic (and the laptop speakers come back when casting stops).
+  # audio is automatic. On stop it clears the default pins instead of forcing
+  # the laptop speakers, leaving WirePlumber's auto-selection (BT headsets) free.
   projector-audio-watch = pkgs.writeShellApplication {
     name = "projector-audio-watch";
-    runtimeInputs = with pkgs; [ pulseaudio ];
+    runtimeInputs = with pkgs; [ pulseaudio pipewire ];
     text = builtins.readFile ./scripts/projector-audio-watch.sh;
   };
 in

@@ -1,0 +1,139 @@
+--- waybar-orig/src/modules/hyprland/workspaces.cpp	2026-09-14 10:22:39.710175072 +0200
++++ waybar/src/modules/hyprland/workspaces.cpp	2026-09-14 10:22:26.656464361 +0200
+@@ -14,6 +14,28 @@
+ 
+ namespace waybar::modules::hyprland {
+ 
++// Hyprland 0.56 replaced the numeric "id" field of workspaces with a string
++// "address" field in its IPC replies. Try the legacy field first and fall back
++// to parsing "address" so workspaces keep a stable numeric id (and deduplicate
++// correctly against persistent workspaces).
++static int getWorkspaceId(const Json::Value& ws) {
++  if (ws["id"].isInt()) {
++    return ws["id"].asInt();
++  }
++  if (ws["address"].isString()) {
++    const auto address = ws["address"].asString();
++    if (address == "special") {
++      return -99;
++    }
++    try {
++      return std::stoi(address);
++    } catch (const std::exception&) {
++      return 0;
++    }
++  }
++  return 0;
++}
++
+ Workspaces::Workspaces(const std::string& id, const Bar& bar, const Json::Value& config)
+     : AModule(config, "workspaces", id, false, false),
+       m_bar(bar),
+@@ -40,7 +62,7 @@
+ }
+ 
+ void Workspaces::init() {
+-  m_activeWorkspaceId = m_ipc.getSocket1JsonReply("activeworkspace")["id"].asInt();
++  m_activeWorkspaceId = getWorkspaceId(m_ipc.getSocket1JsonReply("activeworkspace"));
+ 
+   initializeWorkspaces();
+   dp.emit();
+@@ -65,7 +87,7 @@
+ void Workspaces::createWorkspace(Json::Value const& workspace_data,
+                                  Json::Value const& clients_data) {
+   auto workspaceName = workspace_data["name"].asString();
+-  auto workspaceId = workspace_data["id"].asInt();
++  auto workspaceId = getWorkspaceId(workspace_data);
+   spdlog::debug("Creating workspace {}", workspaceName);
+ 
+   // avoid recreating existing workspaces
+@@ -165,13 +187,13 @@
+   auto monitors = IPC::inst().getSocket1JsonReply("monitors");
+   for (const auto& monitor : monitors) {
+     auto ws = monitor["activeWorkspace"];
+-    if (ws.isObject() && ws["id"].isInt()) {
+-      visibleWorkspaces.push_back(ws["id"].asInt());
++    if (ws.isObject()) {
++      visibleWorkspaces.push_back(getWorkspaceId(ws));
+     }
+     auto sws = monitor["specialWorkspace"];
+     auto name = sws["name"].asString();
+-    if (sws.isObject() && sws["id"].isInt() && !name.empty()) {
+-      visibleWorkspaces.push_back(sws["id"].asInt());
++    if (sws.isObject() && !name.empty()) {
++      visibleWorkspaces.push_back(getWorkspaceId(sws));
+     }
+   }
+   return visibleWorkspaces;
+@@ -196,7 +218,7 @@
+         !isWorkspaceIgnored(workspaceName)) {
+       m_workspacesToCreate.emplace_back(workspaceJson, clientsJson);
+     } else {
+-      extendOrphans(workspaceJson["id"].asInt(), clientsJson);
++      extendOrphans(getWorkspaceId(workspaceJson), clientsJson);
+     }
+   }
+ 
+@@ -394,7 +416,7 @@
+   auto const workspacesJson = m_ipc.getSocket1JsonReply("workspaces");
+ 
+   for (Json::Value workspaceJson : workspacesJson) {
+-    const auto currentId = workspaceJson["id"].asInt();
++    const auto currentId = getWorkspaceId(workspaceJson);
+     if (currentId == *workspaceId) {
+       std::string workspaceName = workspaceJson["name"].asString();
+       // This workspace name is more up-to-date than the one in the event payload.
+@@ -430,7 +452,7 @@
+   spdlog::debug("Workspace moved: {}", payload);
+ 
+   // Update active workspace
+-  m_activeWorkspaceId = (m_ipc.getSocket1JsonReply("activeworkspace"))["id"].asInt();
++  m_activeWorkspaceId = getWorkspaceId(m_ipc.getSocket1JsonReply("activeworkspace"));
+ 
+   if (allOutputs()) return;
+ 
+@@ -997,7 +1019,7 @@
+ 
+   for (Json::Value clientJson : clientsJson) {
+     if (clientJson["address"].asString().ends_with(windowaddress)) {
+-      workspaceId = clientJson["workspace"]["id"].asInt();
++      workspaceId = getWorkspaceId(clientJson["workspace"]);
+       break;
+     }
+   }
+--- waybar-orig/src/modules/hyprland/workspace.cpp	2026-09-14 10:22:39.713879027 +0200
++++ waybar/src/modules/hyprland/workspace.cpp	2026-09-14 10:22:33.267469804 +0200
+@@ -11,10 +11,32 @@
+ 
+ namespace waybar::modules::hyprland {
+ 
++// Hyprland 0.56 replaced the numeric "id" field of workspaces with a string
++// "address" field in its IPC replies. Try the legacy field first and fall back
++// to parsing "address" so workspaces keep a stable numeric id (and deduplicate
++// correctly against persistent workspaces).
++static int getWorkspaceId(const Json::Value& ws) {
++  if (ws["id"].isInt()) {
++    return ws["id"].asInt();
++  }
++  if (ws["address"].isString()) {
++    const auto address = ws["address"].asString();
++    if (address == "special") {
++      return -99;
++    }
++    try {
++      return std::stoi(address);
++    } catch (const std::exception&) {
++      return 0;
++    }
++  }
++  return 0;
++}
++
+ Workspace::Workspace(const Json::Value& workspace_data, Workspaces& workspace_manager,
+                      const Json::Value& clients_data)
+     : m_workspaceManager(workspace_manager),
+-      m_id(workspace_data["id"].asInt()),
++      m_id(getWorkspaceId(workspace_data)),
+       m_name(workspace_data["name"].asString()),
+       m_output(workspace_data["monitor"].asString()),  // TODO:allow using monitor desc
+       m_windows(workspace_data["windows"].asInt()),

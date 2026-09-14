@@ -77,6 +77,16 @@
         config.allowUnfree = true;
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
       };
+      # waybar 0.15.0 predates Hyprland 0.56's IPC rename of workspace "id" →
+      # "address", which broke deduplication in hyprland/workspaces (persistent
+      # workspaces rendered twice). Backport the address fallback until upstream
+      # waybar ships a fixed release.
+      waybarHyprland056Fix = final: prev: {
+        waybar = prev.waybar.overrideAttrs (old: {
+          patches = (old.patches or []) ++ [ ./patches/waybar-hyprland-0.56-address.patch ];
+        });
+      };
+
       # Silence xorg.* deprecation warnings emitted by upstream packages that
       # haven't migrated to the new top-level names yet (e.g. nvidia-vaapi-driver).
       # Maps the warned aliases directly to the canonical top-level derivations.
@@ -108,7 +118,7 @@
         inherit system;
         config.allowUnfree = true;
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
-        overlays = [ suppressXorgWarnings inputs.nix-matlab.overlay inputs.nix-openclaw.overlays.default ];
+        overlays = [ suppressXorgWarnings inputs.nix-matlab.overlay inputs.nix-openclaw.overlays.default waybarHyprland056Fix ];
       };
       username = "vitor";
       kbLayout = "us";

@@ -59,6 +59,21 @@ in {
         # stay disabled while a window is in Restricted Mode. Files are opened
         # from yazi as untrusted workspaces, so trust must be off system-wide.
         "security.workspace.trust.enabled" = false;
+        # On cold start (yazi opens `codium file.xlsx` with no instance
+        # running), VS Code races extension activation and the extension's
+        # own priority:"default" registration loses — the file falls back to
+        # the binary text editor. An explicit association resolves reliably.
+        "workbench.editorAssociations" = {
+          "*.xlsx" = "tableViewer.excelViewer";
+          "*.XLSX" = "tableViewer.excelViewer";
+          "*.xls" = "tableViewer.excelViewer";
+          "*.XLS" = "tableViewer.excelViewer";
+        };
+        # VS Code tried to write this default into settings.json on startup.
+        # settings.json is a read-only nix symlink, so the write failed and
+        # left a dirty buffer that hot-exit restored as an unsaved tab on
+        # every launch. Pre-setting it here makes VS Code skip the write.
+        "chat.disableAIFeatures" = false;
       };
       mutableExtensionsDir = false;
 

@@ -24,6 +24,22 @@
         }
       ];
     };
+
+    # The snd-dummy card is only a capture target for ExceedShare, never a
+    # sensible auto-selected default. Zeroing its session priority keeps
+    # WirePlumber's default-node policy from ever landing on it (silent audio)
+    # after the projector-audio-watch service clears the default pins.
+    wireplumber.extraConfig."51-dummy-not-default" = {
+      "monitor.alsa.rules" = [
+        {
+          matches = [
+            { "node.name" = "alsa_output.platform-snd_dummy.0.stereo-fallback"; }
+            { "node.name" = "alsa_input.platform-snd_dummy.0.stereo-fallback"; }
+          ];
+          actions."update-props"."session.priority" = 0;
+        }
+      ];
+    };
   };
 
   # Virtual sound card the ExceedShare client captures system audio from
