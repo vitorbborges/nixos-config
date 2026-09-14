@@ -55,6 +55,10 @@ in {
       ];
       profiles.default.userSettings = {
         "keyboard.dispatch" = "keyCode";
+        # Custom editors (table-viewer for xlsx/csv) are extensions, so they
+        # stay disabled while a window is in Restricted Mode. Files are opened
+        # from yazi as untrusted workspaces, so trust must be off system-wide.
+        "security.workspace.trust.enabled" = false;
       };
       mutableExtensionsDir = false;
 
