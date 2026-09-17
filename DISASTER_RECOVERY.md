@@ -34,7 +34,7 @@ services" with no manual re-keying.
 2. **Cloudflare API token**: My Profile → API Tokens → create one scoped to
    `Zone.DNS: Edit` for `vitorbborges.space` only.
 3. **Populate real secret values** (run locally, never paste these into
-   chat/Claude):
+   chat):
    ```sh
    # edit in place with your $EDITOR, sops re-encrypts on save
    sops hosts/oci-vps/secrets.yaml

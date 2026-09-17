@@ -28,7 +28,7 @@
       "ctrl+minus" = "change_font_size all -2.0";
       "ctrl+c" = "copy_or_interrupt";
       # ctrl+v is intentionally NOT bound here so it passes through to
-      # applications (e.g. Claude Code), which read the clipboard directly
+      # applications (e.g. coding agents), which read the clipboard directly
       # including image/png. Use ctrl+shift+v for text-only paste in kitty.
     };
   };

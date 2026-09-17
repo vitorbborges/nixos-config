@@ -1,6 +1,6 @@
 ---
 name: write-a-skill
-description: "Use when the user wants to create, draft, rewrite, or improve a Claude Code skill (a SKILL.md file) — including 'write a skill for X,' 'turn this into a skill,' 'make a skill that does Y,' or 'fix/improve this skill.' Also use when the user asks how to structure a skill, why a skill isn't triggering, or how to write instructions an LLM will actually follow. Make sure to use this whenever the user mentions skill authoring, agent instructions, or prompt design for a reusable capability, even if they don't say the word 'skill.'"
+description: "Use when the user wants to create, draft, rewrite, or improve an agent skill (a SKILL.md file) — including 'write a skill for X,' 'turn this into a skill,' 'make a skill that does Y,' or 'fix/improve this skill.' Also use when the user asks how to structure a skill, why a skill isn't triggering, or how to write instructions an LLM will actually follow. Make sure to use this whenever the user mentions skill authoring, agent instructions, or prompt design for a reusable capability, even if they don't say the word 'skill.'"
 ---
 
 # Write a Skill
@@ -33,7 +33,7 @@ skill-name/
 2. The SKILL.md body — loaded whenever the skill triggers. **Keep this under ~500 lines.** If a sub-procedure is pushing you past that, move it to a `references/` file and point to it explicitly ("read `references/x.md` now, before doing Y") rather than inlining it.
 3. Bundled resources — loaded only on demand, so they don't cost context until actually needed. Reference files over ~300 lines should carry their own table of contents.
 
-**The description is the entire triggering mechanism** — nothing in the body helps if the skill never fires. Anthropic's own guidance: Claude tends to *under*-trigger skills, so write descriptions a bit "pushy" — state both what the skill does and the contexts that should invoke it, even contexts where the user won't use the skill's own name. Compare:
+**The description is the entire triggering mechanism** — nothing in the body helps if the skill never fires. Agents tend to *under*-trigger skills, so write descriptions a bit "pushy" — state both what the skill does and the contexts that should invoke it, even contexts where the user won't use the skill's own name. Compare:
 - Weak: "Helps with dashboards."
 - Better: "Build a dashboard for internal data. Use this whenever the user mentions dashboards, data visualization, internal metrics, or wants to display company data — even if they don't say 'dashboard.'"
 
@@ -48,7 +48,7 @@ skill-name/
 - **Prefer imperative instructions** ("Do X") **and explain why in one clause** rather than stacking bare MUSTs — the reason is what lets the executing model generalize to cases you didn't enumerate.
 - **Put the load-bearing constraints at the start and the end, not buried in the middle.** Models attend to the beginning and end of a context far more reliably than the middle — a controlled study found retrieval accuracy dropped sharply for information placed mid-context even when it was easy to find at either end (Liu et al., "Lost in the Middle," 2023). Restate your single most important non-negotiable right after the title, and again as the last line.
 - **Keep the total instruction count low, and order them.** Compliance with *every* instruction in a prompt drops off roughly exponentially as the number of independent instructions grows (2025 work on multi-constraint prompting, sometimes called the "curse of instructions"). One ordered numbered procedure beats a flat pile of a dozen independent rules — group and sequence, then push anything non-essential to a reference file instead of adding it as instruction #13.
-- **Use real structural delimiters** — Markdown headers, numbered steps, tables — not dense prose paragraphs carrying instructions. Claude is specifically tuned to attend to structure, and clear delimiters measurably reduce the model confusing instructions with content.
+- **Use real structural delimiters** — Markdown headers, numbered steps, tables — not dense prose paragraphs carrying instructions. Models are specifically tuned to attend to structure, and clear delimiters measurably reduce the model confusing instructions with content.
 - **Draft, then reread with fresh eyes before showing the user.** The first draft is usually over-hedged or under-specified in ways that are obvious on a second pass and invisible on the first.
 
 **If the skill will run on a smaller/cheaper model (Step 1, question 4):**
@@ -64,7 +64,7 @@ Write the SKILL.md applying Steps 2 and 3. Default to no bundled resources; add 
 ## Step 5 — Self-check before showing the user
 
 Reread the draft and confirm:
-- [ ] The description alone (no body) would make Claude trigger this in the right conversations, including phrasings that don't use the skill's own vocabulary
+- [ ] The description alone (no body) would make the agent trigger this in the right conversations, including phrasings that don't use the skill's own vocabulary
 - [ ] The single most important constraint appears in the first paragraph and again in the last
 - [ ] Every instruction is either in one ordered sequence, or clearly marked as conditional/optional
 - [ ] Nothing asks the executing model to run a script, hit an API, or read a file that doesn't actually exist in this environment

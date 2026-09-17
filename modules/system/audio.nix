@@ -29,6 +29,9 @@
     # sensible auto-selected default. Zeroing its session priority keeps
     # WirePlumber's default-node policy from ever landing on it (silent audio)
     # after the projector-audio-watch service clears the default pins.
+    # NB: the property WirePlumber sorts on is `priority.session`, not
+    # `session.priority` — the latter is silently ignored and the dummy then
+    # wins the 1000-priority tie by being the oldest device.
     wireplumber.extraConfig."51-dummy-not-default" = {
       "monitor.alsa.rules" = [
         {
@@ -36,7 +39,7 @@
             { "node.name" = "alsa_output.platform-snd_dummy.0.stereo-fallback"; }
             { "node.name" = "alsa_input.platform-snd_dummy.0.stereo-fallback"; }
           ];
-          actions."update-props"."session.priority" = 0;
+          actions."update-props"."priority.session" = 0;
         }
       ];
     };
