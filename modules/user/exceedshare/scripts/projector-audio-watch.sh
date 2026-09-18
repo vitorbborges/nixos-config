@@ -61,6 +61,11 @@ if casting; then
     state=on
 else
     set_mode off
+    # WirePlumber loads its persisted default from the state file *after* this
+    # service starts, which can resurrect a stale configured pin right after
+    # the clear above. Clear once more after it has settled.
+    sleep 2
+    clear_default_pins
     state=off
 fi
 
