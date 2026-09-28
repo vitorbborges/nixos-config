@@ -31,7 +31,6 @@
         autoVolume
         showQueueDuration
         history
-        betterGenres
         adblock
         playNext
         volumePercentage
