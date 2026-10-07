@@ -146,9 +146,6 @@ in
           on = [ "c" "o" ];
           desc = "Open in codium";
         }
-        { run = "shell ' %s' --cursor=0 --interactive --block"; on = [ "r" ]; desc = "Run command (blocking)"; }
-        { run = "shell ' %s' --cursor=0 --interactive"; on = [ "R" ]; desc = "Run command (detached)"; }
-
         # ── archives ──
         { run = ''plugin compress -pls''; on = [ "c" "z" ]; desc = "Compress (password/level)"; }
         { run = "plugin ouch"; on = [ "c" "Z" ]; desc = "Compress with ouch"; }
