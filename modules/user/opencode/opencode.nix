@@ -128,6 +128,16 @@ in
     text = builtins.toJSON {
       "$schema" = "https://opencode.ai/config.json";
       plugin = [ "@slkiser/opencode-quota@4.8.2" ];
+
+      # GridCraft's MCP server runs headless: the agent opens/saves .xlsx
+      # files directly. To drive the open GUI window instead, change command
+      # to [ "gridcraft-cli" "mcp" "--connect" "7979" ] and launch
+      # `gridcraft --control 7979` beforehand.
+      mcp.gridcraft = {
+        type = "local";
+        command = [ "gridcraft-cli" "mcp" ];
+        enabled = true;
+      };
     };
     # opencode rewrites this file at runtime, which makes home-manager back it up
     # on every activation; once a .bak exists the next activation fails. Nix owns
