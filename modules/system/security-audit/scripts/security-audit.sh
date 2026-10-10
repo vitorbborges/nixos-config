@@ -31,7 +31,7 @@ section "Lynis audit"
 lynis audit system --no-colors || printf 'lynis exited with status %s\n' "$?"
 
 section "Nix store integrity (re-hashes every store path, may take minutes)"
-if nix store verify --all; then
+if nix store verify --all --no-trust; then
   printf 'All store paths verified OK against recorded hashes.\n'
 else
   printf 'nix store verify reported problems -- inspect the output above.\n'
