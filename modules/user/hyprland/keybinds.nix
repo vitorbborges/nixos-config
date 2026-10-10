@@ -11,6 +11,11 @@ let
     runtimeInputs = with pkgs; [ grim libnotify wl-clipboard ];
     text = builtins.readFile ./scripts/screenshot-full.sh;
   };
+  screenshot-annotate = pkgs.writeShellApplication {
+    name = "hl-screenshot-annotate";
+    runtimeInputs = with pkgs; [ grim slurp satty wl-clipboard ];
+    text = builtins.readFile ./scripts/screenshot-annotate.sh;
+  };
   kb-switch = pkgs.writeShellApplication {
     name = "hl-kb-switch";
     runtimeInputs = with pkgs; [ hyprland jq libnotify ];
@@ -22,5 +27,5 @@ in
   # Binds themselves live in ./generated.lua (loaded via hyprland.nix's
   # extraConfig) now that configType = "lua" — these scripts just need to
   # stay on $PATH for the binds that exec them by name.
-  home.packages = [ screenshot-area screenshot-full kb-switch ];
+  home.packages = [ screenshot-area screenshot-full screenshot-annotate kb-switch ];
 }

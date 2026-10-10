@@ -1,0 +1,19 @@
+[general]
+fullscreen = "current-screen"
+output-filename = "~/Media/Pictures/Screenshots/%F_%T.png"
+copy-command = "wl-copy"
+save-after-copy = true
+early-exit = ["all"]
+
+[font]
+family = "@font@"
+
+[color-palette]
+palette = [
+    "@base08@ff",
+    "@base0A@ff",
+    "@base0B@ff",
+    "@base0C@ff",
+    "@base0D@ff",
+    "@base0E@ff",
+]

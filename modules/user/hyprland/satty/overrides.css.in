@@ -1,0 +1,21 @@
+.outer_box {
+    background-color: @base00@;
+}
+
+.toolbar {
+    color: @base05@;
+    background-color: @base00@;
+}
+
+.toast {
+    color: @base05@;
+    background-color: @base01@;
+}
+
+image.grouped-tools-menu-indicator-hover {
+    color: @base0D@;
+}
+
+button.editing {
+    color: @base0D@;
+}
