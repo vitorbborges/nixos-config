@@ -131,6 +131,7 @@ in
         # ── navigation ──
         { run = "cd ~/Projects"; on = [ "g" "p" ]; desc = "Go to projects"; }
         { run = "cd ~/Media/Pictures/Screenshots"; on = [ "g" "s" ]; desc = "Go to screenshots"; }
+        { run = "plugin trash"; on = [ "g" "t" ]; desc = "Go to trash bin"; }
         { run = "cd --interactive"; on = [ "c" "d" ]; desc = "Jump to directory"; }
         { run = "plugin smart-enter"; on = [ "l" ]; desc = "Enter dir / open file"; }
 
@@ -157,7 +158,7 @@ in
         { run = "copy filename"; on = [ "y" "n" ]; desc = "Copy filename"; }
         { run = "copy name_without_ext"; on = [ "y" "N" ]; desc = "Copy name (no ext)"; }
         { run = "yank --cut"; on = [ "d" "d" ]; desc = "Cut"; }
-        { run = "remove --force"; on = [ "d" "D" ]; desc = "Delete (force)"; }
+        { run = "remove --force"; on = [ "d" "D" ]; desc = "Trash (force)"; }
         { run = "paste"; on = [ "p" "p" ]; desc = "Paste"; }
         { run = "paste --force"; on = [ "p" "P" ]; desc = "Paste (overwrite)"; }
 

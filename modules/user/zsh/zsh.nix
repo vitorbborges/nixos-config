@@ -3,6 +3,11 @@
 let
   cfg = "${config.home.homeDirectory}/nixos-config";
 
+  # Bump GridCraft to its latest GitHub release before rebuilding (no-op when
+  # current). Best-effort: "|| true" keeps nr/nrc working when offline or rate
+  # limited; the script itself aborts before editing on any download failure.
+  gridcraftUpdate = "${cfg}/modules/user/office/update-gridcraft.sh || true";
+
   # zsh-vi-mode 0.12.0: zvm_widget_wrapper declares `local -i retval=0`;
   # through zsh's dynamic scoping that integer attribute leaks into
   # zvm_navigation_handler's `retval=$keys`, so pressing `^`, `$`, or any
@@ -27,8 +32,8 @@ in
       cat   = "bat";
       mamba = "micromamba";
       man   = "tldr";
-      nr    = "sudo nixos-rebuild switch --flake ${cfg}#desktop";
-      nrc   = "git add ${cfg} && sudo nixos-rebuild switch --flake ${cfg}#desktop && git -C ${cfg} commit -m \"$(date '+%Y-%m-%d %H:%M:%S')\" && git -C ${cfg} push";
+      nr    = "${gridcraftUpdate}; sudo nixos-rebuild switch --flake ${cfg}#desktop";
+      nrc   = "${gridcraftUpdate}; git add ${cfg} && sudo nixos-rebuild switch --flake ${cfg}#desktop && git -C ${cfg} commit -m \"$(date '+%Y-%m-%d %H:%M:%S')\" && git -C ${cfg} push";
     };
 
     history = {
