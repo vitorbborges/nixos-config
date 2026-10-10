@@ -1,0 +1,26 @@
+state="${XDG_STATE_HOME:-$HOME/.local/state}/security-audit"
+mkdir -p "$state"
+out="$state/last-check.log"
+
+rc=0
+content=$(/run/wrappers/bin/sudo -n @AIDE@/bin/aide --check --config /etc/aide.conf 2>&1) || rc=$?
+printf '%s\n' "$content" > "$out"
+
+if [ "$rc" -eq 0 ]; then
+  exit 0
+fi
+
+if [ "$rc" -le 7 ]; then
+  summary=$(grep -E 'Added entries:|Removed entries:|Changed entries:' "$out" | tr '\n' ' ' || true)
+  notify-send -u critical -t 0 -i dialog-warning \
+    "AIDE: file changes detected" \
+    "exit $rc ${summary}
+Report: $out" || true
+else
+  notify-send -u critical -t 0 -i dialog-error \
+    "AIDE: check failed" \
+    "exit $rc (error, not a diff)
+Report: $out" || true
+fi
+
+exit 0
