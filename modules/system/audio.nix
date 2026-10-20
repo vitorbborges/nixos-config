@@ -43,6 +43,21 @@
         }
       ];
     };
+
+    # The TV (NVIDIA HDMI) reports priority.session 696, below the laptop
+    # speaker's 1000, so with no configured-default pin WirePlumber never
+    # picks it — e.g. after every boot, since projector-audio-watch clears
+    # the pins on start. 1100 puts the TV just above the speaker while
+    # staying under Bluetooth headset priorities: plugging the TV in switches
+    # audio to it, unplugging falls back to the speakers automatically.
+    wireplumber.extraConfig."52-nvidia-hdmi-priority" = {
+      "monitor.alsa.rules" = [
+        {
+          matches = [ { "node.name" = "alsa_output.pci-0000_01_00.1.hdmi-stereo"; } ];
+          actions."update-props"."priority.session" = 1100;
+        }
+      ];
+    };
   };
 
   # Virtual sound card the ExceedShare client captures system audio from

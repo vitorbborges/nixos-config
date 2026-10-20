@@ -136,6 +136,7 @@
             { nixpkgs.pkgs = pkgs-desktop; }
             ./hosts/desktop/configuration.nix
             ./modules/system
+            inputs.sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
