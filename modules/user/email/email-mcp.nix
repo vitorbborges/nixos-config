@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   email-mcp = pkgs.writeShellApplication {
@@ -14,6 +14,20 @@ in
   # lives in sops; see hosts/desktop/secrets.nix. Editing it:
   #   sops hosts/desktop/secrets.yaml
   home.packages = [ email-mcp pkgs.sops ];
+
+  # opencode-quota rewrites the global opencode.jsonc on startup and drops
+  # unknown keys, so the MCP entry and permission live in this extra config.
+  home.file.".config/opencode/email-mcp.json".text = builtins.toJSON {
+    mcp.email = {
+      type = "local";
+      command = [ "email-mcp" ];
+      enabled = true;
+    };
+    permission.email_send_email = "ask";
+  };
+
+  home.sessionVariables.OPENCODE_CONFIG =
+    "${config.home.homeDirectory}/.config/opencode/email-mcp.json";
 
   home.file.".config/email-mcp/config.json".text = builtins.toJSON {
     host = "smtp.terra.com.br";
