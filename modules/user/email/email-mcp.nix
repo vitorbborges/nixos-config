@@ -26,7 +26,7 @@ in
     permission.email_send_email = "ask";
   };
 
-  home.sessionVariables.OPENCODE_CONFIG =
+  programs.zsh.sessionVariables.OPENCODE_CONFIG =
     "${config.home.homeDirectory}/.config/opencode/email-mcp.json";
 
   home.file.".config/email-mcp/config.json".text = builtins.toJSON {

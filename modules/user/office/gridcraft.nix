@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  version = "0.9.0";
+  version = "0.13.0";
 
   # Upstream's release binaries dlopen Wayland/Vulkan/X11 at runtime — ldd
   # shows only libc/libgcc/libm — so those libs must reach them through
@@ -26,7 +26,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/storytold/gridcraft/releases/download/v${version}/gridcraft-${version}-linux-x86_64.deb";
-      hash = "sha256-dMcro5sLUgh9zZm1mjkdO/Wyujohu2IpMSxBxmi9kRE=";
+      hash = "sha256-j9mv3o+bwtGLtJk00pX+othGXLkvkSrWUrI2JhX83XI=";
     };
 
     nativeBuildInputs = [

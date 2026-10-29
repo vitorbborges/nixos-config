@@ -7,6 +7,14 @@
 
   home.packages = [ pkgs.spicetify-cli ];
 
+  home.activation.spotifyUiZoom = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for prefs in "$HOME"/.config/spotify/Users/*/prefs; do
+      [ -f "$prefs" ] || continue
+      ${pkgs.gnused}/bin/sed -i 's/^app\.browser\.zoom-level=.*/app.browser.zoom-level=-50/' "$prefs"
+      grep -q '^app\.browser\.zoom-level=' "$prefs" || printf '%s\n' 'app.browser.zoom-level=-50' >> "$prefs"
+    done
+  '';
+
   programs.spicetify =
     let
       spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
@@ -17,6 +25,11 @@
 
       enabledCustomApps = with spicePkgs.apps; [
         marketplace
+        # WaveLink 3.0.71 plus software AAC fallback (upstream issue #3), vendored as built.
+        ({
+          src = ./wavelink;
+          name = "wavelink";
+        })
       ];
 
       enabledExtensions = with spicePkgs.extensions; [
