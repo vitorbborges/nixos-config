@@ -90,6 +90,22 @@
         });
       };
 
+      # Mesa 26.2.4 aborts in dri_create_fence_fd on this Intel/NVIDIA
+      # hybrid stack (Hyprland SIGABRT, EGL_BAD_MATCH). 26.2.3 is the last
+      # known-good release; remove once 26.2.5+ is verified fixed.
+      mesa263Fix = final: prev: {
+        mesa = prev.mesa.overrideAttrs (old: {
+          version = "26.2.3";
+          src = prev.fetchFromGitLab {
+            domain = "gitlab.freedesktop.org";
+            owner = "mesa";
+            repo = "mesa";
+            rev = "mesa-26.2.3";
+            hash = "sha256-vhoX4anFe68PNpkOsdtme1fnGSCmKit+dyNYq6ox9AM=";
+          };
+        });
+      };
+
       # Silence xorg.* deprecation warnings emitted by upstream packages that
       # haven't migrated to the new top-level names yet (e.g. nvidia-vaapi-driver).
       # Maps the warned aliases directly to the canonical top-level derivations.
@@ -123,6 +139,15 @@
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
         overlays = [ suppressXorgWarnings inputs.nix-matlab.overlay waybarHyprland056Fix ];
       };
+
+      # Hyprland-only Mesa pin: keep the compositor on 26.2.3 without rebuilding
+      # every Mesa consumer (digikam, Qt, etc.) on 26.2.4.
+      pkgs-hypr = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        config.permittedInsecurePackages = [ "electron-38.8.4" ];
+        overlays = [ suppressXorgWarnings mesa263Fix ];
+      };
       username = "vitor";
       kbLayout = "us";
       font = "JetBrains Mono Nerd Font";
@@ -147,7 +172,7 @@
               home-manager.users.${username} = import ./hosts/desktop/home.nix;
             }
           ];
-          specialArgs = { inherit inputs username kbLayout pkgs-stable theme; };
+          specialArgs = { inherit inputs username kbLayout pkgs-stable theme; mesa263 = pkgs-hypr.mesa; };
         };
 
         oci-vps = lib.nixosSystem {

@@ -1,9 +1,12 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, mesa263, ... }:
 {
 
     # Enable OpenGL
     hardware.graphics = {
         enable = true;
+        # Mesa 26.2.4 aborts in dri_create_fence_fd on this hybrid stack.
+        # Pin only the runtime driver set to 26.2.3; app closures stay on 26.2.4.
+        package = mesa263;
     };
 
     # Load nvidia driver for Xorg and Wayland
