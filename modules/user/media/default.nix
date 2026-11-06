@@ -15,5 +15,6 @@
     qalculate-gtk    # calculator: powerful (unit conversion, symbolic math); CLI: `qalc`
     nautilus         # GUI file manager for drag-and-drop heavy tasks
     prismlauncher    # Minecraft launcher — set JVM arg -Dsun.java2d.uiScale=2 for HiDPI
+    stremio-linux-shell  # Stremio desktop (GTK4/WebKit shell + bundled server); unfree
   ];
 }

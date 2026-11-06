@@ -8,6 +8,10 @@
   stylix = {
     enable = true;
 
+    # home-manager.useGlobalPkgs disables HM's nixpkgs.* options, so stylix's
+    # overlay targets (nixos-icons, gtksourceview) cannot inject overlays here.
+    overlays.enable = false;
+
     # image lives in wallpaper.nix (managed by wallpaper-switch script)
     # Colors are pinned to a named scheme — swapping wallpaper no longer changes the palette.
     # To change the full theme, edit `theme` in flake.nix (one variable, all apps).

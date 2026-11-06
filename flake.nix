@@ -51,11 +51,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-matlab = {
-      url = "git+https://gitlab.com/doronbehar/nix-matlab";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -87,6 +82,17 @@
       waybarHyprland056Fix = final: prev: {
         waybar = prev.waybar.overrideAttrs (old: {
           patches = (old.patches or []) ++ [ ./patches/waybar-hyprland-0.56-address.patch ];
+        });
+      };
+
+      # nixpkgs rev 1d060086 ships opencode 2.2.5 with a stale node_modules
+      # hash; upstream fixed it in c399e1b (Nov 4). Drop once the channel
+      # includes that commit.
+      opencodeHashFix = final: prev: {
+        opencode = prev.opencode.overrideAttrs (old: {
+          node_modules = old.node_modules.overrideAttrs (_: {
+            outputHash = "sha256-prx9dX7kUvs/E3zopkaPk5LXh3xJAy5sZeum/W8L7cA=";
+          });
         });
       };
 
@@ -131,13 +137,13 @@
         };
       };
 
-      # Desktop pkgs: allowUnfree + nix-matlab overlay applied at instantiation
-      # so home-manager (useGlobalPkgs) never sees nixpkgs.overlays in module eval.
+      # Desktop pkgs: allowUnfree applied at instantiation so home-manager
+      # (useGlobalPkgs) never sees nixpkgs.overlays in module eval.
       pkgs-desktop = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
         config.permittedInsecurePackages = [ "electron-38.8.4" ];
-        overlays = [ suppressXorgWarnings inputs.nix-matlab.overlay waybarHyprland056Fix ];
+        overlays = [ suppressXorgWarnings waybarHyprland056Fix opencodeHashFix ];
       };
 
       # Hyprland-only Mesa pin: keep the compositor on 26.2.3 without rebuilding
